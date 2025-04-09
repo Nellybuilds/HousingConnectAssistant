@@ -3,14 +3,17 @@ import ChatInput from "./ChatInput";
 import ChatMessage from "./ChatMessage";
 import ChatSuggestions from "./ChatSuggestions";
 import { useChat } from "@/hooks/useChat";
-import { WELCOME_MESSAGE } from "@/lib/constants";
 
 export default function ChatInterface() {
   const { 
     messages, 
     isTyping, 
     sendMessage,
-    askSuggestedQuestion 
+    askSuggestedQuestion,
+    conversations,
+    activeConversationId,
+    loadConversation,
+    startNewConversation
   } = useChat();
   
   const chatMessagesRef = useRef<HTMLDivElement>(null);
@@ -30,14 +33,8 @@ export default function ChatInterface() {
         className="flex-1 overflow-y-auto custom-scrollbar p-4 chat-height"
       >
         <div className="flex flex-col max-w-3xl mx-auto space-y-4 pb-4">
-          {/* Welcome message */}
-          <ChatMessage 
-            role="assistant"
-            content={WELCOME_MESSAGE}
-          />
-          
-          {/* Suggested questions - only show initially */}
-          {messages.length === 0 && (
+          {/* Show suggested questions only on empty conversation */}
+          {messages.length === 1 && messages[0].role === "assistant" && (
             <ChatSuggestions onSelectQuestion={askSuggestedQuestion} />
           )}
           

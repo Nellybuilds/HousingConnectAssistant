@@ -1,6 +1,32 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { storage } from "./storage";
+import { db } from "./db";
+import { users } from "@shared/schema";
+
+// Initialize a default user if no users exist
+async function initializeDefaultUser() {
+  try {
+    // Check if any users exist
+    const existingUsers = await db.select().from(users);
+    
+    if (existingUsers.length === 0) {
+      // Create a default user
+      log("Creating default user");
+      await storage.createUser({
+        username: "default",
+        email: "user@example.com",
+        password: "hashed_password", // In a real app, this would be hashed
+      });
+      log("Default user created");
+    } else {
+      log(`Found ${existingUsers.length} existing users`);
+    }
+  } catch (error) {
+    console.error("Error initializing default user:", error);
+  }
+}
 
 const app = express();
 app.use(express.json());
@@ -37,6 +63,9 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Initialize database with default user if needed
+  await initializeDefaultUser();
+  
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

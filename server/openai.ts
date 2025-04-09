@@ -46,8 +46,29 @@ ${knowledgeBase}
     return {
       answer: response.choices[0].message.content || "I'm sorry, I don't have an answer for that."
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("OpenAI API error:", error);
-    throw new Error("Failed to generate response from OpenAI");
+    
+    // Handle quota errors specifically
+    if (error.code === 'insufficient_quota') {
+      return {
+        answer: "I'm sorry, but the API quota has been exceeded. Please try again later or contact support to update your API quota.",
+        error: "quota_exceeded"
+      };
+    }
+    
+    // For network errors
+    if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT' || error.code === 'ENOTFOUND') {
+      return {
+        answer: "I'm currently experiencing connectivity issues. Please try again in a moment.",
+        error: "network_error"
+      };
+    }
+    
+    // Default error
+    return {
+      answer: "I'm sorry, I couldn't process your request at the moment. Please try again later.",
+      error: "api_error"
+    };
   }
 }

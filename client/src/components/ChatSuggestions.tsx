@@ -1,20 +1,15 @@
+import { SUGGESTED_QUESTIONS } from "@/lib/constants";
+
 interface ChatSuggestionsProps {
   onSelectQuestion: (question: string) => void;
 }
 
 export default function ChatSuggestions({ onSelectQuestion }: ChatSuggestionsProps) {
-  const suggestedQuestions = [
-    "What is Housing Connect?",
-    "Am I eligible for affordable housing?",
-    "How do I apply?",
-    "What documents do I need?"
-  ];
-
   return (
     <div className="flex flex-col space-y-2 pl-10">
       <p className="text-sm text-gray-600 mb-1">Here are some questions you might want to ask:</p>
       <div className="flex flex-wrap gap-2">
-        {suggestedQuestions.map((question, index) => (
+        {SUGGESTED_QUESTIONS.map((question, index) => (
           <button
             key={index}
             onClick={() => onSelectQuestion(question)}

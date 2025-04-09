@@ -31,11 +31,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         knowledgeBase: housingConnectKnowledge,
       });
       
+      // If there's an error property, we still return 200 with the error info in the response
+      // This allows the client to handle different types of errors gracefully
       return res.json(chatResponse);
     } catch (error) {
       console.error("Error processing chat request:", error);
+      // Generic server error that wasn't caught in the OpenAI handler
       return res.status(500).json({ 
-        message: "An error occurred while processing your request" 
+        answer: "An error occurred while processing your request. Please try again later.",
+        error: "server_error" 
       });
     }
   });

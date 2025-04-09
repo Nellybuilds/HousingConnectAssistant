@@ -6,4 +6,5 @@ export interface Message {
 export interface ChatResponse {
   answer: string;
   sources?: string[];
+  error?: "quota_exceeded" | "network_error" | "api_error";
 }

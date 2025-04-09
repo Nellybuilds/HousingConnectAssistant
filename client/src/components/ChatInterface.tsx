@@ -3,6 +3,7 @@ import ChatInput from "./ChatInput";
 import ChatMessage from "./ChatMessage";
 import ChatSuggestions from "./ChatSuggestions";
 import { useChat } from "@/hooks/useChat";
+import { WELCOME_MESSAGE } from "@/lib/constants";
 
 export default function ChatInterface() {
   const { 
@@ -32,7 +33,7 @@ export default function ChatInterface() {
           {/* Welcome message */}
           <ChatMessage 
             role="assistant"
-            content="👋 Hi there! I'm your Housing Connect Helper. I can answer questions about eligibility criteria, application process, and how to use the Housing Connect platform. How can I assist you today?"
+            content={WELCOME_MESSAGE}
           />
           
           {/* Suggested questions - only show initially */}

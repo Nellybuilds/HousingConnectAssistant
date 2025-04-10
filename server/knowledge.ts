@@ -39,6 +39,26 @@ Area Median Income (AMI) is a metric used to determine eligibility for affordabl
   * Moderate Income: 81-120% of AMI
   * Middle Income: 121-165% of AMI
 
+## If You Don't Meet AMI Requirements
+
+If your income is above the maximum AMI threshold for a specific housing program:
+
+- You may not qualify for that particular housing opportunity
+- However, you should explore other housing programs with higher income limits
+- Mixed-income developments may have units available at various AMI levels
+- Some housing lotteries have units designated for multiple income bands
+- Housing Connect includes options ranging from 30% to 165% AMI
+- Market-rate units with preferential rent may be an alternative
+
+If your income is below the minimum AMI requirement:
+
+- Look for developments with lower AMI requirements (some go as low as 30% AMI)
+- Explore deeply subsidized programs like public housing or Section 8
+- Check eligibility for emergency housing assistance programs
+- Rental assistance programs may help bridge the gap
+- Some supportive housing options are available for extremely low incomes
+- Consider shared housing arrangements to increase household income
+
 ## Other Eligibility Factors
 
 - Household size must match apartment size requirements (minimum and maximum people)
@@ -168,6 +188,38 @@ You will receive notifications through your Housing Connect account and possibly
 ## What if my income or household composition changes?
 Update your Housing Connect profile immediately if there are changes to your household size or income.
 
+## What if I can't meet certain requirements?
+
+### Income Requirements
+If you don't meet income requirements:
+- For income that's too high: Look for developments with higher AMI bands or market-rate units with preferential rent
+- For income that's too low: Focus on deeply subsidized units, explore rental assistance programs, or consider adding household members (if applicable)
+- If your income is unstable: Provide documentation of all income sources including part-time work, benefits, and assistance programs
+
+### Credit History Issues
+If you have credit problems:
+- Provide explanations for negative items on your credit report
+- Show evidence of payment plans for outstanding debts
+- Include reference letters from previous landlords or employers
+- Consider credit counseling programs and include certificates of completion
+- Some developments have less stringent credit requirements or consider extenuating circumstances
+
+### Immigration Status
+If you have immigration status concerns:
+- Some housing programs do not require citizenship verification
+- Mixed-status households may qualify for certain programs
+- Look for non-federally funded housing options which may have different requirements
+- Community-based housing organizations often have more flexible criteria
+- Legal aid organizations can provide guidance specific to your situation
+
+### Criminal Background
+If you have criminal background issues:
+- Focus on developments that follow fair chance housing policies
+- Provide evidence of rehabilitation and positive community involvement
+- Include character references from employers, counselors, or community leaders
+- Certain convictions have time limitations and may not be considered after a specific period
+- Housing advocacy organizations can help identify housing providers with more inclusive policies
+
 ## Do I need to be a citizen to qualify?
 Eligibility requirements vary by program. While some require U.S. citizenship or eligible immigration status, others may be available to all residents regardless of immigration status.
 
@@ -175,7 +227,37 @@ Eligibility requirements vary by program. While some require U.S. citizenship or
 You cannot transfer applications between properties, but you can apply to multiple properties simultaneously through your Housing Connect profile.
 
 ## What happens if I'm rejected?
-If your application is rejected, you will receive a notice explaining the reason. You may have the right to appeal this decision within a specified timeframe.
+If your application is rejected, you will receive a notice explaining the reason. You may have the right to appeal this decision within a specified timeframe, typically 10-14 business days from receiving the rejection notice.
+
+### Appeal Process for Rejected Applications
+
+If you are rejected from a Housing Connect development:
+
+1. Review the rejection letter carefully to understand the specific reason(s)
+2. Gather documentation that counters the reason for rejection
+3. File a written appeal within the specified deadline (usually 10-14 days)
+4. Include all supporting documents with your appeal
+5. Request a hearing if available for that housing program
+6. Consider seeking assistance from a housing advocate or legal aid
+
+Common reasons for rejection and how to address them:
+
+- **Income too high or too low**: Provide updated income documentation or seek developments with different AMI requirements
+- **Credit issues**: Explain extenuating circumstances, provide proof of payment plans, or obtain letters from previous landlords showing good payment history
+- **Background check concerns**: Provide evidence of rehabilitation, character references, or certificates of completion for relevant programs
+- **Incomplete application**: Submit missing documents promptly
+
+### Alternatives If Your Appeal Is Denied
+
+If your appeal is unsuccessful:
+
+- Apply to different housing developments with criteria you can meet
+- Explore emergency housing assistance programs
+- Contact local housing counseling agencies for personalized guidance
+- Consider roommate arrangements to meet income requirements
+- Look into rent subsidy programs that might bridge gaps in eligibility
+- Investigate community land trusts and other alternative affordable housing models
+- Check eligibility for homelessness prevention programs if at risk
 
 ## How long will I stay on the waiting list?
 Waiting list times vary greatly depending on availability, your lottery number, and preference categories. Some applicants may wait several years.

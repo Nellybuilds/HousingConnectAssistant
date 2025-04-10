@@ -29,6 +29,26 @@ const knowledgeBase = [
     keywords: ["ami", "area median income", "income", "median", "eligibility", "qualification", "percentage", "income level", "income limit"]
   },
   {
+    question: "What if I don't meet AMI requirements?",
+    answer: "If your income is above the maximum AMI threshold, you should explore housing programs with higher income limits, mixed-income developments with units at various AMI levels, or market-rate units with preferential rent. If your income is below the minimum AMI requirement, look for developments with lower AMI requirements (some go as low as 30% AMI), explore deeply subsidized programs like public housing or Section 8, check emergency housing assistance programs, or consider rental assistance programs that help bridge the gap. Some supportive housing options are also available for extremely low incomes.",
+    keywords: ["don't meet ami", "don't qualify", "too high income", "too low income", "income too high", "income too low", "over income", "under income", "exceed limit", "below limit", "not enough income", "make too much", "make too little"]
+  },
+  {
+    question: "What if I'm rejected?",
+    answer: "If you're rejected, you'll receive a notice explaining the reason and you may have the right to appeal within 10-14 business days. To appeal: 1) Review the rejection reason, 2) Gather supporting documentation, 3) File a written appeal by the deadline, 4) Include all supporting documents, 5) Request a hearing if available, and 6) Consider seeking help from a housing advocate. If your appeal is denied, alternatives include applying to different developments with criteria you can meet, exploring emergency assistance programs, contacting housing counseling agencies, considering roommate arrangements, investigating rent subsidy programs, or community land trusts.",
+    keywords: ["rejected", "denial", "denied", "appeal", "turned down", "not accepted", "not approved", "declined", "appeal process", "fight rejection", "reapply", "second chance"]
+  },
+  {
+    question: "What if I have credit issues?",
+    answer: "If you have credit problems, you can still apply but should: provide explanations for negative items on your credit report, show evidence of payment plans for outstanding debts, include reference letters from previous landlords or employers, consider credit counseling programs and include certificates of completion with your application. Some housing developments have less stringent credit requirements or consider extenuating circumstances, particularly for affordable housing programs.",
+    keywords: ["credit", "bad credit", "credit score", "credit history", "credit check", "credit issues", "poor credit", "credit problems", "bankruptcy", "debt", "collections", "financial history"]
+  },
+  {
+    question: "What if I have a criminal record?",
+    answer: "With a criminal background, focus on developments that follow fair chance housing policies, provide evidence of rehabilitation and positive community involvement, include character references from employers, counselors, or community leaders. Be aware that certain convictions have time limitations and may not be considered after a specific period. Housing advocacy organizations can help identify housing providers with more inclusive policies. If rejected based on criminal history, you have the right to appeal and explain the circumstances or provide evidence of rehabilitation.",
+    keywords: ["criminal", "record", "background check", "conviction", "felony", "misdemeanor", "arrest", "crime", "charges", "prison", "jail", "probation", "parole", "criminal history"]
+  },
+  {
     question: "Am I eligible for affordable housing?",
     answer: "Eligibility depends on factors like your income, household size, and specific development requirements. Typically, households must earn between 30% and 165% of Area Median Income (AMI) to qualify for different housing options. Other eligibility factors include household size matching apartment requirements, credit history, rental history, criminal background checks, and possibly citizenship or eligible immigration status. Some properties also have age restrictions for senior housing.",
     keywords: ["eligible", "eligibility", "qualify", "qualification", "requirements", "income", "limits", "limits", "who can apply", "can I apply"]
@@ -65,7 +85,7 @@ const knowledgeBase = [
   },
   {
     question: "Do I need to be a citizen?",
-    answer: "Eligibility requirements vary by program. While some housing programs require U.S. citizenship or eligible immigration status, others may be available to all residents regardless of immigration status. The specific requirements will be listed in each housing development's criteria.",
+    answer: "Eligibility requirements vary by program. While some require U.S. citizenship or eligible immigration status, others may be available to all residents regardless of immigration status. If you have immigration status concerns, look for non-federally funded housing options which may have different requirements, or contact community-based housing organizations that often have more flexible criteria. Legal aid organizations can provide guidance specific to your situation.",
     keywords: ["citizen", "citizenship", "immigration", "status", "undocumented", "legal", "residency", "green card", "visa", "documentation"]
   },
   {
@@ -84,7 +104,11 @@ const topicKeywords: Record<string, string[]> = {
   "housing types": ["types", "housing", "options", "properties", "apartments", "units", "public housing", "section 8"],
   "rent": ["rent", "cost", "price", "payment", "calculate", "amount", "monthly", "percentage"],
   "rights": ["rights", "tenant", "protections", "legal", "fair housing", "discrimination", "eviction"],
-  "lottery": ["lottery", "random", "selection", "chance", "number", "odds", "preference", "priority"]
+  "lottery": ["lottery", "random", "selection", "chance", "number", "odds", "preference", "priority"],
+  "ami requirements": ["ami", "income", "too high", "too low", "not enough", "maximum", "minimum", "exceed", "below", "don't meet", "don't qualify"],
+  "rejection": ["rejected", "denial", "appeal", "turned down", "not approved", "declined", "second chance", "reapply"],
+  "credit issues": ["credit", "credit score", "bankruptcy", "debt", "collections", "financial history"],
+  "criminal record": ["criminal", "background check", "conviction", "felony", "misdemeanor", "arrest", "record"]
 };
 
 /**

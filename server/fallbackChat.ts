@@ -113,8 +113,7 @@ const topicKeywords: Record<string, string[]> = {
   "ami requirements": ["ami", "income", "too high", "too low", "not enough", "maximum", "minimum", "exceed", "below", "don't meet", "don't qualify"],
   "rejection": ["rejected", "denial", "appeal", "turned down", "not approved", "declined", "second chance", "reapply"],
   "credit issues": ["credit", "credit score", "bankruptcy", "debt", "collections", "financial history"],
-  "criminal record": ["criminal", "background check", "conviction", "felony", "misdemeanor", "arrest", "record"],
-  "pursuit": ["learn", "building", "build", "create", "develop", "coding", "programming", "learned", "pursuit", "education", "training", "taught", "skills", "development"]
+  "criminal record": ["criminal", "background check", "conviction", "felony", "misdemeanor", "arrest", "record"]
 };
 
 /**

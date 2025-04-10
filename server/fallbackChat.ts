@@ -97,6 +97,36 @@ const knowledgeBase = [
     question: "What are my rights as a tenant?",
     answer: "As an affordable housing tenant, you have rights including the right to fair treatment without discrimination, the right to a safe and habitable dwelling, the right to proper notice before landlord entry, the right to request repairs, protection against unfair eviction, and reasonable accommodations for disabilities. Many jurisdictions have additional tenant protections under local housing laws.",
     keywords: ["rights", "tenant rights", "protections", "legal", "fair housing", "discrimination", "eviction", "repairs", "accommodations", "landlord"]
+  },
+  {
+    question: "What is a log number and what does it mean?",
+    answer: "A log number is a unique identifier assigned to your Housing Connect application when you apply to a specific housing development. This number confirms your application was successfully submitted and is being processed. You can use your log number to check your application status and for reference in any communications with the housing provider. The log number is typically assigned in chronological order of application receipt and may be used in the lottery selection process.",
+    keywords: ["log number", "log", "application number", "confirmation number", "reference number", "id number", "identifier", "application id", "tracking number"]
+  },
+  {
+    question: "How do I know when my application has been received?",
+    answer: "After submitting your application on Housing Connect, you will receive a confirmation email with a log number. This log number confirms your application was successfully received and is being processed. You can also check your Housing Connect dashboard, which will display all your submitted applications and their status. If you don't receive a confirmation within 48 hours, you should contact the Housing Connect support team to verify your application status.",
+    keywords: ["application received", "confirmation", "receipt", "submitted", "verify submission", "application status", "confirmation email", "notification"]
+  },
+  {
+    question: "What is the waiting list process?",
+    answer: "The waiting list process for Housing Connect works as follows: 1) After the lottery, eligible applicants who weren't immediately selected are placed on a waiting list, 2) Your position depends on your lottery number and any preference categories you qualify for, 3) As units become available, applicants are contacted in waiting list order, 4) The waiting list may remain active for 1-2 years depending on the development, 5) You must respond promptly when contacted (typically within 5-10 business days), 6) You'll need to verify your continued eligibility when reached on the list. You can check your waiting list status through your Housing Connect account or by contacting the housing provider directly with your log number.",
+    keywords: ["waiting list", "waitlist", "wait time", "queue", "position", "ranking", "order", "when will I hear back", "status update", "line", "priority"]
+  },
+  {
+    question: "What happens if I miss my interview?",
+    answer: "If you miss your scheduled interview for affordable housing: 1) Contact the housing provider immediately to explain your situation and request a reschedule, 2) Be aware that most providers allow one reschedule if you have a valid reason and contact them promptly, 3) If you don't contact them typically within 5 business days of the missed appointment, your application may be disqualified, and 4) You'll need to provide documentation explaining the absence (like a doctor's note or employer letter) in many cases. Always update your contact information in your Housing Connect profile to ensure you receive interview notifications, and check your email and phone regularly during the application process.",
+    keywords: ["missed interview", "reschedule", "appointment", "couldn't attend", "no-show", "didn't go", "absent", "couldn't make it", "missed appointment", "second chance"]
+  },
+  {
+    question: "What is the difference between affordable and market-rate housing?",
+    answer: "Affordable housing refers to units with regulated rents set to be affordable to households within specific income ranges (typically 30-165% AMI), while market-rate housing has rents determined by market conditions with no income restrictions. The key differences are: 1) Price - affordable housing has below-market rents based on income level, 2) Eligibility - affordable housing requires meeting income and other qualifications, 3) Application process - affordable housing typically requires a formal application process, sometimes with lotteries, 4) Rent increases - affordable units have regulated rent increases, while market-rate units can increase based on market conditions, and 5) Income verification - affordable housing requires annual income recertification, while market-rate does not.",
+    keywords: ["affordable vs market", "market rate", "difference", "comparison", "compare", "regular housing", "normal rent", "subsidized", "regular apartment", "price difference"]
+  },
+  {
+    question: "How often do I need to update my application?",
+    answer: "You should update your Housing Connect profile whenever significant changes occur to your household or income situation. While there's no strict schedule for profile updates, it's recommended to review your information at least every 6 months. For active applications on waiting lists, you'll typically be required to respond to annual update requests from housing providers to confirm continued interest and eligibility. If you're selected for an interview, you'll need to provide current documentation, so keeping your profile updated will make this process smoother. Failure to update significant changes may result in application rejection if discovered during verification.",
+    keywords: ["update application", "keep current", "refresh", "modify application", "change information", "edit profile", "renewal", "maintain", "how long valid", "frequency", "how often"]
   }
 ];
 
@@ -113,7 +143,13 @@ const topicKeywords: Record<string, string[]> = {
   "ami requirements": ["ami", "income", "too high", "too low", "not enough", "maximum", "minimum", "exceed", "below", "don't meet", "don't qualify"],
   "rejection": ["rejected", "denial", "appeal", "turned down", "not approved", "declined", "second chance", "reapply"],
   "credit issues": ["credit", "credit score", "bankruptcy", "debt", "collections", "financial history"],
-  "criminal record": ["criminal", "background check", "conviction", "felony", "misdemeanor", "arrest", "record"]
+  "criminal record": ["criminal", "background check", "conviction", "felony", "misdemeanor", "arrest", "record"],
+  "log number": ["log number", "log", "application number", "confirmation number", "reference number", "id number", "identifier", "tracking"],
+  "application status": ["received", "confirmation", "receipt", "submitted", "verify submission", "status", "confirmation email"],
+  "waiting list": ["waiting list", "waitlist", "wait time", "queue", "position", "ranking", "order", "line", "priority"],
+  "interview": ["interview", "appointment", "meeting", "missed", "reschedule", "no-show", "absent"],
+  "market-rate": ["affordable vs market", "market rate", "regular housing", "normal rent", "price difference", "unsubsidized"],
+  "updates": ["update application", "keep current", "refresh", "modify", "change information", "edit profile", "renewal"]
 };
 
 /**

@@ -4,6 +4,11 @@ import { housingConnectKnowledge } from './knowledge';
 // Knowledge base with common questions about Housing Connect
 const knowledgeBase = [
   {
+    question: "Where did I learn how to build this?",
+    answer: "At Pursuit",
+    keywords: ["learn", "building", "build", "create", "develop", "coding", "programming", "learned", "pursuit", "education", "training", "taught", "skills", "development"]
+  },
+  {
     question: "How do I apply for housing?",
     answer: "You can apply by visiting the Housing Connect website and creating an account. Complete your Household Profile with accurate information, browse available housing options, select and apply for developments you're interested in, submit required documentation, and track your application status through your dashboard.",
     keywords: ["apply", "application", "how to apply", "sign up", "register", "create account", "profile", "process"]
@@ -108,7 +113,8 @@ const topicKeywords: Record<string, string[]> = {
   "ami requirements": ["ami", "income", "too high", "too low", "not enough", "maximum", "minimum", "exceed", "below", "don't meet", "don't qualify"],
   "rejection": ["rejected", "denial", "appeal", "turned down", "not approved", "declined", "second chance", "reapply"],
   "credit issues": ["credit", "credit score", "bankruptcy", "debt", "collections", "financial history"],
-  "criminal record": ["criminal", "background check", "conviction", "felony", "misdemeanor", "arrest", "record"]
+  "criminal record": ["criminal", "background check", "conviction", "felony", "misdemeanor", "arrest", "record"],
+  "pursuit": ["learn", "building", "build", "create", "develop", "coding", "programming", "learned", "pursuit", "education", "training", "taught", "skills", "development"]
 };
 
 /**

@@ -5,6 +5,7 @@ import { generateChatResponse } from "./openai";
 import { housingConnectKnowledge } from "./knowledge";
 import { findBestAnswer } from "./fallbackChat";
 import { storage } from "./storage";
+import { generateRAGResponse } from "./rag";
 
 // Define validation schema for chat requests
 const chatRequestSchema = z.object({
@@ -52,54 +53,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       try {
-        // Try to generate response using OpenAI first
-        const chatResponse = await generateChatResponse({
-          message,
-          knowledgeBase: housingConnectKnowledge,
-        });
-        
-        // If there's an error property but OpenAI still returned a response
-        if (chatResponse.error) {
-          console.log(`OpenAI error type: ${chatResponse.error}, falling back to local knowledge base`);
+        // Try to generate response using RAG first
+        try {
+          console.log("Attempting to use RAG for answer generation...");
+          const ragResponse = await generateRAGResponse(message);
           
-          // If it's a quota error, use our fallback
-          if (chatResponse.error === "quota_exceeded") {
-            // Use fallback implementation
-            const fallbackAnswer = findBestAnswer(message);
+          // Store and return the RAG response
+          await storage.createMessage({
+            role: "assistant",
+            content: ragResponse.answer,
+            conversationId: activeConversationId,
+          });
+          
+          return res.json({
+            answer: ragResponse.answer,
+            conversationId: activeConversationId,
+            source: "rag",
+            contexts: ragResponse.contexts
+          });
+        } catch (ragError) {
+          console.error("RAG generation failed, falling back to standard OpenAI:", ragError);
+          
+          // Fall back to standard OpenAI if RAG fails
+          const chatResponse = await generateChatResponse({
+            message,
+            knowledgeBase: housingConnectKnowledge,
+          });
+          
+          // If there's an error property but OpenAI still returned a response
+          if (chatResponse.error) {
+            console.log(`OpenAI error type: ${chatResponse.error}, falling back to local knowledge base`);
             
-            // Store assistant message
-            await storage.createMessage({
-              role: "assistant",
-              content: fallbackAnswer,
-              conversationId: activeConversationId,
-            });
+            // If it's a quota error, use our fallback
+            if (chatResponse.error === "quota_exceeded") {
+              // Use fallback implementation
+              const fallbackAnswer = findBestAnswer(message);
+              
+              // Store assistant message
+              await storage.createMessage({
+                role: "assistant",
+                content: fallbackAnswer,
+                conversationId: activeConversationId,
+              });
+              
+              return res.json({
+                answer: fallbackAnswer,
+                conversationId: activeConversationId,
+                source: "fallback",
+                original_error: chatResponse.error
+              });
+            }
             
+            // For other errors, return the OpenAI error response as is
             return res.json({
-              answer: fallbackAnswer,
-              conversationId: activeConversationId,
-              source: "fallback",
-              original_error: chatResponse.error
+              ...chatResponse,
+              conversationId: activeConversationId
             });
           }
           
-          // For other errors, return the OpenAI error response as is
+          // If no error, store and return the OpenAI response
+          await storage.createMessage({
+            role: "assistant",
+            content: chatResponse.answer,
+            conversationId: activeConversationId,
+          });
+          
           return res.json({
             ...chatResponse,
             conversationId: activeConversationId
           });
         }
-        
-        // If no error, store and return the OpenAI response
-        await storage.createMessage({
-          role: "assistant",
-          content: chatResponse.answer,
-          conversationId: activeConversationId,
-        });
-        
-        return res.json({
-          ...chatResponse,
-          conversationId: activeConversationId
-        });
       } catch (openaiError) {
         // If OpenAI completely fails, use fallback
         console.error("OpenAI request failed completely, using fallback:", openaiError);

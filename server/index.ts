@@ -4,6 +4,7 @@ import { setupVite, serveStatic, log } from "./vite";
 import { storage } from "./storage";
 import { db } from "./db";
 import { users } from "@shared/schema";
+import { initializePineconeWithKnowledge } from "./rag";
 
 // Initialize a default user if no users exist
 async function initializeDefaultUser() {
@@ -65,6 +66,16 @@ app.use((req, res, next) => {
 (async () => {
   // Initialize database with default user if needed
   await initializeDefaultUser();
+  
+  // Initialize Pinecone with Housing Connect knowledge
+  try {
+    log("Starting Pinecone knowledge base initialization...");
+    await initializePineconeWithKnowledge();
+    log("Pinecone knowledge base initialized successfully");
+  } catch (error) {
+    console.error("Error initializing Pinecone knowledge base:", error);
+    log("Failed to initialize Pinecone knowledge base. Continuing with fallback system.");
+  }
   
   const server = await registerRoutes(app);
 

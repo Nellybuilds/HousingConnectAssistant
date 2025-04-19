@@ -33,3 +33,10 @@ export interface ConversationHistoryResponse {
 export interface ConversationsResponse {
   conversations: Conversation[];
 }
+
+export interface Feedback {
+  id: number;
+  messageId: number;
+  rating: boolean; // true = thumbs up, false = thumbs down
+  createdAt: string;
+}

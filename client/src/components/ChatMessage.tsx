@@ -1,8 +1,12 @@
 import { Bot } from "lucide-react";
+import { useState } from "react";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
+  id?: number;
 }
 
 export default function ChatMessage({ role, content }: ChatMessageProps) {

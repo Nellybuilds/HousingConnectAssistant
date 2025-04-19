@@ -1,5 +1,5 @@
 import { Bot } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +9,7 @@ interface ChatMessageProps {
   id?: number;
 }
 
-export default function ChatMessage({ role, content }: ChatMessageProps) {
+export default function ChatMessage({ role, content, id }: ChatMessageProps) {
   // Function to format message with HTML elements for lists and paragraphs
   const formatMessage = (text: string) => {
     if (!text) return "";
@@ -60,6 +60,66 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
     );
   }
   
+  // For feedback functionality
+  const [feedback, setFeedback] = useState<{ rating: boolean } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Function to submit feedback
+  const submitFeedback = async (rating: boolean) => {
+    if (!id) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messageId: id, rating }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to submit feedback");
+      }
+      
+      const data = await response.json();
+      setFeedback(data);
+    } catch (err) {
+      console.error("Error submitting feedback:", err);
+      setError("Failed to submit feedback");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // Fetch existing feedback on mount
+  useEffect(() => {
+    if (!id) return;
+    
+    const fetchFeedback = async () => {
+      try {
+        const response = await fetch(`/api/feedback/${id}`);
+        
+        if (response.status === 404) {
+          // No feedback yet, that's fine
+          return;
+        }
+        
+        if (!response.ok) {
+          return;
+        }
+        
+        const data = await response.json();
+        setFeedback(data);
+      } catch (err) {
+        console.error("Error fetching feedback:", err);
+      }
+    };
+    
+    fetchFeedback();
+  }, [id]);
+
   return (
     <div className="flex items-start">
       <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center mr-2">
@@ -70,6 +130,39 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
           className="text-gray-800"
           dangerouslySetInnerHTML={{ __html: formatMessage(content) }}
         />
+        
+        {/* Feedback buttons - only show for assistant messages with an ID */}
+        {id && (
+          <div className="flex items-center mt-2">
+            <p className="text-xs text-gray-500 mr-2">Was this helpful?</p>
+            
+            <button
+              className={cn(
+                "p-1 rounded hover:bg-gray-100 transition-colors",
+                feedback?.rating === true && "bg-green-100 hover:bg-green-100 text-green-600"
+              )}
+              onClick={() => submitFeedback(true)}
+              disabled={isLoading}
+              aria-label="Thumbs up"
+            >
+              <ThumbsUp size={16} />
+            </button>
+            
+            <button
+              className={cn(
+                "p-1 rounded ml-2 hover:bg-gray-100 transition-colors",
+                feedback?.rating === false && "bg-red-100 hover:bg-red-100 text-red-600"
+              )}
+              onClick={() => submitFeedback(false)}
+              disabled={isLoading}
+              aria-label="Thumbs down"
+            >
+              <ThumbsDown size={16} />
+            </button>
+            
+            {error && <p className="text-xs text-red-500 ml-2">{error}</p>}
+          </div>
+        )}
       </div>
     </div>
   );

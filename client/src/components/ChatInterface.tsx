@@ -42,6 +42,7 @@ export default function ChatInterface() {
           {messages.map((message, index) => (
             <ChatMessage 
               key={index}
+              id={message.id}
               role={message.role}
               content={message.content}
             />

@@ -260,6 +260,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: "Server error" });
     }
   });
+  
+  // Admin endpoint - Get all feedback with associated message content
+  app.get("/api/admin/feedback", async (_req: Request, res: Response) => {
+    try {
+      // Get all feedback entries
+      const feedbackEntries = await storage.getAllFeedback();
+      
+      // Now for each feedback, get the associated message content
+      const enrichedFeedback = await Promise.all(
+        feedbackEntries.map(async (feedback) => {
+          const message = await storage.getMessage(feedback.messageId);
+          let conversationTitle = null;
+          
+          if (message && message.conversationId) {
+            const conversation = await storage.getConversation(message.conversationId);
+            if (conversation) {
+              conversationTitle = conversation.title;
+            }
+          }
+          
+          return {
+            ...feedback,
+            message: message || null,
+            conversationTitle
+          };
+        })
+      );
+      
+      // Group by positive/negative feedback
+      const positiveCount = enrichedFeedback.filter(f => f.rating === true).length;
+      const negativeCount = enrichedFeedback.filter(f => f.rating === false).length;
+      
+      res.status(200).json({ 
+        feedback: enrichedFeedback,
+        stats: {
+          total: enrichedFeedback.length,
+          positive: positiveCount,
+          negative: negativeCount,
+          positivePercentage: enrichedFeedback.length > 0 
+            ? Math.round((positiveCount / enrichedFeedback.length) * 100) 
+            : 0
+        }
+      });
+    } catch (error) {
+      console.error("Error retrieving all feedback:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;

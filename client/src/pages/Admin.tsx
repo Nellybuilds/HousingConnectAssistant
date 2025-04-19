@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
-import { ThumbsUp, ThumbsDown, CalendarDays, MessageCircle, Search } from "lucide-react";
+import { useState } from "react";
+import { ThumbsUp, ThumbsDown, CalendarDays, MessageCircle, Search, LogOut } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { Redirect } from "wouter";
 
 interface FeedbackStats {
   total: number;
@@ -32,6 +34,12 @@ interface FeedbackResponse {
 export default function Admin() {
   const [searchTerm, setSearchTerm] = useState("");
   const [feedbackFilter, setFeedbackFilter] = useState<"all" | "positive" | "negative">("all");
+  const { isAuthenticated, logout } = useAdminAuth();
+  
+  // If not authenticated, redirect to login page
+  if (!isAuthenticated) {
+    return <Redirect to="/admin-login" />;
+  }
   
   // Fetch feedback data
   const { data, isLoading, error } = useQuery<FeedbackResponse>({
@@ -69,7 +77,16 @@ export default function Admin() {
   
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Feedback Analytics</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Feedback Analytics</h1>
+        <button
+          onClick={logout}
+          className="flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md"
+        >
+          <LogOut className="h-4 w-4 mr-2" />
+          Logout
+        </button>
+      </div>
       
       {/* Stats Cards */}
       {data?.stats && (

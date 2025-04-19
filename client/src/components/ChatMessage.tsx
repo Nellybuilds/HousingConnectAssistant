@@ -134,33 +134,40 @@ export default function ChatMessage({ role, content, id }: ChatMessageProps) {
         {/* Feedback buttons - only show for assistant messages with an ID */}
         {id && (
           <div className="flex items-center mt-2">
-            <p className="text-xs text-gray-500 mr-2">Was this helpful?</p>
-            
-            <button
-              className={cn(
-                "p-1 rounded hover:bg-gray-100 transition-colors",
-                feedback?.rating === true && "bg-green-100 hover:bg-green-100 text-green-600"
-              )}
-              onClick={() => submitFeedback(true)}
-              disabled={isLoading}
-              aria-label="Thumbs up"
-            >
-              <ThumbsUp size={16} />
-            </button>
-            
-            <button
-              className={cn(
-                "p-1 rounded ml-2 hover:bg-gray-100 transition-colors",
-                feedback?.rating === false && "bg-red-100 hover:bg-red-100 text-red-600"
-              )}
-              onClick={() => submitFeedback(false)}
-              disabled={isLoading}
-              aria-label="Thumbs down"
-            >
-              <ThumbsDown size={16} />
-            </button>
-            
-            {error && <p className="text-xs text-red-500 ml-2">{error}</p>}
+            {feedback ? (
+              <p className="text-xs text-green-600 animate-fadeIn">
+                Thank you for your feedback!
+              </p>
+            ) : (
+              <>
+                <p className="text-xs text-gray-500 mr-2">Was this helpful?</p>
+                
+                <button
+                  className={cn(
+                    "p-1 rounded hover:bg-gray-100 transition-colors"
+                  )}
+                  onClick={() => submitFeedback(true)}
+                  disabled={isLoading}
+                  aria-label="Thumbs up"
+                >
+                  <ThumbsUp size={16} />
+                </button>
+                
+                <button
+                  className={cn(
+                    "p-1 rounded ml-2 hover:bg-gray-100 transition-colors"
+                  )}
+                  onClick={() => submitFeedback(false)}
+                  disabled={isLoading}
+                  aria-label="Thumbs down"
+                >
+                  <ThumbsDown size={16} />
+                </button>
+                
+                {error && <p className="text-xs text-red-500 ml-2">{error}</p>}
+                {isLoading && <p className="text-xs text-gray-500 ml-2">Sending...</p>}
+              </>
+            )}
           </div>
         )}
       </div>

@@ -1,7 +1,8 @@
 import { 
   Home, Info, File, ScrollText, FileStack, CalendarCheck, 
-  Link as LinkIcon, FileDown, HeadphonesIcon 
+  Link as LinkIcon, FileDown, HeadphonesIcon, BarChart2
 } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Sidebar() {
   return (
@@ -85,6 +86,12 @@ export default function Sidebar() {
                   <HeadphonesIcon className="h-4 w-4 mr-2" />
                   <span>Contact Support</span>
                 </a>
+              </li>
+              <li>
+                <Link href="/admin" className="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-100">
+                  <BarChart2 className="h-4 w-4 mr-2" />
+                  <span>Admin Dashboard</span>
+                </Link>
               </li>
             </ul>
           </div>

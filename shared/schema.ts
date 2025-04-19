@@ -62,12 +62,29 @@ export const conversationsRelations = relations(conversations, ({ one, many }) =
   messages: many(messages),
 }));
 
-export const messagesRelations = relations(messages, ({ one }) => ({
-  conversation: one(conversations, {
-    fields: [messages.conversationId],
-    references: [conversations.id],
+// Feedback schema for message ratings
+export const feedback = pgTable("feedback", {
+  id: serial("id").primaryKey(),
+  messageId: integer("message_id").references(() => messages.id).notNull(),
+  rating: boolean("rating").notNull(), // true = thumbs up, false = thumbs down
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertFeedbackSchema = createInsertSchema(feedback).pick({
+  messageId: true,
+  rating: true,
+});
+
+// Define relations for feedback
+export const feedbackRelations = relations(feedback, ({ one }) => ({
+  message: one(messages, {
+    fields: [feedback.messageId],
+    references: [messages.id],
   }),
 }));
+
+// Update message relations to include feedback
+
 
 // Define types
 export type User = typeof users.$inferSelect;
@@ -78,3 +95,6 @@ export type InsertConversation = z.infer<typeof insertConversationSchema>;
 
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+
+export type Feedback = typeof feedback.$inferSelect;
+export type InsertFeedback = z.infer<typeof insertFeedbackSchema>;

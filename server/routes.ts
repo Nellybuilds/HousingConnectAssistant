@@ -211,6 +211,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ status: "ok" });
   });
 
+  // Feedback endpoints
+  app.post("/api/feedback", async (req: Request, res: Response) => {
+    try {
+      // Validate request body
+      const feedbackSchema = z.object({
+        messageId: z.number(),
+        rating: z.boolean(),
+      });
+      
+      const { messageId, rating } = feedbackSchema.parse(req.body);
+      
+      // Check if feedback already exists for this message
+      const existingFeedback = await storage.getFeedbackForMessage(messageId);
+      
+      let feedback;
+      if (existingFeedback) {
+        // Update existing feedback
+        feedback = await storage.updateFeedback(existingFeedback.id, { rating });
+      } else {
+        // Create new feedback
+        feedback = await storage.createFeedback({ messageId, rating });
+      }
+      
+      res.status(200).json(feedback);
+    } catch (error) {
+      console.error("Error creating feedback:", error);
+      res.status(400).json({ error: "Invalid request" });
+    }
+  });
+  
+  // Get feedback for a specific message
+  app.get("/api/feedback/:messageId", async (req: Request, res: Response) => {
+    try {
+      const messageId = parseInt(req.params.messageId);
+      if (isNaN(messageId)) {
+        return res.status(400).json({ error: "Invalid message ID" });
+      }
+      
+      const feedback = await storage.getFeedbackForMessage(messageId);
+      if (feedback) {
+        res.status(200).json(feedback);
+      } else {
+        res.status(404).json({ error: "Feedback not found" });
+      }
+    } catch (error) {
+      console.error("Error retrieving feedback:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

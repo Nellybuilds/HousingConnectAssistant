@@ -83,7 +83,14 @@ export const feedbackRelations = relations(feedback, ({ one }) => ({
   }),
 }));
 
-// Update message relations to include feedback
+// Define message relations including feedback
+export const messagesRelations = relations(messages, ({ one, many }) => ({
+  conversation: one(conversations, {
+    fields: [messages.conversationId],
+    references: [conversations.id],
+  }),
+  feedback: many(feedback),
+}));
 
 
 // Define types

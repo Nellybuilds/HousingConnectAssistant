@@ -1,4 +1,4 @@
-import { users, type User, type InsertUser, messages, conversations, type Message, type InsertMessage, type Conversation, type InsertConversation } from "@shared/schema";
+import { users, type User, type InsertUser, messages, conversations, feedback, type Message, type InsertMessage, type Conversation, type InsertConversation, type Feedback, type InsertFeedback } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -17,6 +17,11 @@ export interface IStorage {
   // Message methods
   getMessages(conversationId: string): Promise<Message[]>;
   createMessage(message: InsertMessage): Promise<Message>;
+  
+  // Feedback methods
+  getFeedbackForMessage(messageId: number): Promise<Feedback | undefined>;
+  createFeedback(feedback: InsertFeedback): Promise<Feedback>;
+  updateFeedback(id: number, data: Partial<Feedback>): Promise<Feedback>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -72,6 +77,26 @@ export class DatabaseStorage implements IStorage {
   async createMessage(message: InsertMessage): Promise<Message> {
     const [newMessage] = await db.insert(messages).values(message).returning();
     return newMessage;
+  }
+  
+  // Feedback methods
+  async getFeedbackForMessage(messageId: number): Promise<Feedback | undefined> {
+    const [messageFeedback] = await db.select().from(feedback).where(eq(feedback.messageId, messageId));
+    return messageFeedback;
+  }
+  
+  async createFeedback(feedbackData: InsertFeedback): Promise<Feedback> {
+    const [newFeedback] = await db.insert(feedback).values(feedbackData).returning();
+    return newFeedback;
+  }
+  
+  async updateFeedback(id: number, data: Partial<Feedback>): Promise<Feedback> {
+    const [updatedFeedback] = await db
+      .update(feedback)
+      .set(data)
+      .where(eq(feedback.id, id))
+      .returning();
+    return updatedFeedback;
   }
 }
 

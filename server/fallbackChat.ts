@@ -243,5 +243,5 @@ export function findBestAnswer(userQuestion: string): string {
   }
   
   // 5. Default response if no good match found
-  return "I don't have specific information about that. Please ask about Housing Connect applications, eligibility criteria, housing options, required documents, or application timelines. You can also ask about AMI (Area Median Income), rent calculation, or tenant rights.";
+  return "I don't know about that. You can ask me about how to apply for housing, what papers you need, how long it takes, who can apply, how much it costs, or what your rights are as a tenant. I'm here to help with Housing Connect questions.";
 }

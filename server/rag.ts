@@ -203,14 +203,14 @@ Question: ${question}
 Context information from Housing Connect knowledge base:
 ${context}
 
-Instructions: Using the context information provided above, answer the question as accurately and helpfully as possible. If the answer cannot be determined from the context, say so clearly. Don't make up information not present in the context.
+Instructions: Using the context information provided above, answer the question as accurately and helpfully as possible. Write at a 6th grade reading level using simple words and short sentences. Explain any housing terms in simple language. If the answer cannot be determined from the context, say so clearly. Don't make up information not present in the context.
 `;
     
     // Generate response
     const response = await openai.invoke([
       {
         role: "system",
-        content: "You are Housing Connect Helper, an AI assistant that provides information about affordable housing. Your responses should be helpful, accurate, and based on the context provided."
+        content: "You are Housing Connect Helper, an AI assistant that provides information about affordable housing. Write at a 6th grade reading level (simple words, short sentences, clear explanations). Avoid complex vocabulary and technical terms. Explain any necessary housing terms in simple language. Your responses should be helpful, accurate, and based on the context provided."
       },
       {
         role: "user",

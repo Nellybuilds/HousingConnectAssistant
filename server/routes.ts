@@ -5,11 +5,7 @@ import { generateChatResponse } from "./openai";
 import { housingConnectKnowledge } from "./knowledge";
 import { findBestAnswer } from "./fallbackChat";
 import { storage } from "./storage";
-import { generateResponse as generateJsonRagResponse } from "./json-rag";
 import { generateRAGResponse } from "./rag";
-import { generateDirectJsonResponse } from "./direct-json-search";
-import fs from 'fs';
-import path from 'path';
 
 // Define validation schema for chat requests
 const chatRequestSchema = z.object({
@@ -56,35 +52,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         conversationId: activeConversationId,
       });
       
-      // Main processing flow - try methods in order of reliability
-      
-      // 1. First, try direct JSON search (most reliable)
       try {
-        console.log("Attempting direct JSON search for:", message);
-        const directJsonResponse = await generateDirectJsonResponse(message);
-        
-        // Store and return the direct JSON response
-        await storage.createMessage({
-          role: "assistant",
-          content: directJsonResponse.answer,
-          conversationId: activeConversationId,
-        });
-        
-        return res.json({
-          answer: directJsonResponse.answer,
-          conversationId: activeConversationId,
-          source: "direct-json-search",
-          contexts: directJsonResponse.contexts,
-          metadata: {
-            source_count: directJsonResponse.contexts?.length || 0,
-            categories: Array.from(new Set(directJsonResponse.contexts?.map((c: any) => c.category) || []))
-          }
-        });
-      } 
-      catch (directJsonError) {
-        console.error("Direct JSON search failed, trying RAG fallback:", directJsonError);
-        
-        // 2. Next, try RAG
+        // Try to generate response using RAG first
         try {
           console.log("Attempting to use RAG for answer generation...");
           const ragResponse = await generateRAGResponse(message);
@@ -100,121 +69,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
             answer: ragResponse.answer,
             conversationId: activeConversationId,
             source: "rag",
-            contexts: ragResponse.contexts,
-            metadata: {
-              source_count: ragResponse.contexts?.length || 0,
-              categories: Array.from(new Set(ragResponse.contexts?.map((c: any) => c.category) || []))
-            }
+            contexts: ragResponse.contexts
           });
-        } 
-        catch (ragError) {
-          console.error("RAG generation failed, falling back to Google Vertex AI:", ragError);
+        } catch (ragError) {
+          console.error("RAG generation failed, falling back to standard OpenAI:", ragError);
           
-          // 3. Try Google Vertex AI
-          try {
-            // Fall back to Google Vertex AI if RAG fails
-            const chatResponse = await generateChatResponse({
-              message,
-              knowledgeBase: housingConnectKnowledge,
-            });
+          // Fall back to standard OpenAI if RAG fails
+          const chatResponse = await generateChatResponse({
+            message,
+            knowledgeBase: housingConnectKnowledge,
+          });
+          
+          // If there's an error property but OpenAI still returned a response
+          if (chatResponse.error) {
+            console.log(`OpenAI error type: ${chatResponse.error}, falling back to local knowledge base`);
             
-            // If there's an error property but Vertex AI still returned a response
-            if (chatResponse.error) {
-              console.log(`Vertex AI error type: ${chatResponse.error}, trying pattern matching`);
+            // If it's a quota error, use our fallback
+            if (chatResponse.error === "quota_exceeded") {
+              // Use fallback implementation
+              const fallbackAnswer = findBestAnswer(message);
               
-              // 4. If AI has quota error, try pattern matching
-              if (chatResponse.error === "quota_exceeded") {
-                // Use fallback implementation
-                const fallbackAnswer = findBestAnswer(message);
-                
-                // Store assistant message
-                await storage.createMessage({
-                  role: "assistant",
-                  content: fallbackAnswer,
-                  conversationId: activeConversationId,
-                });
-                
-                return res.json({
-                  answer: fallbackAnswer,
-                  conversationId: activeConversationId,
-                  source: "fallback",
-                  original_error: chatResponse.error
-                });
-              }
+              // Store assistant message
+              await storage.createMessage({
+                role: "assistant",
+                content: fallbackAnswer,
+                conversationId: activeConversationId,
+              });
               
-              // For other errors, return the Vertex AI error response as is
               return res.json({
-                ...chatResponse,
-                conversationId: activeConversationId
+                answer: fallbackAnswer,
+                conversationId: activeConversationId,
+                source: "fallback",
+                original_error: chatResponse.error
               });
             }
             
-            // If no error, store and return the Vertex AI response
-            await storage.createMessage({
-              role: "assistant",
-              content: chatResponse.answer,
-              conversationId: activeConversationId,
-            });
-            
+            // For other errors, return the OpenAI error response as is
             return res.json({
               ...chatResponse,
               conversationId: activeConversationId
             });
           }
-          catch (aiError) {
-            // 5. Final fallback - pattern matching
-            console.error("All AI methods failed, using pattern matching:", aiError);
-            
-            const fallbackAnswer = findBestAnswer(message);
-            
-            // Store assistant message
-            await storage.createMessage({
-              role: "assistant",
-              content: fallbackAnswer,
-              conversationId: activeConversationId,
-            });
-            
-            return res.json({
-              answer: fallbackAnswer,
-              conversationId: activeConversationId,
-              source: "fallback",
-              fallback_reason: "all_methods_failed"
-            });
-          }
+          
+          // If no error, store and return the OpenAI response
+          await storage.createMessage({
+            role: "assistant",
+            content: chatResponse.answer,
+            conversationId: activeConversationId,
+          });
+          
+          return res.json({
+            ...chatResponse,
+            conversationId: activeConversationId
+          });
         }
+      } catch (openaiError) {
+        // If OpenAI completely fails, use fallback
+        console.error("OpenAI request failed completely, using fallback:", openaiError);
+        const fallbackAnswer = findBestAnswer(message);
+        
+        // Store assistant message
+        await storage.createMessage({
+          role: "assistant",
+          content: fallbackAnswer,
+          conversationId: activeConversationId,
+        });
+        
+        return res.json({
+          answer: fallbackAnswer,
+          conversationId: activeConversationId,
+          source: "fallback",
+          fallback_reason: "api_failure"
+        });
       }
-    } 
-    catch (error) {
+    } catch (error) {
       console.error("Error processing chat request:", error);
-      
-      // Emergency fallback - if everything else fails
+      // Last resort fallback - if everything else fails
       try {
-        // Try direct JSON search first as emergency fallback
-        try {
-          const userMessage = req.body?.message || "";
-          console.log("Attempting emergency direct JSON search for:", userMessage);
-          const directJsonResponse = await generateDirectJsonResponse(userMessage);
-          
-          return res.json({ 
-            answer: directJsonResponse.answer,
-            source: "emergency_json_search",
-            contexts: directJsonResponse.contexts,
-            error: "server_recovered" 
-          });
-        } 
-        catch (jsonError) {
-          // If JSON search fails, use the pattern matching fallback
-          console.log("Emergency JSON search failed, using pattern matching");
-          const emergencyAnswer = findBestAnswer(req.body?.message || "");
-          
-          return res.json({ 
-            answer: emergencyAnswer,
-            source: "emergency_fallback",
-            error: "server_recovered" 
-          });
-        }
-      } 
-      catch (fallbackError) {
+        const emergencyAnswer = findBestAnswer(req.body?.message || "");
+        return res.json({ 
+          answer: emergencyAnswer,
+          source: "emergency_fallback",
+          error: "server_recovered" 
+        });
+      } catch (fallbackError) {
         // If even the fallback fails, return a generic error
         return res.status(500).json({ 
           answer: "An error occurred while processing your request. Please try again later.",
@@ -271,97 +209,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint
   app.get("/api/health", (_req: Request, res: Response) => {
     res.json({ status: "ok" });
-  });
-  
-  // JSON data upload endpoint for vector store
-  app.post("/api/admin/upload-json", async (req: Request, res: Response) => {
-    try {
-      // Only accept JSON array data
-      const jsonData = req.body;
-      
-      if (!Array.isArray(jsonData)) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Data must be an array of objects" 
-        });
-      }
-      
-      if (jsonData.length === 0) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Data array cannot be empty" 
-        });
-      }
-      
-      // Temporarily save the JSON data to a file
-      const tempFilePath = path.join(process.cwd(), 'data', `temp_${Date.now()}.json`);
-      fs.writeFileSync(tempFilePath, JSON.stringify(jsonData, null, 2));
-      
-      console.log(`Received ${jsonData.length} JSON records for indexing`);
-      console.log(`Saved to temporary file: ${tempFilePath}`);
-      
-      // Determine which field to use for embedding
-      // Default to using the first field that's a string and has 'text' in its name
-      const sampleObject = jsonData[0];
-      let textField = null;
-      
-      for (const key in sampleObject) {
-        if (typeof sampleObject[key] === 'string' && 
-            (key.toLowerCase().includes('text') || key.toLowerCase().includes('content') || key.toLowerCase().includes('description'))) {
-          textField = key;
-          break;
-        }
-      }
-      
-      // If no text field found, use the first string field
-      if (!textField) {
-        for (const key in sampleObject) {
-          if (typeof sampleObject[key] === 'string' && sampleObject[key].length > 20) {
-            textField = key;
-            break;
-          }
-        }
-      }
-      
-      if (!textField) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Could not determine which field to use for embedding. Please specify a 'text' field in your data." 
-        });
-      }
-      
-      // Initialize background process to upload data
-      // This runs asynchronously so we don't block the response
-      import('./json-rag').then(async (module) => {
-        try {
-          await module.uploadJsonToPinecone(jsonData, textField);
-          console.log("Successfully processed JSON data in background");
-        } catch (error) {
-          console.error("Error processing JSON in background:", error);
-        } finally {
-          // Clean up the temporary file regardless of success or failure
-          try {
-            fs.unlinkSync(tempFilePath);
-          } catch (err) {
-            console.error("Failed to remove temporary file:", err);
-          }
-        }
-      }).catch(err => {
-        console.error("Failed to import json-rag module:", err);
-      });
-      
-      // Immediately return success, processing continues in background
-      return res.status(200).json({ 
-        success: true, 
-        message: `Processing ${jsonData.length} records in the background. Using field "${textField}" for embedding.` 
-      });
-    } catch (error) {
-      console.error("Error processing JSON upload:", error);
-      return res.status(500).json({ 
-        success: false, 
-        message: "An error occurred while processing your upload" 
-      });
-    }
   });
 
   // Feedback endpoints

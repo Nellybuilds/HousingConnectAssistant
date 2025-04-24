@@ -3,12 +3,11 @@ import { Pinecone } from "@pinecone-database/pinecone";
 import { housingConnectKnowledge } from './knowledge';
 import { Document } from "langchain/document";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import OpenAI from "openai";
+import { OpenAI } from "@langchain/openai";
 
 /**
  * Initialize the Pinecone client
  */
-// Initialize Pinecone client
 const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,
 });
@@ -207,25 +206,20 @@ ${context}
 Instructions: Using the context information provided above, answer the question as accurately and helpfully as possible. Write at a 6th grade reading level using simple words and short sentences. Explain any housing terms in simple language. If the answer cannot be determined from the context, say so clearly. Don't make up information not present in the context.
 `;
     
-    // Generate response using standard OpenAI chat completions
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024
-      messages: [
-        {
-          role: "system",
-          content: "You are Housing Connect Helper, an AI assistant that provides information about affordable housing. Write at a 6th grade reading level (simple words, short sentences, clear explanations). Avoid complex vocabulary and technical terms. Explain any necessary housing terms in simple language. Your responses should be helpful, accurate, and based on the context provided."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 800
-    });
+    // Generate response
+    const response = await openai.invoke([
+      {
+        role: "system",
+        content: "You are Housing Connect Helper, an AI assistant that provides information about affordable housing. Write at a 6th grade reading level (simple words, short sentences, clear explanations). Avoid complex vocabulary and technical terms. Explain any necessary housing terms in simple language. Your responses should be helpful, accurate, and based on the context provided."
+      },
+      {
+        role: "user",
+        content: prompt
+      }
+    ]);
     
     return {
-      answer: response.choices[0].message.content || "I don't have enough information to answer that.",
+      answer: response.toString(),
       source: "rag", 
       contexts: [context]
     };

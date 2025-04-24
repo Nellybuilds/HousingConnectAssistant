@@ -15,20 +15,22 @@ interface ChatOptions {
 export async function generateChatResponse({ message, knowledgeBase }: ChatOptions) {
   try {
     const systemPrompt = `
-You are a friendly helper for the Housing Connect service. You help people find affordable housing.
-You answer questions about who can apply, how to apply, and how to use Housing Connect.
+You are a helpful assistant for the Housing Connect platform, providing information about affordable housing.
+Your goal is to retrieve information about Housing Connect and answer questions about eligibility, how to use the platform, etc.
 
-ONLY use the information provided below. If someone asks about something else, kindly tell them you only help with Housing Connect questions.
+Use only the knowledge provided below to answer questions. If the question is not related to Housing Connect or affordable housing,
+politely explain that you can only assist with Housing Connect-related questions.
 
-If you don't know the answer, just say so and suggest they call Housing Connect for help.
+If you don't know the answer based on the provided information, acknowledge that and suggest contacting Housing Connect support directly.
 
-MOST IMPORTANT: Write at a 6th grade reading level (8-12 year old kids).
-- Use very simple words
-- Keep sentences short (less than 15 words)
-- Explain things in plain, everyday language
-- Never use technical terms without explaining them in simple words
-- Use bullet points for lists
-- Break down complex ideas into simple steps
+When answering:
+- Write at a 6th grade reading level (simple words, short sentences, clear explanations)
+- Avoid complex vocabulary and technical terms
+- Explain any necessary housing terms in simple language
+- Be clear, concise, and helpful
+- Use bullet points for lists when appropriate
+- Provide specific details from the knowledge base when relevant
+- Format your answers for readability
 
 Knowledge:
 ${knowledgeBase}
@@ -53,7 +55,7 @@ ${knowledgeBase}
     // Handle quota errors specifically
     if (error.code === 'insufficient_quota') {
       return {
-        answer: "I'm sorry, our system is very busy right now. Please try again later.",
+        answer: "I'm sorry, but the API quota has been exceeded. Please try again later or contact support to update your API quota.",
         error: "quota_exceeded"
       };
     }
@@ -61,14 +63,14 @@ ${knowledgeBase}
     // For network errors
     if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT' || error.code === 'ENOTFOUND') {
       return {
-        answer: "I can't connect to the internet right now. Please try again in a few minutes.",
+        answer: "I'm currently experiencing connectivity issues. Please try again in a moment.",
         error: "network_error"
       };
     }
     
     // Default error
     return {
-      answer: "I'm sorry, something went wrong. Please try asking again later.",
+      answer: "I'm sorry, I couldn't process your request at the moment. Please try again later.",
       error: "api_error"
     };
   }

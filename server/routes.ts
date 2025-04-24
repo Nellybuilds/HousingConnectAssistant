@@ -131,34 +131,73 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         }
       } catch (openaiError) {
-        // If OpenAI completely fails, use fallback
-        console.error("OpenAI request failed completely, using fallback:", openaiError);
-        const fallbackAnswer = findBestAnswer(message);
-        
-        // Store assistant message
-        await storage.createMessage({
-          role: "assistant",
-          content: fallbackAnswer,
-          conversationId: activeConversationId,
-        });
-        
-        return res.json({
-          answer: fallbackAnswer,
-          conversationId: activeConversationId,
-          source: "fallback",
-          fallback_reason: "api_failure"
-        });
+        // Try direct JSON search first as a fallback
+        try {
+          console.log("AI service failed, trying direct JSON search instead...");
+          const directJsonResponse = await generateDirectJsonResponse(message);
+          
+          // Store assistant message
+          await storage.createMessage({
+            role: "assistant",
+            content: directJsonResponse.answer,
+            conversationId: activeConversationId,
+          });
+          
+          return res.json({
+            answer: directJsonResponse.answer,
+            conversationId: activeConversationId,
+            source: "direct-json-search",
+            contexts: directJsonResponse.contexts,
+            fallback_reason: "api_failure"
+          });
+        } catch (jsonSearchError) {
+          console.error("Direct JSON search failed, using final fallback:", jsonSearchError);
+          
+          // Last resort fallback - pattern matching
+          const fallbackAnswer = findBestAnswer(message);
+          
+          // Store assistant message
+          await storage.createMessage({
+            role: "assistant",
+            content: fallbackAnswer,
+            conversationId: activeConversationId,
+          });
+          
+          return res.json({
+            answer: fallbackAnswer,
+            conversationId: activeConversationId,
+            source: "fallback",
+            fallback_reason: "all_methods_failed"
+          });
+        }
       }
     } catch (error) {
       console.error("Error processing chat request:", error);
       // Last resort fallback - if everything else fails
       try {
-        const emergencyAnswer = findBestAnswer(req.body?.message || "");
-        return res.json({ 
-          answer: emergencyAnswer,
-          source: "emergency_fallback",
-          error: "server_recovered" 
-        });
+        // Try direct JSON search first as emergency fallback
+        try {
+          const userMessage = req.body?.message || "";
+          console.log("Attempting emergency direct JSON search for:", userMessage);
+          const directJsonResponse = await generateDirectJsonResponse(userMessage);
+          
+          return res.json({ 
+            answer: directJsonResponse.answer,
+            source: "emergency_json_search",
+            contexts: directJsonResponse.contexts,
+            error: "server_recovered" 
+          });
+        } catch (jsonError) {
+          // If JSON search fails, use the pattern matching fallback
+          console.log("Emergency JSON search failed, using pattern matching");
+          const emergencyAnswer = findBestAnswer(req.body?.message || "");
+          
+          return res.json({ 
+            answer: emergencyAnswer,
+            source: "emergency_fallback",
+            error: "server_recovered" 
+          });
+        }
       } catch (fallbackError) {
         // If even the fallback fails, return a generic error
         return res.status(500).json({ 

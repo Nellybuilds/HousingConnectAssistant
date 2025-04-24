@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@huggingface/inference": "^2.8.1",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@langchain/community": "^0.3.41",
     "@langchain/openai": "^0.5.5",

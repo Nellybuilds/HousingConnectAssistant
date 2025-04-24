@@ -1,9 +1,9 @@
-import { OpenAIEmbeddings } from "@langchain/openai";
+import { OpenAI } from "@langchain/openai";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { housingConnectKnowledge } from './knowledge';
 import { Document } from "langchain/document";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { OpenAI } from "@langchain/openai";
+import { HuggingFaceEmbeddings } from "./huggingFaceEmbeddings";
 
 /**
  * Initialize the Pinecone client
@@ -14,7 +14,7 @@ const pinecone = new Pinecone({
 
 // Constants
 const PINECONE_INDEX_NAME = "housing-connect-knowledge";
-const EMBEDDING_DIMENSION = 1536; // OpenAI embeddings dimension
+const EMBEDDING_DIMENSION = 384; // Hugging Face all-MiniLM-L6-v2 dimension
 
 /**
  * Initialize or get an existing Pinecone index
@@ -53,10 +53,10 @@ async function getOrCreateIndex() {
 }
 
 /**
- * Initialize embeddings using OpenAI
+ * Initialize embeddings using Hugging Face
  */
-const embeddings = new OpenAIEmbeddings({
-  openAIApiKey: process.env.OPENAI_API_KEY,
+const embeddings = new HuggingFaceEmbeddings({
+  apiKey: process.env.HUGGINGFACE_API_KEY,
 });
 
 /**

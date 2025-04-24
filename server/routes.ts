@@ -6,6 +6,7 @@ import { housingConnectKnowledge } from "./knowledge";
 import { findBestAnswer } from "./fallbackChat";
 import { storage } from "./storage";
 import { generateResponse as generateJsonRagResponse } from "./json-rag";
+import { generateRAGResponse } from "./rag";
 import { generateDirectJsonResponse } from "./direct-json-search";
 import fs from 'fs';
 import path from 'path';
@@ -76,7 +77,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           contexts: directJsonResponse.contexts,
           metadata: {
             source_count: directJsonResponse.contexts?.length || 0,
-            categories: Array.from(new Set(directJsonResponse.contexts?.map(c => c.category) || []))
+            categories: Array.from(new Set(directJsonResponse.contexts?.map((c: any) => c.category) || []))
           }
         });
       } 
@@ -85,8 +86,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         // 2. Next, try RAG
         try {
-          console.log("Attempting to use JSON RAG for answer generation...");
-          const ragResponse = await generateJsonRagResponse(message);
+          console.log("Attempting to use RAG for answer generation...");
+          const ragResponse = await generateRAGResponse(message);
           
           // Store and return the RAG response
           await storage.createMessage({
@@ -98,11 +99,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.json({
             answer: ragResponse.answer,
             conversationId: activeConversationId,
-            source: "json-rag",
+            source: "rag",
             contexts: ragResponse.contexts,
             metadata: {
               source_count: ragResponse.contexts?.length || 0,
-              categories: Array.from(new Set(ragResponse.contexts?.map(c => c.category) || []))
+              categories: Array.from(new Set(ragResponse.contexts?.map((c: any) => c.category) || []))
             }
           });
         } 

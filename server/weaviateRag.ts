@@ -258,10 +258,17 @@ export async function generateWeaviateRAGResponse(question: string) {
     return {
       answer: response.answer,
       source: "weaviate_huggingface_rag", 
-      contexts: [context]
+      contexts: [context],
+      error: response.error // Pass along any error
     };
   } catch (error) {
     console.error("Error generating Weaviate RAG response:", error);
-    throw error;
+    
+    return {
+      answer: "I'm having trouble accessing information at the moment.",
+      source: "weaviate_error",
+      contexts: [],
+      error: error instanceof Error ? error.message : "Unknown error"
+    };
   }
 }

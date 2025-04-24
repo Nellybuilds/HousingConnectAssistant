@@ -8,10 +8,17 @@ interface ChatOptions {
   context: string;
 }
 
+interface ChatResponse {
+  answer: string;
+  source: string;
+  contexts: string[];
+  error?: string;
+}
+
 /**
  * Generate a chat response using Hugging Face LLM
  */
-export async function generateHuggingFaceChatResponse({ message, context }: ChatOptions) {
+export async function generateHuggingFaceChatResponse({ message, context }: ChatOptions): Promise<ChatResponse> {
   try {
     console.log("Generating response with Hugging Face LLM");
     console.log("Using context:", context.substring(0, 100) + "...");
@@ -54,6 +61,13 @@ If the answer cannot be determined from the context, say so clearly and provide 
     };
   } catch (error) {
     console.error("Error generating HuggingFace chat response:", error);
-    throw error;
+    
+    // Return an error response that matches the expected interface
+    return {
+      answer: "I'm having trouble generating a response at the moment.",
+      source: "huggingface_rag_error",
+      contexts: [context],
+      error: error instanceof Error ? error.message : "Unknown error"
+    };
   }
 }

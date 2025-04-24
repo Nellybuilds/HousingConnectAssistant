@@ -74,20 +74,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
             contexts: ragResponse.contexts
           });
         } catch (ragError) {
-          console.error("Weaviate RAG generation failed, falling back to standard OpenAI:", ragError);
+          console.error("Weaviate RAG generation failed, falling back to standard Hugging Face:", ragError);
           
-          // Fall back to standard OpenAI if RAG fails
-          const chatResponse = await generateChatResponse({
+          // Fall back to standard Hugging Face if RAG fails
+          const chatResponse = await generateHuggingFaceChatResponse({
             message,
-            knowledgeBase: housingConnectKnowledge,
+            context: housingConnectKnowledge,
           });
           
-          // If there's an error property but OpenAI still returned a response
+          // If there's an error property but Hugging Face still returned a response
           if (chatResponse.error) {
-            console.log(`OpenAI error type: ${chatResponse.error}, falling back to local knowledge base`);
+            console.log(`Hugging Face error type: ${chatResponse.error}, falling back to local knowledge base`);
             
             // For any error, use our improved fallback system
-            console.log("Using fallback for all OpenAI errors, not just quota issues");
+            console.log("Using fallback for all Hugging Face errors");
             
             // Use fallback implementation with improved matching
             const fallbackAnswer = findBestAnswer(message);
@@ -113,7 +113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             });
           }
           
-          // If no error, store and return the OpenAI response
+          // If no error, store and return the Hugging Face response
           await storage.createMessage({
             role: "assistant",
             content: chatResponse.answer,
@@ -125,9 +125,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
             conversationId: activeConversationId
           });
         }
-      } catch (openaiError) {
-        // If OpenAI completely fails, use fallback
-        console.error("OpenAI request failed completely, using fallback:", openaiError);
+      } catch (huggingFaceError) {
+        // If Hugging Face completely fails, use fallback
+        console.error("Hugging Face request failed completely, using fallback:", huggingFaceError);
         const fallbackAnswer = findBestAnswer(message);
         console.log("Generated direct fallback answer for query:", { 
           query: message, 

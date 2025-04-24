@@ -4,7 +4,7 @@ import { setupVite, serveStatic, log } from "./vite";
 import { storage } from "./storage";
 import { db } from "./db";
 import { users } from "@shared/schema";
-import { initializePineconeWithKnowledge } from "./rag";
+import { initializeWeaviateWithKnowledge } from "./weaviateRag";
 
 // Initialize a default user if no users exist
 async function initializeDefaultUser() {
@@ -67,24 +67,24 @@ app.use((req, res, next) => {
   // Initialize database with default user if needed
   await initializeDefaultUser();
   
-  // Initialize Pinecone with Housing Connect knowledge
+  // Initialize Weaviate with Housing Connect knowledge
   try {
-    log("Starting Pinecone knowledge base initialization...");
-    await initializePineconeWithKnowledge();
-    log("Pinecone knowledge base initialized successfully");
+    log("Starting Weaviate knowledge base initialization...");
+    await initializeWeaviateWithKnowledge();
+    log("Weaviate knowledge base initialized successfully");
   } catch (error) {
-    console.error("Error initializing Pinecone knowledge base:", error);
-    log("Failed to initialize Pinecone knowledge base. Continuing with fallback system.");
+    console.error("Error initializing Weaviate knowledge base:", error);
+    log("Failed to initialize Weaviate knowledge base. Continuing with fallback system.");
     
-    // Retry once more after a delay - sometimes the Pinecone API needs time
+    // Retry once more after a delay
     setTimeout(async () => {
       try {
-        log("Retrying Pinecone knowledge base initialization...");
-        await initializePineconeWithKnowledge();
-        log("Pinecone knowledge base initialized successfully on retry");
+        log("Retrying Weaviate knowledge base initialization...");
+        await initializeWeaviateWithKnowledge();
+        log("Weaviate knowledge base initialized successfully on retry");
       } catch (retryError) {
-        console.error("Error on retry initializing Pinecone knowledge base:", retryError);
-        log("Failed to initialize Pinecone knowledge base on retry. Using fallback system.");
+        console.error("Error on retry initializing Weaviate knowledge base:", retryError);
+        log("Failed to initialize Weaviate knowledge base on retry. Using fallback system.");
       }
     }, 5000); // 5 second delay
   }

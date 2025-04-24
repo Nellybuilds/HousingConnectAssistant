@@ -5,7 +5,7 @@ import { generateChatResponse } from "./openai";
 import { housingConnectKnowledge } from "./knowledge";
 import { findBestAnswer } from "./fallbackChat";
 import { storage } from "./storage";
-import { generateRAGResponse } from "./rag";
+import { generateWeaviateRAGResponse } from "./weaviateRag";
 
 // Define validation schema for chat requests
 const chatRequestSchema = z.object({
@@ -55,24 +55,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         // Try to generate response using RAG first
         try {
-          console.log("Attempting to use RAG for answer generation...");
-          const ragResponse = await generateRAGResponse(message);
+          console.log("Attempting to use Weaviate RAG for answer generation...");
+          const ragResponse = await generateWeaviateRAGResponse(message);
           
-          // Store and return the RAG response
-          await storage.createMessage({
+          // Store and return the Weaviate RAG response
+          const assistantMessage = await storage.createMessage({
             role: "assistant",
             content: ragResponse.answer,
             conversationId: activeConversationId,
           });
           
+          console.log("Stored Weaviate RAG response with ID:", assistantMessage.id);
+          
           return res.json({
             answer: ragResponse.answer,
             conversationId: activeConversationId,
-            source: "rag",
+            source: "weaviate_rag",
             contexts: ragResponse.contexts
           });
         } catch (ragError) {
-          console.error("RAG generation failed, falling back to standard OpenAI:", ragError);
+          console.error("Weaviate RAG generation failed, falling back to standard OpenAI:", ragError);
           
           // Fall back to standard OpenAI if RAG fails
           const chatResponse = await generateChatResponse({

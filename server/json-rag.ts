@@ -1,25 +1,14 @@
 import { Pinecone } from "@pinecone-database/pinecone";
-import { OpenAIEmbeddings } from "@langchain/openai";
-import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
+import { generateEmbedding, generateRAGResponse as generateGoogleRAGResponse } from './vertex-ai';
 
 // Configuration
 const INDEX_NAME = "housing-connect-index";
-const EMBEDDING_DIMENSION = 1536; // OpenAI dimensions
+const EMBEDDING_DIMENSION = 768; // Google embedding dimensions
 const BATCH_SIZE = 10; // Process in smaller batches to avoid rate limits and timeouts
 
-/**
- * Initialize OpenAI and Pinecone clients
- */
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-const embeddings = new OpenAIEmbeddings({
-  openAIApiKey: process.env.OPENAI_API_KEY,
-  modelName: "text-embedding-ada-002",
-});
+// Import OpenAI is removed since we're using Google Vertex AI
 
 const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,
@@ -131,8 +120,8 @@ export async function uploadJsonToPinecone(jsonData: any[], textField: string) {
           // Create a combined text that gives more weight to the question
           const combinedText = `${textToEmbed} ${textToEmbed} ${answerText}`;
           
-          // Generate embedding
-          const embedding = await embeddings.embedQuery(combinedText);
+          // Generate embedding using Google Vertex AI
+          const embedding = await generateEmbedding(combinedText);
           
           // Return vector record with full metadata
           return {
@@ -174,8 +163,8 @@ export async function queryForContext(question: string, topK: number = 5) {
   try {
     const index = await getOrCreateIndex();
     
-    // Generate embedding for the question
-    const queryEmbedding = await embeddings.embedQuery(question);
+    // Generate embedding for the question using Google Vertex AI
+    const queryEmbedding = await generateEmbedding(question);
     
     // Query Pinecone
     const queryResponse = await index.query({
@@ -224,32 +213,8 @@ CATEGORY: ${metadata.category || "General"}`;
       })
       .join("\n\n");
     
-    // Create a prompt that includes the context
-    const prompt = `
-Question: ${question}
-
-Context information:
-${formattedContext}
-
-Instructions: Using the context information provided above, answer the question as accurately and helpfully as possible. Write at a 6th grade reading level using simple words and short sentences. Explain any housing terms in simple language. If the answer cannot be determined from the context, say so clearly. Don't make up information not present in the context.
-`;
-    
-    // Generate response
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024
-      messages: [
-        {
-          role: "system",
-          content: "You are Housing Connect Helper, an AI assistant that provides information about affordable housing. Write at a 6th grade reading level (simple words, short sentences, clear explanations). Avoid complex vocabulary and technical terms. Explain any necessary housing terms in simple language. Your responses should be helpful, accurate, and based on the context provided."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 800
-    });
+    // Use Google Vertex AI to generate the response with the context
+    const response = await generateGoogleRAGResponse(question, contextResults);
     
     // Create formatted context pairs for the response
     const formattedContexts = contextResults.map(result => {
@@ -263,7 +228,7 @@ Instructions: Using the context information provided above, answer the question 
     });
     
     return {
-      answer: response.choices[0].message.content || "I don't have enough information to answer that.",
+      answer: response.answer || "I don't have enough information to answer that.",
       source: "json-rag", 
       contexts: formattedContexts
     };

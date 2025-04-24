@@ -6,6 +6,7 @@ import { housingConnectKnowledge } from "./knowledge";
 import { findBestAnswer } from "./fallbackChat";
 import { storage } from "./storage";
 import { generateResponse as generateJsonRagResponse } from "./json-rag";
+import { generateDirectJsonResponse } from "./direct-json-search";
 import fs from 'fs';
 import path from 'path';
 

@@ -60,8 +60,8 @@ function calculateSimilarity(query: string, text: string): number {
   }
   
   // Split into words and remove duplicates
-  const queryWords = [...new Set(normalizedQuery.split(/\s+/))];
-  const textWords = [...new Set(normalizedText.split(/\s+/))];
+  const queryWords = Array.from(new Set(normalizedQuery.split(/\s+/)));
+  const textWords = Array.from(new Set(normalizedText.split(/\s+/)));
   
   // Calculate word overlap
   let matchCount = 0;

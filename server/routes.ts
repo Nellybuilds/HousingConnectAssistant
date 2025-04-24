@@ -1,11 +1,11 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
-import { generateChatResponse } from "./openai";
 import { housingConnectKnowledge } from "./knowledge";
 import { findBestAnswer } from "./fallbackChat";
 import { storage } from "./storage";
 import { generateWeaviateRAGResponse } from "./weaviateRag";
+import { generateHuggingFaceChatResponse } from "./huggingFaceChat";
 
 // Define validation schema for chat requests
 const chatRequestSchema = z.object({

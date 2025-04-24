@@ -1,9 +1,9 @@
 import weaviate, { WeaviateClient, ApiKey } from 'weaviate-ts-client';
-import { OpenAI } from "@langchain/openai";
 import { housingConnectKnowledge } from './knowledge';
 import { Document } from "langchain/document";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { HuggingFaceEmbeddings } from "./huggingFaceEmbeddings";
+import { generateHuggingFaceChatResponse } from "./huggingFaceChat";
 import crypto from 'crypto';
 
 // Constants
@@ -238,7 +238,7 @@ export async function queryWeaviateForContext(question: string, topK: number = 3
 }
 
 /**
- * Generate a RAG-enhanced response using OpenAI
+ * Generate a RAG-enhanced response using Hugging Face
  */
 export async function generateWeaviateRAGResponse(question: string) {
   try {
@@ -249,36 +249,15 @@ export async function generateWeaviateRAGResponse(question: string) {
       throw new Error("Failed to retrieve context from vector store");
     }
     
-    // Initialize OpenAI
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+    // Use Hugging Face to generate a response
+    const response = await generateHuggingFaceChatResponse({
+      message: question,
+      context: context
     });
     
-    // Create a prompt that includes the context
-    const prompt = `
-Question: ${question}
-
-Context information from Housing Connect knowledge base:
-${context}
-
-Instructions: Using the context information provided above, answer the question as accurately and helpfully as possible. Write at a 6th grade reading level using simple words and short sentences. Explain any housing terms in simple language. If the answer cannot be determined from the context, say so clearly. Don't make up information not present in the context.
-`;
-    
-    // Generate response
-    const response = await openai.invoke([
-      {
-        role: "system",
-        content: "You are Housing Connect Helper, an AI assistant that provides information about affordable housing. Write at a 6th grade reading level (simple words, short sentences, clear explanations). Avoid complex vocabulary and technical terms. Explain any necessary housing terms in simple language. Your responses should be helpful, accurate, and based on the context provided."
-      },
-      {
-        role: "user",
-        content: prompt
-      }
-    ]);
-    
     return {
-      answer: response.toString(),
-      source: "weaviate_rag", 
+      answer: response.answer,
+      source: "weaviate_huggingface_rag", 
       contexts: [context]
     };
   } catch (error) {

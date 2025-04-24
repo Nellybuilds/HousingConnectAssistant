@@ -4,6 +4,7 @@ import { housingConnectKnowledge } from './knowledge';
 import { Document } from "langchain/document";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { HuggingFaceEmbeddings } from "./huggingFaceEmbeddings";
+import crypto from 'crypto';
 
 // Constants
 const WEAVIATE_CLASS_NAME = "HousingConnectKnowledge";
@@ -13,10 +14,12 @@ const embeddings = new HuggingFaceEmbeddings({
   apiKey: process.env.HUGGINGFACE_API_KEY,
 });
 
-// Initialize Weaviate client (local for development or remote for production)
+// Initialize Weaviate client using cloud service
 const client = weaviate.client({
-  scheme: 'http',
-  host: process.env.WEAVIATE_HOST || 'localhost:8080', // Default to local for development
+  scheme: process.env.WEAVIATE_SCHEME || 'https',
+  host: process.env.WEAVIATE_HOST || 'cluster1.weaviate-dev.network',
+  apiKey: new ApiKey(process.env.WEAVIATE_API_KEY || ''),
+  headers: { 'X-OpenAI-Api-Key': process.env.OPENAI_API_KEY || '' },
 });
 
 /**
@@ -148,10 +151,13 @@ export async function initializeWeaviateWithKnowledge() {
             
             // Import to Weaviate one at a time
             console.log(`Importing object ${i + idx + 1}/${documents.length} to Weaviate`);
+            // Generate a valid UUID v4 for Weaviate
+            const uuid = crypto.randomUUID();
+            
             await client.data
               .creator()
               .withClassName(WEAVIATE_CLASS_NAME)
-              .withId(`housing-connect-${i + idx}`)
+              .withId(uuid)
               .withProperties({
                 content: doc.pageContent,
                 source: doc.metadata.source,
@@ -204,7 +210,7 @@ export async function queryWeaviateForContext(question: string, topK: number = 3
       .withFields('content source chunkIndex')
       .withNearVector({
         vector: queryEmbedding,
-        certainty: 0.7,
+        certainty: 0.5, // Lower certainty threshold to return more results
       })
       .withLimit(topK)
       .do();
@@ -217,6 +223,13 @@ export async function queryWeaviateForContext(question: string, topK: number = 3
     const contexts = items.map((item: any) => item.content || "");
     
     console.log("Retrieved contexts:", contexts.length);
+    
+    // If no items found, use some base knowledge as fallback
+    if (contexts.length === 0) {
+      console.log("No relevant contexts found in Weaviate, using generic Housing Connect knowledge");
+      return "Housing Connect is a platform to help you find and apply for affordable housing in one place. It simplifies the application process by allowing users to create a single profile that can be used to apply to multiple housing developments. The platform is designed to make affordable housing more accessible to everyone.";
+    }
+    
     return contexts.join("\n\n");
   } catch (error) {
     console.error("Error querying Weaviate:", error);

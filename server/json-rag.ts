@@ -7,7 +7,7 @@ import path from "path";
 // Configuration
 const INDEX_NAME = "housing-connect-index";
 const EMBEDDING_DIMENSION = 1536; // OpenAI dimensions
-const BATCH_SIZE = 20; // Process in batches to avoid rate limits
+const BATCH_SIZE = 10; // Process in smaller batches to avoid rate limits and timeouts
 
 /**
  * Initialize OpenAI and Pinecone clients
@@ -30,44 +30,61 @@ const pinecone = new Pinecone({
  */
 async function getOrCreateIndex() {
   try {
-    // List existing indexes
-    const indexes = await pinecone.listIndexes();
-    
-    // Check if our index exists
-    let indexExists = false;
-    const indexList = Object.entries(indexes || {});
-    for (const [name, _details] of indexList) {
-      if (name === INDEX_NAME) {
-        indexExists = true;
-        break;
-      }
-    }
-    
-    if (!indexExists) {
-      console.log(`Creating new Pinecone index: ${INDEX_NAME}`);
+    // List existing indexes to check if our index exists
+    try {
+      const indexes = await pinecone.listIndexes();
       
-      // Create a new index
-      await pinecone.createIndex({
-        name: INDEX_NAME,
-        dimension: EMBEDDING_DIMENSION,
-        metric: "cosine",
-        spec: { 
-          serverless: { 
-            cloud: "aws", 
-            region: "us-east-1" // Use us-east-1 for free tier compatibility
-          } 
+      // Check if our index exists
+      let indexExists = false;
+      const indexList = Object.entries(indexes || {});
+      for (const [name, _details] of indexList) {
+        if (name === INDEX_NAME) {
+          console.log(`Pinecone index '${INDEX_NAME}' already exists`);
+          indexExists = true;
+          break;
         }
-      });
+      }
       
-      // Wait for the index to be ready
-      console.log("Waiting for Pinecone index to initialize...");
-      await new Promise(resolve => setTimeout(resolve, 30000));
+      // If index doesn't exist, create it
+      if (!indexExists) {
+        console.log(`Creating new Pinecone index: ${INDEX_NAME}`);
+        
+        try {
+          // Create a new index
+          await pinecone.createIndex({
+            name: INDEX_NAME,
+            dimension: EMBEDDING_DIMENSION,
+            metric: "cosine",
+            spec: { 
+              serverless: { 
+                cloud: "aws", 
+                region: "us-east-1" // Use us-east-1 for free tier compatibility
+              } 
+            }
+          });
+          
+          // Wait briefly for the index to begin initialization
+          console.log("Waiting briefly for Pinecone index to start initialization...");
+          await new Promise(resolve => setTimeout(resolve, 5000));
+        } catch (createError: any) {
+          // Handle case where index might have been created in another process
+          if (createError.message && createError.message.includes("ALREADY_EXISTS")) {
+            console.log(`Index already exists (created by another process)`);
+          } else {
+            throw createError;
+          }
+        }
+      }
+    } catch (listError: any) {
+      console.error("Error checking existing indexes:", listError.message || listError);
+      // Continue anyway, attempt to use the index regardless
     }
     
-    // Get the index
+    // Try to get the index regardless of whether we created it or not
+    console.log(`Connecting to index '${INDEX_NAME}'...`);
     return pinecone.Index(INDEX_NAME);
-  } catch (error) {
-    console.error("Error getting or creating index:", error);
+  } catch (error: any) {
+    console.error("Error getting or creating index:", error.message || error);
     throw error;
   }
 }

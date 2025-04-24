@@ -1,0 +1,1402 @@
+[
+  {
+    "id": 1,
+    "category": "AMI",
+    "question": "What is AMI?",
+    "answer": "AMI means Area Median Income. It shows how much money families earn in an area.",
+    "updated_at": "2025-03-17T00:43:36.185991"
+  },
+  {
+    "id": 2,
+    "category": "AMI",
+    "question": "How is AMI used?",
+    "answer": "AMI helps figure out if you can apply for affordable housing.",
+    "updated_at": "2024-07-02T00:43:36.186015"
+  },
+  {
+    "id": 3,
+    "category": "AMI",
+    "question": "What is 100% AMI?",
+    "answer": "100% AMI is the middle income of a city. Half the people make more, half make less.",
+    "updated_at": "2025-03-12T00:43:36.186022"
+  },
+  {
+    "id": 4,
+    "category": "Log Numbers",
+    "question": "What is a log number?",
+    "answer": "A log number is a number you get when you apply. It helps track your place in line.",
+    "updated_at": "2024-08-06T00:43:36.186026"
+  },
+  {
+    "id": 5,
+    "category": "Log Numbers",
+    "question": "Do lower log numbers mean better chances?",
+    "answer": "Yes, a lower log number usually means a better chance.",
+    "updated_at": "2025-02-19T00:43:36.186031"
+  },
+  {
+    "id": 6,
+    "category": "Log Numbers",
+    "question": "Where do I find my log number?",
+    "answer": "You see your log number in your Housing Connect account after you apply.",
+    "updated_at": "2024-05-12T00:43:36.186035"
+  },
+  {
+    "id": 7,
+    "category": "Income Requirements",
+    "question": "How much money do I need to make?",
+    "answer": "It depends on the building. Each one has its own income rules.",
+    "updated_at": "2024-06-15T00:43:36.186041"
+  },
+  {
+    "id": 8,
+    "category": "Income Requirements",
+    "question": "Can I apply if I don\u2019t have a job?",
+    "answer": "Yes, you can use other income like Social Security or child support.",
+    "updated_at": "2024-12-18T00:43:36.186046"
+  },
+  {
+    "id": 9,
+    "category": "Income Requirements",
+    "question": "Do I need to show proof of income?",
+    "answer": "Yes, you must show papers like pay stubs or tax forms.",
+    "updated_at": "2025-03-19T00:43:36.186055"
+  },
+  {
+    "id": 10,
+    "category": "Eligibility",
+    "question": "Can I apply if I live outside NYC?",
+    "answer": "Yes, but NYC residents get first pick.",
+    "updated_at": "2025-04-20T00:43:36.186060"
+  },
+  {
+    "id": 11,
+    "category": "Eligibility",
+    "question": "Can I apply if I already have housing?",
+    "answer": "Yes, but your need for housing is looked at.",
+    "updated_at": "2024-09-13T00:43:36.186063"
+  },
+  {
+    "id": 12,
+    "category": "Eligibility",
+    "question": "What age do I need to be?",
+    "answer": "You must be at least 18 years old.",
+    "updated_at": "2024-06-29T00:43:36.186067"
+  },
+  {
+    "id": 13,
+    "category": "Application Process",
+    "question": "How do I apply?",
+    "answer": "You can apply online at the Housing Connect website.",
+    "updated_at": "2024-06-25T00:43:36.186071"
+  },
+  {
+    "id": 14,
+    "category": "Application Process",
+    "question": "Can I apply for more than one building?",
+    "answer": "Yes, you can apply to many at the same time.",
+    "updated_at": "2024-08-05T00:43:36.186075"
+  },
+  {
+    "id": 15,
+    "category": "Application Process",
+    "question": "Do I need to pay to apply?",
+    "answer": "No, applying is free.",
+    "updated_at": "2025-01-12T00:43:36.186080"
+  },
+  {
+    "id": 16,
+    "category": "Common Issues",
+    "question": "What if I forgot my password?",
+    "answer": "Click 'Forgot Password' on the login page to reset it.",
+    "updated_at": "2024-05-20T00:43:36.186086"
+  },
+  {
+    "id": 17,
+    "category": "Common Issues",
+    "question": "What if I made a mistake on my form?",
+    "answer": "You can fix it in your account before the deadline.",
+    "updated_at": "2025-03-03T00:43:36.186092"
+  },
+  {
+    "id": 18,
+    "category": "Common Issues",
+    "question": "Why was I disqualified?",
+    "answer": "It could be because of income, credit, or missing documents.",
+    "updated_at": "2024-10-06T00:43:36.186097"
+  },
+  {
+    "id": 19,
+    "category": "Jargon",
+    "question": "What does 'lottery' mean?",
+    "answer": "It means a random draw to pick who gets looked at for apartments.",
+    "updated_at": "2024-06-05T00:43:36.186103"
+  },
+  {
+    "id": 20,
+    "category": "Jargon",
+    "question": "What is 'affordable housing'?",
+    "answer": "It means apartments that cost less for people who earn less.",
+    "updated_at": "2024-11-11T00:43:36.186109"
+  },
+  {
+    "id": 21,
+    "category": "Jargon",
+    "question": "What is 'proof of assets'?",
+    "answer": "It means papers that show things you own, like savings or cars.",
+    "updated_at": "2024-10-16T00:43:36.186115"
+  },
+  {
+    "id": 22,
+    "category": "AMI",
+    "question": "What is AMI?",
+    "answer": "AMI means Area Median Income. It shows how much money families earn in an area.",
+    "updated_at": "2024-12-22T00:43:36.186121"
+  },
+  {
+    "id": 23,
+    "category": "AMI",
+    "question": "How is AMI used?",
+    "answer": "AMI helps figure out if you can apply for affordable housing.",
+    "updated_at": "2024-09-13T00:43:36.186125"
+  },
+  {
+    "id": 24,
+    "category": "AMI",
+    "question": "What is 100% AMI?",
+    "answer": "100% AMI is the middle income of a city. Half the people make more, half make less.",
+    "updated_at": "2024-10-19T00:43:36.186129"
+  },
+  {
+    "id": 25,
+    "category": "Log Numbers",
+    "question": "What is a log number?",
+    "answer": "A log number is a number you get when you apply. It helps track your place in line.",
+    "updated_at": "2024-10-19T00:43:36.186136"
+  },
+  {
+    "id": 26,
+    "category": "Log Numbers",
+    "question": "Do lower log numbers mean better chances?",
+    "answer": "Yes, a lower log number usually means a better chance.",
+    "updated_at": "2024-05-29T00:43:36.186141"
+  },
+  {
+    "id": 27,
+    "category": "Log Numbers",
+    "question": "Where do I find my log number?",
+    "answer": "You see your log number in your Housing Connect account after you apply.",
+    "updated_at": "2024-09-27T00:43:36.186147"
+  },
+  {
+    "id": 28,
+    "category": "Income Requirements",
+    "question": "How much money do I need to make?",
+    "answer": "It depends on the building. Each one has its own income rules.",
+    "updated_at": "2025-03-02T00:43:36.186153"
+  },
+  {
+    "id": 29,
+    "category": "Income Requirements",
+    "question": "Can I apply if I don\u2019t have a job?",
+    "answer": "Yes, you can use other income like Social Security or child support.",
+    "updated_at": "2024-05-30T00:43:36.186158"
+  },
+  {
+    "id": 30,
+    "category": "Income Requirements",
+    "question": "Do I need to show proof of income?",
+    "answer": "Yes, you must show papers like pay stubs or tax forms.",
+    "updated_at": "2024-08-26T00:43:36.186164"
+  },
+  {
+    "id": 31,
+    "category": "Eligibility",
+    "question": "Can I apply if I live outside NYC?",
+    "answer": "Yes, but NYC residents get first pick.",
+    "updated_at": "2024-05-19T00:43:36.186170"
+  },
+  {
+    "id": 32,
+    "category": "Eligibility",
+    "question": "Can I apply if I already have housing?",
+    "answer": "Yes, but your need for housing is looked at.",
+    "updated_at": "2024-12-15T00:43:36.186174"
+  },
+  {
+    "id": 33,
+    "category": "Eligibility",
+    "question": "What age do I need to be?",
+    "answer": "You must be at least 18 years old.",
+    "updated_at": "2025-04-12T00:43:36.186178"
+  },
+  {
+    "id": 34,
+    "category": "Application Process",
+    "question": "How do I apply?",
+    "answer": "You can apply online at the Housing Connect website.",
+    "updated_at": "2025-03-29T00:43:36.186182"
+  },
+  {
+    "id": 35,
+    "category": "Application Process",
+    "question": "Can I apply for more than one building?",
+    "answer": "Yes, you can apply to many at the same time.",
+    "updated_at": "2025-02-24T00:43:36.186185"
+  },
+  {
+    "id": 36,
+    "category": "Application Process",
+    "question": "Do I need to pay to apply?",
+    "answer": "No, applying is free.",
+    "updated_at": "2024-08-21T00:43:36.186189"
+  },
+  {
+    "id": 37,
+    "category": "Common Issues",
+    "question": "What if I forgot my password?",
+    "answer": "Click 'Forgot Password' on the login page to reset it.",
+    "updated_at": "2024-11-03T00:43:36.186193"
+  },
+  {
+    "id": 38,
+    "category": "Common Issues",
+    "question": "What if I made a mistake on my form?",
+    "answer": "You can fix it in your account before the deadline.",
+    "updated_at": "2025-02-02T00:43:36.186196"
+  },
+  {
+    "id": 39,
+    "category": "Common Issues",
+    "question": "Why was I disqualified?",
+    "answer": "It could be because of income, credit, or missing documents.",
+    "updated_at": "2024-06-06T00:43:36.186200"
+  },
+  {
+    "id": 40,
+    "category": "Jargon",
+    "question": "What does 'lottery' mean?",
+    "answer": "It means a random draw to pick who gets looked at for apartments.",
+    "updated_at": "2024-12-24T00:43:36.186205"
+  },
+  {
+    "id": 41,
+    "category": "Jargon",
+    "question": "What is 'affordable housing'?",
+    "answer": "It means apartments that cost less for people who earn less.",
+    "updated_at": "2024-05-14T00:43:36.186208"
+  },
+  {
+    "id": 42,
+    "category": "Jargon",
+    "question": "What is 'proof of assets'?",
+    "answer": "It means papers that show things you own, like savings or cars.",
+    "updated_at": "2024-11-11T00:43:36.186212"
+  },
+  {
+    "id": 43,
+    "category": "AMI",
+    "question": "What is AMI?",
+    "answer": "AMI means Area Median Income. It shows how much money families earn in an area.",
+    "updated_at": "2024-07-15T00:43:36.186216"
+  },
+  {
+    "id": 44,
+    "category": "AMI",
+    "question": "How is AMI used?",
+    "answer": "AMI helps figure out if you can apply for affordable housing.",
+    "updated_at": "2024-12-25T00:43:36.186220"
+  },
+  {
+    "id": 45,
+    "category": "AMI",
+    "question": "What is 100% AMI?",
+    "answer": "100% AMI is the middle income of a city. Half the people make more, half make less.",
+    "updated_at": "2025-03-15T00:43:36.186223"
+  },
+  {
+    "id": 46,
+    "category": "Log Numbers",
+    "question": "What is a log number?",
+    "answer": "A log number is a number you get when you apply. It helps track your place in line.",
+    "updated_at": "2025-01-02T00:43:36.186226"
+  },
+  {
+    "id": 47,
+    "category": "Log Numbers",
+    "question": "Do lower log numbers mean better chances?",
+    "answer": "Yes, a lower log number usually means a better chance.",
+    "updated_at": "2024-12-29T00:43:36.186230"
+  },
+  {
+    "id": 48,
+    "category": "Log Numbers",
+    "question": "Where do I find my log number?",
+    "answer": "You see your log number in your Housing Connect account after you apply.",
+    "updated_at": "2024-10-21T00:43:36.186234"
+  },
+  {
+    "id": 49,
+    "category": "Income Requirements",
+    "question": "How much money do I need to make?",
+    "answer": "It depends on the building. Each one has its own income rules.",
+    "updated_at": "2025-03-18T00:43:36.186249"
+  },
+  {
+    "id": 50,
+    "category": "Income Requirements",
+    "question": "Can I apply if I don\u2019t have a job?",
+    "answer": "Yes, you can use other income like Social Security or child support.",
+    "updated_at": "2024-07-26T00:43:36.186253"
+  },
+  {
+    "id": 51,
+    "category": "Income Requirements",
+    "question": "Do I need to show proof of income?",
+    "answer": "Yes, you must show papers like pay stubs or tax forms.",
+    "updated_at": "2025-01-13T00:43:36.186256"
+  },
+  {
+    "id": 52,
+    "category": "Eligibility",
+    "question": "Can I apply if I live outside NYC?",
+    "answer": "Yes, but NYC residents get first pick.",
+    "updated_at": "2024-11-23T00:43:36.186260"
+  },
+  {
+    "id": 53,
+    "category": "Eligibility",
+    "question": "Can I apply if I already have housing?",
+    "answer": "Yes, but your need for housing is looked at.",
+    "updated_at": "2025-02-17T00:43:36.186264"
+  },
+  {
+    "id": 54,
+    "category": "Eligibility",
+    "question": "What age do I need to be?",
+    "answer": "You must be at least 18 years old.",
+    "updated_at": "2025-01-31T00:43:36.186268"
+  },
+  {
+    "id": 55,
+    "category": "Application Process",
+    "question": "How do I apply?",
+    "answer": "You can apply online at the Housing Connect website.",
+    "updated_at": "2024-06-17T00:43:36.186271"
+  },
+  {
+    "id": 56,
+    "category": "Application Process",
+    "question": "Can I apply for more than one building?",
+    "answer": "Yes, you can apply to many at the same time.",
+    "updated_at": "2024-11-24T00:43:36.186275"
+  },
+  {
+    "id": 57,
+    "category": "Application Process",
+    "question": "Do I need to pay to apply?",
+    "answer": "No, applying is free.",
+    "updated_at": "2024-06-24T00:43:36.186279"
+  },
+  {
+    "id": 58,
+    "category": "Common Issues",
+    "question": "What if I forgot my password?",
+    "answer": "Click 'Forgot Password' on the login page to reset it.",
+    "updated_at": "2024-11-03T00:43:36.186282"
+  },
+  {
+    "id": 59,
+    "category": "Common Issues",
+    "question": "What if I made a mistake on my form?",
+    "answer": "You can fix it in your account before the deadline.",
+    "updated_at": "2024-09-21T00:43:36.186286"
+  },
+  {
+    "id": 60,
+    "category": "Common Issues",
+    "question": "Why was I disqualified?",
+    "answer": "It could be because of income, credit, or missing documents.",
+    "updated_at": "2024-05-01T00:43:36.186289"
+  },
+  {
+    "id": 61,
+    "category": "Jargon",
+    "question": "What does 'lottery' mean?",
+    "answer": "It means a random draw to pick who gets looked at for apartments.",
+    "updated_at": "2025-01-12T00:43:36.186293"
+  },
+  {
+    "id": 62,
+    "category": "Jargon",
+    "question": "What is 'affordable housing'?",
+    "answer": "It means apartments that cost less for people who earn less.",
+    "updated_at": "2024-07-23T00:43:36.186296"
+  },
+  {
+    "id": 63,
+    "category": "Jargon",
+    "question": "What is 'proof of assets'?",
+    "answer": "It means papers that show things you own, like savings or cars.",
+    "updated_at": "2024-09-21T00:43:36.186300"
+  },
+  {
+    "id": 64,
+    "category": "AMI",
+    "question": "What is AMI?",
+    "answer": "AMI means Area Median Income. It shows how much money families earn in an area.",
+    "updated_at": "2024-08-15T00:43:36.186304"
+  },
+  {
+    "id": 65,
+    "category": "AMI",
+    "question": "How is AMI used?",
+    "answer": "AMI helps figure out if you can apply for affordable housing.",
+    "updated_at": "2024-09-20T00:43:36.186307"
+  },
+  {
+    "id": 66,
+    "category": "AMI",
+    "question": "What is 100% AMI?",
+    "answer": "100% AMI is the middle income of a city. Half the people make more, half make less.",
+    "updated_at": "2024-08-07T00:43:36.186311"
+  },
+  {
+    "id": 67,
+    "category": "Log Numbers",
+    "question": "What is a log number?",
+    "answer": "A log number is a number you get when you apply. It helps track your place in line.",
+    "updated_at": "2025-01-12T00:43:36.186314"
+  },
+  {
+    "id": 68,
+    "category": "Log Numbers",
+    "question": "Do lower log numbers mean better chances?",
+    "answer": "Yes, a lower log number usually means a better chance.",
+    "updated_at": "2025-02-17T00:43:36.186318"
+  },
+  {
+    "id": 69,
+    "category": "Log Numbers",
+    "question": "Where do I find my log number?",
+    "answer": "You see your log number in your Housing Connect account after you apply.",
+    "updated_at": "2024-09-09T00:43:36.186321"
+  },
+  {
+    "id": 70,
+    "category": "Income Requirements",
+    "question": "How much money do I need to make?",
+    "answer": "It depends on the building. Each one has its own income rules.",
+    "updated_at": "2024-07-20T00:43:36.186325"
+  },
+  {
+    "id": 71,
+    "category": "Income Requirements",
+    "question": "Can I apply if I don\u2019t have a job?",
+    "answer": "Yes, you can use other income like Social Security or child support.",
+    "updated_at": "2024-09-15T00:43:36.186328"
+  },
+  {
+    "id": 72,
+    "category": "Income Requirements",
+    "question": "Do I need to show proof of income?",
+    "answer": "Yes, you must show papers like pay stubs or tax forms.",
+    "updated_at": "2024-05-08T00:43:36.186332"
+  },
+  {
+    "id": 73,
+    "category": "Eligibility",
+    "question": "Can I apply if I live outside NYC?",
+    "answer": "Yes, but NYC residents get first pick.",
+    "updated_at": "2024-06-02T00:43:36.186337"
+  },
+  {
+    "id": 74,
+    "category": "Eligibility",
+    "question": "Can I apply if I already have housing?",
+    "answer": "Yes, but your need for housing is looked at.",
+    "updated_at": "2024-09-27T00:43:36.186343"
+  },
+  {
+    "id": 75,
+    "category": "Eligibility",
+    "question": "What age do I need to be?",
+    "answer": "You must be at least 18 years old.",
+    "updated_at": "2024-10-08T00:43:36.186349"
+  },
+  {
+    "id": 76,
+    "category": "Application Process",
+    "question": "How do I apply?",
+    "answer": "You can apply online at the Housing Connect website.",
+    "updated_at": "2024-12-20T00:43:36.186354"
+  },
+  {
+    "id": 77,
+    "category": "Application Process",
+    "question": "Can I apply for more than one building?",
+    "answer": "Yes, you can apply to many at the same time.",
+    "updated_at": "2024-05-18T00:43:36.186359"
+  },
+  {
+    "id": 78,
+    "category": "Application Process",
+    "question": "Do I need to pay to apply?",
+    "answer": "No, applying is free.",
+    "updated_at": "2024-11-24T00:43:36.186365"
+  },
+  {
+    "id": 79,
+    "category": "Common Issues",
+    "question": "What if I forgot my password?",
+    "answer": "Click 'Forgot Password' on the login page to reset it.",
+    "updated_at": "2025-02-11T00:43:36.186372"
+  },
+  {
+    "id": 80,
+    "category": "Common Issues",
+    "question": "What if I made a mistake on my form?",
+    "answer": "You can fix it in your account before the deadline.",
+    "updated_at": "2025-01-11T00:43:36.186377"
+  },
+  {
+    "id": 81,
+    "category": "Common Issues",
+    "question": "Why was I disqualified?",
+    "answer": "It could be because of income, credit, or missing documents.",
+    "updated_at": "2024-08-08T00:43:36.186380"
+  },
+  {
+    "id": 82,
+    "category": "Jargon",
+    "question": "What does 'lottery' mean?",
+    "answer": "It means a random draw to pick who gets looked at for apartments.",
+    "updated_at": "2024-08-27T00:43:36.186384"
+  },
+  {
+    "id": 83,
+    "category": "Jargon",
+    "question": "What is 'affordable housing'?",
+    "answer": "It means apartments that cost less for people who earn less.",
+    "updated_at": "2024-10-22T00:43:36.186387"
+  },
+  {
+    "id": 84,
+    "category": "Jargon",
+    "question": "What is 'proof of assets'?",
+    "answer": "It means papers that show things you own, like savings or cars.",
+    "updated_at": "2024-05-07T00:43:36.186391"
+  },
+  {
+    "id": 85,
+    "category": "AMI",
+    "question": "What is AMI?",
+    "answer": "AMI means Area Median Income. It shows how much money families earn in an area.",
+    "updated_at": "2024-05-15T00:43:36.186395"
+  },
+  {
+    "id": 86,
+    "category": "AMI",
+    "question": "How is AMI used?",
+    "answer": "AMI helps figure out if you can apply for affordable housing.",
+    "updated_at": "2024-08-16T00:43:36.186398"
+  },
+  {
+    "id": 87,
+    "category": "AMI",
+    "question": "What is 100% AMI?",
+    "answer": "100% AMI is the middle income of a city. Half the people make more, half make less.",
+    "updated_at": "2024-07-08T00:43:36.186402"
+  },
+  {
+    "id": 88,
+    "category": "Log Numbers",
+    "question": "What is a log number?",
+    "answer": "A log number is a number you get when you apply. It helps track your place in line.",
+    "updated_at": "2024-08-23T00:43:36.186406"
+  },
+  {
+    "id": 89,
+    "category": "Log Numbers",
+    "question": "Do lower log numbers mean better chances?",
+    "answer": "Yes, a lower log number usually means a better chance.",
+    "updated_at": "2024-08-29T00:43:36.186409"
+  },
+  {
+    "id": 90,
+    "category": "Log Numbers",
+    "question": "Where do I find my log number?",
+    "answer": "You see your log number in your Housing Connect account after you apply.",
+    "updated_at": "2025-01-04T00:43:36.186413"
+  },
+  {
+    "id": 91,
+    "category": "Income Requirements",
+    "question": "How much money do I need to make?",
+    "answer": "It depends on the building. Each one has its own income rules.",
+    "updated_at": "2024-11-02T00:43:36.186416"
+  },
+  {
+    "id": 92,
+    "category": "Income Requirements",
+    "question": "Can I apply if I don\u2019t have a job?",
+    "answer": "Yes, you can use other income like Social Security or child support.",
+    "updated_at": "2024-06-21T00:43:36.186419"
+  },
+  {
+    "id": 93,
+    "category": "Income Requirements",
+    "question": "Do I need to show proof of income?",
+    "answer": "Yes, you must show papers like pay stubs or tax forms.",
+    "updated_at": "2024-10-09T00:43:36.186423"
+  },
+  {
+    "id": 94,
+    "category": "Eligibility",
+    "question": "Can I apply if I live outside NYC?",
+    "answer": "Yes, but NYC residents get first pick.",
+    "updated_at": "2024-05-10T00:43:36.186426"
+  },
+  {
+    "id": 95,
+    "category": "Eligibility",
+    "question": "Can I apply if I already have housing?",
+    "answer": "Yes, but your need for housing is looked at.",
+    "updated_at": "2024-06-26T00:43:36.186430"
+  },
+  {
+    "id": 96,
+    "category": "Eligibility",
+    "question": "What age do I need to be?",
+    "answer": "You must be at least 18 years old.",
+    "updated_at": "2025-02-19T00:43:36.186433"
+  },
+  {
+    "id": 97,
+    "category": "Application Process",
+    "question": "How do I apply?",
+    "answer": "You can apply online at the Housing Connect website.",
+    "updated_at": "2024-06-14T00:43:36.186437"
+  },
+  {
+    "id": 98,
+    "category": "Application Process",
+    "question": "Can I apply for more than one building?",
+    "answer": "Yes, you can apply to many at the same time.",
+    "updated_at": "2025-02-24T00:43:36.186440"
+  },
+  {
+    "id": 99,
+    "category": "Application Process",
+    "question": "Do I need to pay to apply?",
+    "answer": "No, applying is free.",
+    "updated_at": "2025-03-21T00:43:36.186443"
+  },
+  {
+    "id": 100,
+    "category": "Common Issues",
+    "question": "What if I forgot my password?",
+    "answer": "Click 'Forgot Password' on the login page to reset it.",
+    "updated_at": "2024-11-16T00:43:36.186452"
+  },
+  {
+    "id": 101,
+    "category": "Common Issues",
+    "question": "What if I made a mistake on my form?",
+    "answer": "You can fix it in your account before the deadline.",
+    "updated_at": "2024-11-06T00:43:36.186455"
+  },
+  {
+    "id": 102,
+    "category": "Common Issues",
+    "question": "Why was I disqualified?",
+    "answer": "It could be because of income, credit, or missing documents.",
+    "updated_at": "2025-04-12T00:43:36.186459"
+  },
+  {
+    "id": 103,
+    "category": "Jargon",
+    "question": "What does 'lottery' mean?",
+    "answer": "It means a random draw to pick who gets looked at for apartments.",
+    "updated_at": "2025-04-10T00:43:36.186464"
+  },
+  {
+    "id": 104,
+    "category": "Jargon",
+    "question": "What is 'affordable housing'?",
+    "answer": "It means apartments that cost less for people who earn less.",
+    "updated_at": "2024-10-25T00:43:36.186467"
+  },
+  {
+    "id": 105,
+    "category": "Jargon",
+    "question": "What is 'proof of assets'?",
+    "answer": "It means papers that show things you own, like savings or cars.",
+    "updated_at": "2024-11-26T00:43:36.186471"
+  },
+  {
+    "id": 106,
+    "category": "AMI",
+    "question": "What is AMI?",
+    "answer": "AMI means Area Median Income. It shows how much money families earn in an area.",
+    "updated_at": "2025-03-06T00:43:36.186474"
+  },
+  {
+    "id": 107,
+    "category": "AMI",
+    "question": "How is AMI used?",
+    "answer": "AMI helps figure out if you can apply for affordable housing.",
+    "updated_at": "2024-09-06T00:43:36.186478"
+  },
+  {
+    "id": 108,
+    "category": "AMI",
+    "question": "What is 100% AMI?",
+    "answer": "100% AMI is the middle income of a city. Half the people make more, half make less.",
+    "updated_at": "2024-11-08T00:43:36.186481"
+  },
+  {
+    "id": 109,
+    "category": "Log Numbers",
+    "question": "What is a log number?",
+    "answer": "A log number is a number you get when you apply. It helps track your place in line.",
+    "updated_at": "2025-02-04T00:43:36.186484"
+  },
+  {
+    "id": 110,
+    "category": "Log Numbers",
+    "question": "Do lower log numbers mean better chances?",
+    "answer": "Yes, a lower log number usually means a better chance.",
+    "updated_at": "2024-11-09T00:43:36.186488"
+  },
+  {
+    "id": 111,
+    "category": "Log Numbers",
+    "question": "Where do I find my log number?",
+    "answer": "You see your log number in your Housing Connect account after you apply.",
+    "updated_at": "2024-10-30T00:43:36.186491"
+  },
+  {
+    "id": 112,
+    "category": "Income Requirements",
+    "question": "How much money do I need to make?",
+    "answer": "It depends on the building. Each one has its own income rules.",
+    "updated_at": "2024-08-14T00:43:36.186495"
+  },
+  {
+    "id": 113,
+    "category": "Income Requirements",
+    "question": "Can I apply if I don\u2019t have a job?",
+    "answer": "Yes, you can use other income like Social Security or child support.",
+    "updated_at": "2025-02-21T00:43:36.186498"
+  },
+  {
+    "id": 114,
+    "category": "Income Requirements",
+    "question": "Do I need to show proof of income?",
+    "answer": "Yes, you must show papers like pay stubs or tax forms.",
+    "updated_at": "2024-09-04T00:43:36.186501"
+  },
+  {
+    "id": 115,
+    "category": "Eligibility",
+    "question": "Can I apply if I live outside NYC?",
+    "answer": "Yes, but NYC residents get first pick.",
+    "updated_at": "2024-12-14T00:43:36.186505"
+  },
+  {
+    "id": 116,
+    "category": "Eligibility",
+    "question": "Can I apply if I already have housing?",
+    "answer": "Yes, but your need for housing is looked at.",
+    "updated_at": "2024-10-20T00:43:36.186508"
+  },
+  {
+    "id": 117,
+    "category": "Eligibility",
+    "question": "What age do I need to be?",
+    "answer": "You must be at least 18 years old.",
+    "updated_at": "2025-02-06T00:43:36.186511"
+  },
+  {
+    "id": 118,
+    "category": "Application Process",
+    "question": "How do I apply?",
+    "answer": "You can apply online at the Housing Connect website.",
+    "updated_at": "2024-06-18T00:43:36.186515"
+  },
+  {
+    "id": 119,
+    "category": "Application Process",
+    "question": "Can I apply for more than one building?",
+    "answer": "Yes, you can apply to many at the same time.",
+    "updated_at": "2024-08-06T00:43:36.186518"
+  },
+  {
+    "id": 120,
+    "category": "Application Process",
+    "question": "Do I need to pay to apply?",
+    "answer": "No, applying is free.",
+    "updated_at": "2024-07-24T00:43:36.186521"
+  },
+  {
+    "id": 121,
+    "category": "Common Issues",
+    "question": "What if I forgot my password?",
+    "answer": "Click 'Forgot Password' on the login page to reset it.",
+    "updated_at": "2024-07-11T00:43:36.186525"
+  },
+  {
+    "id": 122,
+    "category": "Common Issues",
+    "question": "What if I made a mistake on my form?",
+    "answer": "You can fix it in your account before the deadline.",
+    "updated_at": "2025-03-28T00:43:36.186528"
+  },
+  {
+    "id": 123,
+    "category": "Common Issues",
+    "question": "Why was I disqualified?",
+    "answer": "It could be because of income, credit, or missing documents.",
+    "updated_at": "2024-06-18T00:43:36.186531"
+  },
+  {
+    "id": 124,
+    "category": "Jargon",
+    "question": "What does 'lottery' mean?",
+    "answer": "It means a random draw to pick who gets looked at for apartments.",
+    "updated_at": "2025-03-09T00:43:36.186535"
+  },
+  {
+    "id": 125,
+    "category": "Jargon",
+    "question": "What is 'affordable housing'?",
+    "answer": "It means apartments that cost less for people who earn less.",
+    "updated_at": "2024-05-08T00:43:36.186538"
+  },
+  {
+    "id": 126,
+    "category": "Jargon",
+    "question": "What is 'proof of assets'?",
+    "answer": "It means papers that show things you own, like savings or cars.",
+    "updated_at": "2024-12-15T00:43:36.186542"
+  },
+  {
+    "id": 127,
+    "category": "AMI",
+    "question": "What is AMI?",
+    "answer": "AMI means Area Median Income. It shows how much money families earn in an area.",
+    "updated_at": "2025-02-06T00:43:36.186545"
+  },
+  {
+    "id": 128,
+    "category": "AMI",
+    "question": "How is AMI used?",
+    "answer": "AMI helps figure out if you can apply for affordable housing.",
+    "updated_at": "2025-01-31T00:43:36.186549"
+  },
+  {
+    "id": 129,
+    "category": "AMI",
+    "question": "What is 100% AMI?",
+    "answer": "100% AMI is the middle income of a city. Half the people make more, half make less.",
+    "updated_at": "2025-01-30T00:43:36.186552"
+  },
+  {
+    "id": 130,
+    "category": "Log Numbers",
+    "question": "What is a log number?",
+    "answer": "A log number is a number you get when you apply. It helps track your place in line.",
+    "updated_at": "2024-08-22T00:43:36.186556"
+  },
+  {
+    "id": 131,
+    "category": "Log Numbers",
+    "question": "Do lower log numbers mean better chances?",
+    "answer": "Yes, a lower log number usually means a better chance.",
+    "updated_at": "2024-10-19T00:43:36.186559"
+  },
+  {
+    "id": 132,
+    "category": "Log Numbers",
+    "question": "Where do I find my log number?",
+    "answer": "You see your log number in your Housing Connect account after you apply.",
+    "updated_at": "2024-12-31T00:43:36.186563"
+  },
+  {
+    "id": 133,
+    "category": "Income Requirements",
+    "question": "How much money do I need to make?",
+    "answer": "It depends on the building. Each one has its own income rules.",
+    "updated_at": "2024-06-12T00:43:36.186566"
+  },
+  {
+    "id": 134,
+    "category": "Income Requirements",
+    "question": "Can I apply if I don\u2019t have a job?",
+    "answer": "Yes, you can use other income like Social Security or child support.",
+    "updated_at": "2024-11-30T00:43:36.186570"
+  },
+  {
+    "id": 135,
+    "category": "Income Requirements",
+    "question": "Do I need to show proof of income?",
+    "answer": "Yes, you must show papers like pay stubs or tax forms.",
+    "updated_at": "2025-03-15T00:43:36.186573"
+  },
+  {
+    "id": 136,
+    "category": "Eligibility",
+    "question": "Can I apply if I live outside NYC?",
+    "answer": "Yes, but NYC residents get first pick.",
+    "updated_at": "2025-02-16T00:43:36.186577"
+  },
+  {
+    "id": 137,
+    "category": "Eligibility",
+    "question": "Can I apply if I already have housing?",
+    "answer": "Yes, but your need for housing is looked at.",
+    "updated_at": "2024-08-24T00:43:36.186581"
+  },
+  {
+    "id": 138,
+    "category": "Eligibility",
+    "question": "What age do I need to be?",
+    "answer": "You must be at least 18 years old.",
+    "updated_at": "2024-09-25T00:43:36.186584"
+  },
+  {
+    "id": 139,
+    "category": "Application Process",
+    "question": "How do I apply?",
+    "answer": "You can apply online at the Housing Connect website.",
+    "updated_at": "2024-10-08T00:43:36.186588"
+  },
+  {
+    "id": 140,
+    "category": "Application Process",
+    "question": "Can I apply for more than one building?",
+    "answer": "Yes, you can apply to many at the same time.",
+    "updated_at": "2025-03-02T00:43:36.186591"
+  },
+  {
+    "id": 141,
+    "category": "Application Process",
+    "question": "Do I need to pay to apply?",
+    "answer": "No, applying is free.",
+    "updated_at": "2024-06-17T00:43:36.186594"
+  },
+  {
+    "id": 142,
+    "category": "Common Issues",
+    "question": "What if I forgot my password?",
+    "answer": "Click 'Forgot Password' on the login page to reset it.",
+    "updated_at": "2024-09-11T00:43:36.186598"
+  },
+  {
+    "id": 143,
+    "category": "Common Issues",
+    "question": "What if I made a mistake on my form?",
+    "answer": "You can fix it in your account before the deadline.",
+    "updated_at": "2025-04-11T00:43:36.186601"
+  },
+  {
+    "id": 144,
+    "category": "Common Issues",
+    "question": "Why was I disqualified?",
+    "answer": "It could be because of income, credit, or missing documents.",
+    "updated_at": "2024-08-07T00:43:36.186604"
+  },
+  {
+    "id": 145,
+    "category": "Jargon",
+    "question": "What does 'lottery' mean?",
+    "answer": "It means a random draw to pick who gets looked at for apartments.",
+    "updated_at": "2025-02-24T00:43:36.186608"
+  },
+  {
+    "id": 146,
+    "category": "Jargon",
+    "question": "What is 'affordable housing'?",
+    "answer": "It means apartments that cost less for people who earn less.",
+    "updated_at": "2024-06-20T00:43:36.186611"
+  },
+  {
+    "id": 147,
+    "category": "Jargon",
+    "question": "What is 'proof of assets'?",
+    "answer": "It means papers that show things you own, like savings or cars.",
+    "updated_at": "2024-12-01T00:43:36.186615"
+  },
+  {
+    "id": 148,
+    "category": "AMI",
+    "question": "What is AMI?",
+    "answer": "AMI means Area Median Income. It shows how much money families earn in an area.",
+    "updated_at": "2025-04-10T00:43:36.186618"
+  },
+  {
+    "id": 149,
+    "category": "AMI",
+    "question": "How is AMI used?",
+    "answer": "AMI helps figure out if you can apply for affordable housing.",
+    "updated_at": "2024-08-03T00:43:36.186621"
+  },
+  {
+    "id": 150,
+    "category": "AMI",
+    "question": "What is 100% AMI?",
+    "answer": "100% AMI is the middle income of a city. Half the people make more, half make less.",
+    "updated_at": "2024-08-22T00:43:36.186625"
+  },
+  {
+    "id": 151,
+    "category": "Log Numbers",
+    "question": "What is a log number?",
+    "answer": "A log number is a number you get when you apply. It helps track your place in line.",
+    "updated_at": "2024-08-12T00:43:36.186632"
+  },
+  {
+    "id": 152,
+    "category": "Log Numbers",
+    "question": "Do lower log numbers mean better chances?",
+    "answer": "Yes, a lower log number usually means a better chance.",
+    "updated_at": "2025-02-27T00:43:36.186636"
+  },
+  {
+    "id": 153,
+    "category": "Log Numbers",
+    "question": "Where do I find my log number?",
+    "answer": "You see your log number in your Housing Connect account after you apply.",
+    "updated_at": "2024-08-02T00:43:36.186639"
+  },
+  {
+    "id": 154,
+    "category": "Income Requirements",
+    "question": "How much money do I need to make?",
+    "answer": "It depends on the building. Each one has its own income rules.",
+    "updated_at": "2024-05-28T00:43:36.186643"
+  },
+  {
+    "id": 155,
+    "category": "Income Requirements",
+    "question": "Can I apply if I don\u2019t have a job?",
+    "answer": "Yes, you can use other income like Social Security or child support.",
+    "updated_at": "2024-12-28T00:43:36.186646"
+  },
+  {
+    "id": 156,
+    "category": "Income Requirements",
+    "question": "Do I need to show proof of income?",
+    "answer": "Yes, you must show papers like pay stubs or tax forms.",
+    "updated_at": "2025-04-04T00:43:36.186649"
+  },
+  {
+    "id": 157,
+    "category": "Eligibility",
+    "question": "Can I apply if I live outside NYC?",
+    "answer": "Yes, but NYC residents get first pick.",
+    "updated_at": "2025-03-15T00:43:36.186653"
+  },
+  {
+    "id": 158,
+    "category": "Eligibility",
+    "question": "Can I apply if I already have housing?",
+    "answer": "Yes, but your need for housing is looked at.",
+    "updated_at": "2024-12-17T00:43:36.186656"
+  },
+  {
+    "id": 159,
+    "category": "Eligibility",
+    "question": "What age do I need to be?",
+    "answer": "You must be at least 18 years old.",
+    "updated_at": "2024-08-03T00:43:36.186659"
+  },
+  {
+    "id": 160,
+    "category": "Application Process",
+    "question": "How do I apply?",
+    "answer": "You can apply online at the Housing Connect website.",
+    "updated_at": "2024-09-20T00:43:36.186663"
+  },
+  {
+    "id": 161,
+    "category": "Application Process",
+    "question": "Can I apply for more than one building?",
+    "answer": "Yes, you can apply to many at the same time.",
+    "updated_at": "2024-10-04T00:43:36.186666"
+  },
+  {
+    "id": 162,
+    "category": "Application Process",
+    "question": "Do I need to pay to apply?",
+    "answer": "No, applying is free.",
+    "updated_at": "2024-05-12T00:43:36.186669"
+  },
+  {
+    "id": 163,
+    "category": "Common Issues",
+    "question": "What if I forgot my password?",
+    "answer": "Click 'Forgot Password' on the login page to reset it.",
+    "updated_at": "2024-05-20T00:43:36.186673"
+  },
+  {
+    "id": 164,
+    "category": "Common Issues",
+    "question": "What if I made a mistake on my form?",
+    "answer": "You can fix it in your account before the deadline.",
+    "updated_at": "2025-02-07T00:43:36.186676"
+  },
+  {
+    "id": 165,
+    "category": "Common Issues",
+    "question": "Why was I disqualified?",
+    "answer": "It could be because of income, credit, or missing documents.",
+    "updated_at": "2024-05-28T00:43:36.186679"
+  },
+  {
+    "id": 166,
+    "category": "Jargon",
+    "question": "What does 'lottery' mean?",
+    "answer": "It means a random draw to pick who gets looked at for apartments.",
+    "updated_at": "2024-05-11T00:43:36.186683"
+  },
+  {
+    "id": 167,
+    "category": "Jargon",
+    "question": "What is 'affordable housing'?",
+    "answer": "It means apartments that cost less for people who earn less.",
+    "updated_at": "2025-01-17T00:43:36.186687"
+  },
+  {
+    "id": 168,
+    "category": "Jargon",
+    "question": "What is 'proof of assets'?",
+    "answer": "It means papers that show things you own, like savings or cars.",
+    "updated_at": "2024-05-24T00:43:36.186690"
+  },
+  {
+    "id": 169,
+    "category": "AMI",
+    "question": "What is AMI?",
+    "answer": "AMI means Area Median Income. It shows how much money families earn in an area.",
+    "updated_at": "2024-08-23T00:43:36.186694"
+  },
+  {
+    "id": 170,
+    "category": "AMI",
+    "question": "How is AMI used?",
+    "answer": "AMI helps figure out if you can apply for affordable housing.",
+    "updated_at": "2024-07-10T00:43:36.186697"
+  },
+  {
+    "id": 171,
+    "category": "AMI",
+    "question": "What is 100% AMI?",
+    "answer": "100% AMI is the middle income of a city. Half the people make more, half make less.",
+    "updated_at": "2024-06-18T00:43:36.186700"
+  },
+  {
+    "id": 172,
+    "category": "Log Numbers",
+    "question": "What is a log number?",
+    "answer": "A log number is a number you get when you apply. It helps track your place in line.",
+    "updated_at": "2025-02-12T00:43:36.186715"
+  },
+  {
+    "id": 173,
+    "category": "Log Numbers",
+    "question": "Do lower log numbers mean better chances?",
+    "answer": "Yes, a lower log number usually means a better chance.",
+    "updated_at": "2024-08-19T00:43:36.186719"
+  },
+  {
+    "id": 174,
+    "category": "Log Numbers",
+    "question": "Where do I find my log number?",
+    "answer": "You see your log number in your Housing Connect account after you apply.",
+    "updated_at": "2025-04-24T00:43:36.186723"
+  },
+  {
+    "id": 175,
+    "category": "Income Requirements",
+    "question": "How much money do I need to make?",
+    "answer": "It depends on the building. Each one has its own income rules.",
+    "updated_at": "2024-08-09T00:43:36.186726"
+  },
+  {
+    "id": 176,
+    "category": "Income Requirements",
+    "question": "Can I apply if I don\u2019t have a job?",
+    "answer": "Yes, you can use other income like Social Security or child support.",
+    "updated_at": "2024-05-30T00:43:36.186730"
+  },
+  {
+    "id": 177,
+    "category": "Income Requirements",
+    "question": "Do I need to show proof of income?",
+    "answer": "Yes, you must show papers like pay stubs or tax forms.",
+    "updated_at": "2024-08-15T00:43:36.186733"
+  },
+  {
+    "id": 178,
+    "category": "Eligibility",
+    "question": "Can I apply if I live outside NYC?",
+    "answer": "Yes, but NYC residents get first pick.",
+    "updated_at": "2025-02-03T00:43:36.186737"
+  },
+  {
+    "id": 179,
+    "category": "Eligibility",
+    "question": "Can I apply if I already have housing?",
+    "answer": "Yes, but your need for housing is looked at.",
+    "updated_at": "2024-08-07T00:43:36.186740"
+  },
+  {
+    "id": 180,
+    "category": "Eligibility",
+    "question": "What age do I need to be?",
+    "answer": "You must be at least 18 years old.",
+    "updated_at": "2024-05-21T00:43:36.186743"
+  },
+  {
+    "id": 181,
+    "category": "Application Process",
+    "question": "How do I apply?",
+    "answer": "You can apply online at the Housing Connect website.",
+    "updated_at": "2025-04-08T00:43:36.186747"
+  },
+  {
+    "id": 182,
+    "category": "Application Process",
+    "question": "Can I apply for more than one building?",
+    "answer": "Yes, you can apply to many at the same time.",
+    "updated_at": "2025-04-19T00:43:36.186750"
+  },
+  {
+    "id": 183,
+    "category": "Application Process",
+    "question": "Do I need to pay to apply?",
+    "answer": "No, applying is free.",
+    "updated_at": "2024-08-03T00:43:36.186754"
+  },
+  {
+    "id": 184,
+    "category": "Common Issues",
+    "question": "What if I forgot my password?",
+    "answer": "Click 'Forgot Password' on the login page to reset it.",
+    "updated_at": "2024-05-10T00:43:36.186757"
+  },
+  {
+    "id": 185,
+    "category": "Common Issues",
+    "question": "What if I made a mistake on my form?",
+    "answer": "You can fix it in your account before the deadline.",
+    "updated_at": "2025-01-28T00:43:36.186761"
+  },
+  {
+    "id": 186,
+    "category": "Common Issues",
+    "question": "Why was I disqualified?",
+    "answer": "It could be because of income, credit, or missing documents.",
+    "updated_at": "2024-10-13T00:43:36.186764"
+  },
+  {
+    "id": 187,
+    "category": "Jargon",
+    "question": "What does 'lottery' mean?",
+    "answer": "It means a random draw to pick who gets looked at for apartments.",
+    "updated_at": "2024-08-18T00:43:36.186768"
+  },
+  {
+    "id": 188,
+    "category": "Jargon",
+    "question": "What is 'affordable housing'?",
+    "answer": "It means apartments that cost less for people who earn less.",
+    "updated_at": "2025-01-08T00:43:36.186771"
+  },
+  {
+    "id": 189,
+    "category": "Jargon",
+    "question": "What is 'proof of assets'?",
+    "answer": "It means papers that show things you own, like savings or cars.",
+    "updated_at": "2024-05-19T00:43:36.186774"
+  },
+  {
+    "id": 190,
+    "category": "AMI",
+    "question": "What is AMI?",
+    "answer": "AMI means Area Median Income. It shows how much money families earn in an area.",
+    "updated_at": "2024-05-07T00:43:36.186778"
+  },
+  {
+    "id": 191,
+    "category": "AMI",
+    "question": "How is AMI used?",
+    "answer": "AMI helps figure out if you can apply for affordable housing.",
+    "updated_at": "2024-08-31T00:43:36.186781"
+  },
+  {
+    "id": 192,
+    "category": "AMI",
+    "question": "What is 100% AMI?",
+    "answer": "100% AMI is the middle income of a city. Half the people make more, half make less.",
+    "updated_at": "2025-01-17T00:43:36.186785"
+  },
+  {
+    "id": 193,
+    "category": "Log Numbers",
+    "question": "What is a log number?",
+    "answer": "A log number is a number you get when you apply. It helps track your place in line.",
+    "updated_at": "2025-01-15T00:43:36.186789"
+  },
+  {
+    "id": 194,
+    "category": "Log Numbers",
+    "question": "Do lower log numbers mean better chances?",
+    "answer": "Yes, a lower log number usually means a better chance.",
+    "updated_at": "2025-01-04T00:43:36.186793"
+  },
+  {
+    "id": 195,
+    "category": "Log Numbers",
+    "question": "Where do I find my log number?",
+    "answer": "You see your log number in your Housing Connect account after you apply.",
+    "updated_at": "2025-01-13T00:43:36.186796"
+  },
+  {
+    "id": 196,
+    "category": "Income Requirements",
+    "question": "How much money do I need to make?",
+    "answer": "It depends on the building. Each one has its own income rules.",
+    "updated_at": "2025-04-19T00:43:36.186799"
+  },
+  {
+    "id": 197,
+    "category": "Income Requirements",
+    "question": "Can I apply if I don\u2019t have a job?",
+    "answer": "Yes, you can use other income like Social Security or child support.",
+    "updated_at": "2025-01-28T00:43:36.186802"
+  },
+  {
+    "id": 198,
+    "category": "Income Requirements",
+    "question": "Do I need to show proof of income?",
+    "answer": "Yes, you must show papers like pay stubs or tax forms.",
+    "updated_at": "2024-09-15T00:43:36.186806"
+  },
+  {
+    "id": 199,
+    "category": "Eligibility",
+    "question": "Can I apply if I live outside NYC?",
+    "answer": "Yes, but NYC residents get first pick.",
+    "updated_at": "2024-07-15T00:43:36.186809"
+  },
+  {
+    "id": 200,
+    "category": "Eligibility",
+    "question": "Can I apply if I already have housing?",
+    "answer": "Yes, but your need for housing is looked at.",
+    "updated_at": "2024-12-22T00:43:36.186813"
+  }
+]

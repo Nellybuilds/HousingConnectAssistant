@@ -54,7 +54,7 @@ async function getOrCreateIndex() {
         spec: { 
           serverless: { 
             cloud: "aws", 
-            region: "us-west-2" 
+            region: "us-east-1" // Use us-east-1 for free tier compatibility
           } 
         }
       });
@@ -105,19 +105,28 @@ export async function uploadJsonToPinecone(jsonData: any[], textField: string) {
       // Generate embeddings for this batch
       const embedBatch = await Promise.all(
         batch.map(async (item, idx) => {
-          // Extract the text to embed
-          const textToEmbed = item[textField] || JSON.stringify(item);
+          // For Housing Connect data, we want to embed both the question and answer
+          // but prioritize the question for search
+          const textToEmbed = item[textField] || "";
+          const answerText = item.answer || "";
+          const categoryText = item.category || "";
+          
+          // Create a combined text that gives more weight to the question
+          const combinedText = `${textToEmbed} ${textToEmbed} ${answerText}`;
           
           // Generate embedding
-          const embedding = await embeddings.embedQuery(textToEmbed);
+          const embedding = await embeddings.embedQuery(combinedText);
           
-          // Return vector record
+          // Return vector record with full metadata
           return {
             id: `json-${i + idx}`,
             values: embedding,
             metadata: {
               ...item,
-              originalText: textToEmbed
+              originalText: textToEmbed,
+              answerText: answerText,
+              category: categoryText,
+              displayText: `Q: ${textToEmbed}\nA: ${answerText}`
             }
           };
         })
@@ -189,7 +198,13 @@ export async function generateResponse(question: string) {
     
     // Format contexts
     const formattedContext = contextResults
-      .map(item => item.text)
+      .map(item => {
+        const metadata = item.metadata || {};
+        // Format as Q&A pairs for better context understanding
+        return `QUESTION: ${metadata.question || item.text}
+ANSWER: ${metadata.answer || ""}
+CATEGORY: ${metadata.category || "General"}`;
+      })
       .join("\n\n");
     
     // Create a prompt that includes the context
@@ -219,10 +234,21 @@ Instructions: Using the context information provided above, answer the question 
       max_tokens: 800
     });
     
+    // Create formatted context pairs for the response
+    const formattedContexts = contextResults.map(result => {
+      const metadata = result.metadata || {};
+      return {
+        question: metadata.question || result.text,
+        answer: metadata.answer || "",
+        category: metadata.category || "General",
+        score: result.score
+      };
+    });
+    
     return {
       answer: response.choices[0].message.content || "I don't have enough information to answer that.",
       source: "json-rag", 
-      contexts: contextResults.map(r => r.text)
+      contexts: formattedContexts
     };
   } catch (error) {
     console.error("Error generating RAG response:", error);

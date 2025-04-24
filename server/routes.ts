@@ -71,7 +71,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
             answer: ragResponse.answer,
             conversationId: activeConversationId,
             source: "json-rag",
-            contexts: ragResponse.contexts
+            contexts: ragResponse.contexts,
+            metadata: {
+              source_count: ragResponse.contexts?.length || 0,
+              categories: Array.from(new Set(ragResponse.contexts?.map(c => c.category) || []))
+            }
           });
         } catch (ragError) {
           console.error("RAG generation failed, falling back to standard OpenAI:", ragError);

@@ -11,8 +11,9 @@ import path from 'path';
  */
 
 // Configuration
-const JSON_FILE = 'your-data.json'; // Update this with your JSON file name
-const TEXT_FIELD = 'text';          // Update this with the field that contains the text to embed
+const JSON_FILE = 'housing_connect_dataset.json'; // The Housing Connect dataset
+const TEXT_FIELD = 'question';     // The question field will be used for the primary search
+const ANSWER_FIELD = 'answer';     // The answer field contains the information
 
 // Execute import
 async function main() {

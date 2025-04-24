@@ -5,7 +5,9 @@ import { generateChatResponse } from "./openai";
 import { housingConnectKnowledge } from "./knowledge";
 import { findBestAnswer } from "./fallbackChat";
 import { storage } from "./storage";
-import { generateRAGResponse } from "./rag";
+import { generateResponse as generateJsonRagResponse } from "./json-rag";
+import fs from 'fs';
+import path from 'path';
 
 // Define validation schema for chat requests
 const chatRequestSchema = z.object({
@@ -55,8 +57,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         // Try to generate response using RAG first
         try {
-          console.log("Attempting to use RAG for answer generation...");
-          const ragResponse = await generateRAGResponse(message);
+          console.log("Attempting to use JSON RAG for answer generation...");
+          const ragResponse = await generateJsonRagResponse(message);
           
           // Store and return the RAG response
           await storage.createMessage({
@@ -68,7 +70,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.json({
             answer: ragResponse.answer,
             conversationId: activeConversationId,
-            source: "rag",
+            source: "json-rag",
             contexts: ragResponse.contexts
           });
         } catch (ragError) {
@@ -209,6 +211,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint
   app.get("/api/health", (_req: Request, res: Response) => {
     res.json({ status: "ok" });
+  });
+  
+  // JSON data upload endpoint for vector store
+  app.post("/api/admin/upload-json", async (req: Request, res: Response) => {
+    try {
+      // Only accept JSON array data
+      const jsonData = req.body;
+      
+      if (!Array.isArray(jsonData)) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Data must be an array of objects" 
+        });
+      }
+      
+      if (jsonData.length === 0) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Data array cannot be empty" 
+        });
+      }
+      
+      // Temporarily save the JSON data to a file
+      const tempFilePath = path.join(process.cwd(), 'data', `temp_${Date.now()}.json`);
+      fs.writeFileSync(tempFilePath, JSON.stringify(jsonData, null, 2));
+      
+      console.log(`Received ${jsonData.length} JSON records for indexing`);
+      console.log(`Saved to temporary file: ${tempFilePath}`);
+      
+      // Determine which field to use for embedding
+      // Default to using the first field that's a string and has 'text' in its name
+      const sampleObject = jsonData[0];
+      let textField = null;
+      
+      for (const key in sampleObject) {
+        if (typeof sampleObject[key] === 'string' && 
+            (key.toLowerCase().includes('text') || key.toLowerCase().includes('content') || key.toLowerCase().includes('description'))) {
+          textField = key;
+          break;
+        }
+      }
+      
+      // If no text field found, use the first string field
+      if (!textField) {
+        for (const key in sampleObject) {
+          if (typeof sampleObject[key] === 'string' && sampleObject[key].length > 20) {
+            textField = key;
+            break;
+          }
+        }
+      }
+      
+      if (!textField) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Could not determine which field to use for embedding. Please specify a 'text' field in your data." 
+        });
+      }
+      
+      // Initialize background process to upload data
+      // This runs asynchronously so we don't block the response
+      import('./json-rag').then(async (module) => {
+        try {
+          await module.uploadJsonToPinecone(jsonData, textField);
+          console.log("Successfully processed JSON data in background");
+        } catch (error) {
+          console.error("Error processing JSON in background:", error);
+        } finally {
+          // Clean up the temporary file regardless of success or failure
+          try {
+            fs.unlinkSync(tempFilePath);
+          } catch (err) {
+            console.error("Failed to remove temporary file:", err);
+          }
+        }
+      }).catch(err => {
+        console.error("Failed to import json-rag module:", err);
+      });
+      
+      // Immediately return success, processing continues in background
+      return res.status(200).json({ 
+        success: true, 
+        message: `Processing ${jsonData.length} records in the background. Using field "${textField}" for embedding.` 
+      });
+    } catch (error) {
+      console.error("Error processing JSON upload:", error);
+      return res.status(500).json({ 
+        success: false, 
+        message: "An error occurred while processing your upload" 
+      });
+    }
   });
 
   // Feedback endpoints

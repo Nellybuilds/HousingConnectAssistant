@@ -75,6 +75,18 @@ app.use((req, res, next) => {
   } catch (error) {
     console.error("Error initializing Pinecone knowledge base:", error);
     log("Failed to initialize Pinecone knowledge base. Continuing with fallback system.");
+    
+    // Retry once more after a delay - sometimes the Pinecone API needs time
+    setTimeout(async () => {
+      try {
+        log("Retrying Pinecone knowledge base initialization...");
+        await initializePineconeWithKnowledge();
+        log("Pinecone knowledge base initialized successfully on retry");
+      } catch (retryError) {
+        console.error("Error on retry initializing Pinecone knowledge base:", retryError);
+        log("Failed to initialize Pinecone knowledge base on retry. Using fallback system.");
+      }
+    }, 5000); // 5 second delay
   }
   
   const server = await registerRoutes(app);

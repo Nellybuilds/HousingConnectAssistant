@@ -84,30 +84,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
           if (chatResponse.error) {
             console.log(`OpenAI error type: ${chatResponse.error}, falling back to local knowledge base`);
             
-            // If it's a quota error, use our fallback
-            if (chatResponse.error === "quota_exceeded") {
-              // Use fallback implementation
-              const fallbackAnswer = findBestAnswer(message);
-              
-              // Store assistant message
-              await storage.createMessage({
-                role: "assistant",
-                content: fallbackAnswer,
-                conversationId: activeConversationId,
-              });
-              
-              return res.json({
-                answer: fallbackAnswer,
-                conversationId: activeConversationId,
-                source: "fallback",
-                original_error: chatResponse.error
-              });
-            }
+            // For any error, use our improved fallback system
+            console.log("Using fallback for all OpenAI errors, not just quota issues");
             
-            // For other errors, return the OpenAI error response as is
+            // Use fallback implementation with improved matching
+            const fallbackAnswer = findBestAnswer(message);
+            console.log("Generated fallback answer based on query:", { 
+              query: message, 
+              answerPreview: fallbackAnswer.substring(0, 100) + "..." 
+            });
+            
+            // Store assistant message
+            const assistantMessage = await storage.createMessage({
+              role: "assistant",
+              content: fallbackAnswer,
+              conversationId: activeConversationId,
+            });
+            
+            console.log("Stored fallback message with ID:", assistantMessage.id);
+            
             return res.json({
-              ...chatResponse,
-              conversationId: activeConversationId
+              answer: fallbackAnswer,
+              conversationId: activeConversationId,
+              source: "fallback",
+              original_error: chatResponse.error
             });
           }
           
@@ -127,13 +127,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // If OpenAI completely fails, use fallback
         console.error("OpenAI request failed completely, using fallback:", openaiError);
         const fallbackAnswer = findBestAnswer(message);
+        console.log("Generated direct fallback answer for query:", { 
+          query: message, 
+          answerPreview: fallbackAnswer.substring(0, 100) + "..." 
+        });
         
         // Store assistant message
-        await storage.createMessage({
+        const assistantMessage = await storage.createMessage({
           role: "assistant",
           content: fallbackAnswer,
           conversationId: activeConversationId,
         });
+        
+        console.log("Stored direct fallback message with ID:", assistantMessage.id);
         
         return res.json({
           answer: fallbackAnswer,
@@ -146,7 +152,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error processing chat request:", error);
       // Last resort fallback - if everything else fails
       try {
-        const emergencyAnswer = findBestAnswer(req.body?.message || "");
+        const userMessage = req.body?.message || "";
+        console.log("Using emergency fallback for query:", userMessage);
+        const emergencyAnswer = findBestAnswer(userMessage);
+        
+        // Try to store the message if we have conversation ID
+        if (req.body?.conversationId) {
+          try {
+            // Log that we're trying to save the emergency message
+            console.log("Attempting to store emergency message in conversation:", req.body.conversationId);
+            const emergencyMessage = await storage.createMessage({
+              role: "assistant",
+              content: emergencyAnswer,
+              conversationId: req.body.conversationId,
+            });
+            console.log("Emergency message stored with ID:", emergencyMessage.id);
+            
+            return res.json({ 
+              answer: emergencyAnswer,
+              source: "emergency_fallback",
+              error: "server_recovered",
+              conversationId: req.body.conversationId
+            });
+          } catch (storageError) {
+            console.error("Failed to store emergency message:", storageError);
+          }
+        }
+        
+        // Return response without storage if we couldn't store it
         return res.json({ 
           answer: emergencyAnswer,
           source: "emergency_fallback",
@@ -154,6 +187,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       } catch (fallbackError) {
         // If even the fallback fails, return a generic error
+        console.error("Complete system failure, returning generic error:", fallbackError);
         return res.status(500).json({ 
           answer: "An error occurred while processing your request. Please try again later.",
           error: "server_error" 

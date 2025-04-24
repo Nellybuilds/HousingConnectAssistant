@@ -55,11 +55,38 @@ export function useChat(initialConversationId?: string) {
         setActiveConversationId(data.conversationId);
       }
       
-      // Handle the response
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: data.answer, conversationId: data.conversationId }
-      ]);
+      // Get the latest messages from the API to ensure we have IDs for feedback
+      if (data.conversationId) {
+        // Refresh the messages to get the latest with IDs
+        fetch(`/api/conversations/${data.conversationId}`)
+          .then(response => response.json())
+          .then(convData => {
+            if (convData.messages && convData.messages.length > 0) {
+              console.log("Refreshed messages with IDs:", convData.messages);
+              setMessages(convData.messages);
+            } else {
+              // Fallback in case refresh fails
+              setMessages((prev) => [
+                ...prev,
+                { role: "assistant", content: data.answer, conversationId: data.conversationId }
+              ]);
+            }
+          })
+          .catch(err => {
+            console.error("Error refreshing messages:", err);
+            // Fallback to just adding the message without an ID
+            setMessages((prev) => [
+              ...prev,
+              { role: "assistant", content: data.answer, conversationId: data.conversationId }
+            ]);
+          });
+      } else {
+        // Just add the message without refreshing if no conversation ID
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: data.answer }
+        ]);
+      }
       
       // Show toast for API errors if they exist
       if (data.error) {

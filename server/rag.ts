@@ -96,11 +96,18 @@ export async function initializePineconeWithKnowledge() {
     const index = await getOrCreateIndex();
     
     // Check if data already exists in the index
-    const stats = await index.describeIndexStats();
-    
-    if ((stats.totalRecordCount || 0) > 0) {
-      console.log("Knowledge base already loaded in Pinecone");
-      return;
+    console.log("Checking if knowledge base is already loaded...");
+    try {
+      const stats = await index.describeIndexStats();
+      console.log("Index stats:", stats);
+      
+      if ((stats.totalRecordCount || 0) > 0) {
+        console.log("Knowledge base already loaded in Pinecone with", stats.totalRecordCount, "records");
+        return;
+      }
+    } catch (statsError) {
+      console.error("Error checking index stats:", statsError);
+      console.log("Continuing with knowledge base initialization...");
     }
     
     // Split the knowledge text into chunks
@@ -115,38 +122,48 @@ export async function initializePineconeWithKnowledge() {
     console.log("Generating embeddings and uploading to Pinecone...");
     
     // Process in smaller batches to avoid rate limits
-    const batchSize = 10;
+    const batchSize = 5; // Smaller batch size for reliability
     for (let i = 0; i < documents.length; i += batchSize) {
       const batch = documents.slice(i, i + batchSize);
       
-      // Generate embeddings for this batch
-      const embeddings_batch = await Promise.all(
-        batch.map(async (doc) => {
-          const embedding = await embeddings.embedQuery(doc.pageContent);
-          return {
-            id: `housing-connect-${i + batch.indexOf(doc)}`,
-            values: embedding,
-            metadata: {
-              ...doc.metadata,
-              text: doc.pageContent,
-            },
-          };
-        })
-      );
-      
-      // Upsert to Pinecone
-      await index.upsert(embeddings_batch);
-      console.log(`Uploaded batch ${i / batchSize + 1}/${Math.ceil(documents.length / batchSize)}`);
-      
-      // Sleep to avoid rate limits
-      if (i + batchSize < documents.length) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+      try {
+        // Generate embeddings for this batch
+        console.log(`Generating embeddings for batch ${i / batchSize + 1}/${Math.ceil(documents.length / batchSize)}`);
+        const embeddings_batch = await Promise.all(
+          batch.map(async (doc, idx) => {
+            const embedding = await embeddings.embedQuery(doc.pageContent);
+            console.log(`Generated embedding ${idx + 1}/${batch.length} with length:`, embedding.length);
+            return {
+              id: `housing-connect-${i + idx}`,
+              values: embedding,
+              metadata: {
+                ...doc.metadata,
+                text: doc.pageContent,
+              },
+            };
+          })
+        );
+        
+        // Upsert to Pinecone
+        console.log(`Upserting batch ${i / batchSize + 1}/${Math.ceil(documents.length / batchSize)} to Pinecone`);
+        await index.upsert(embeddings_batch);
+        console.log(`Successfully uploaded batch ${i / batchSize + 1}/${Math.ceil(documents.length / batchSize)}`);
+        
+        // Sleep to avoid rate limits
+        if (i + batchSize < documents.length) {
+          console.log("Waiting before processing next batch...");
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      } catch (batchError) {
+        console.error(`Error processing batch ${i / batchSize + 1}:`, batchError);
+        // Continue with next batch
       }
     }
     
     console.log("Finished uploading knowledge to Pinecone");
   } catch (error) {
     console.error("Error initializing Pinecone:", error);
+    throw error;
   }
 }
 
@@ -158,24 +175,29 @@ export async function queryPineconeForContext(question: string, topK: number = 3
     const index = await getOrCreateIndex();
     
     // Generate an embedding for the question
+    console.log("Generating embedding for question:", question);
     const queryEmbedding = await embeddings.embedQuery(question);
+    console.log("Generated embedding of length:", queryEmbedding.length);
     
     // Query Pinecone
+    console.log("Querying Pinecone with embedding");
     const queryResponse = await index.query({
       vector: queryEmbedding,
       topK,
       includeMetadata: true,
     });
+    console.log("Pinecone query response matches:", queryResponse.matches.length);
     
     // Extract and return the relevant context
     const contexts = queryResponse.matches.map(match => {
       return match.metadata?.text || "";
     });
     
+    console.log("Retrieved contexts:", contexts.length);
     return contexts.join("\n\n");
   } catch (error) {
     console.error("Error querying Pinecone:", error);
-    return "";
+    throw error; // Propagate the error for better debugging
   }
 }
 

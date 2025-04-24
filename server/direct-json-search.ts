@@ -8,6 +8,8 @@ import path from 'path';
 
 // Configuration
 const DEFAULT_JSON_PATH = path.join(process.cwd(), 'data', 'housing_connect_dataset.json');
+// If the file doesn't exist, check in attached_assets directory
+const ATTACHED_ASSETS_PATH = path.join(process.cwd(), 'attached_assets', 'housing_connect_dataset.json');
 const MAX_RESULTS = 5;
 
 // In-memory cache of the JSON data
@@ -23,11 +25,24 @@ export async function loadJsonData(filePath: string = DEFAULT_JSON_PATH): Promis
       return jsonDataCache;
     }
     
-    const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    let data;
+    
+    try {
+      // Try to load from the primary path
+      console.log(`Attempting to load JSON data from: ${filePath}`);
+      data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    } catch (primaryPathError) {
+      // If that fails, try the attached assets path
+      console.log(`Primary path failed, trying attached assets path: ${ATTACHED_ASSETS_PATH}`);
+      data = JSON.parse(fs.readFileSync(ATTACHED_ASSETS_PATH, 'utf8'));
+      console.log("Successfully loaded data from attached assets path");
+    }
     
     if (!Array.isArray(data)) {
       throw new Error('JSON data is not an array');
     }
+    
+    console.log(`Loaded ${data.length} JSON records for search`);
     
     // Cache the data for future calls
     jsonDataCache = data;

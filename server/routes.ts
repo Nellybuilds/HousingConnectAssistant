@@ -55,8 +55,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
         conversationId: activeConversationId,
       });
       
+      // Main processing flow - try methods in order of reliability
+      
+      // 1. First, try direct JSON search (most reliable)
       try {
-        // Try to generate response using RAG first
+        console.log("Attempting direct JSON search for:", message);
+        const directJsonResponse = await generateDirectJsonResponse(message);
+        
+        // Store and return the direct JSON response
+        await storage.createMessage({
+          role: "assistant",
+          content: directJsonResponse.answer,
+          conversationId: activeConversationId,
+        });
+        
+        return res.json({
+          answer: directJsonResponse.answer,
+          conversationId: activeConversationId,
+          source: "direct-json-search",
+          contexts: directJsonResponse.contexts,
+          metadata: {
+            source_count: directJsonResponse.contexts?.length || 0,
+            categories: Array.from(new Set(directJsonResponse.contexts?.map(c => c.category) || []))
+          }
+        });
+      } 
+      catch (directJsonError) {
+        console.error("Direct JSON search failed, trying RAG fallback:", directJsonError);
+        
+        // 2. Next, try RAG
         try {
           console.log("Attempting to use JSON RAG for answer generation...");
           const ragResponse = await generateJsonRagResponse(message);
@@ -78,102 +105,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
               categories: Array.from(new Set(ragResponse.contexts?.map(c => c.category) || []))
             }
           });
-        } catch (ragError) {
-          console.error("RAG generation failed, falling back to standard OpenAI:", ragError);
+        } 
+        catch (ragError) {
+          console.error("RAG generation failed, falling back to Google Vertex AI:", ragError);
           
-          // Fall back to standard OpenAI if RAG fails
-          const chatResponse = await generateChatResponse({
-            message,
-            knowledgeBase: housingConnectKnowledge,
-          });
-          
-          // If there's an error property but OpenAI still returned a response
-          if (chatResponse.error) {
-            console.log(`OpenAI error type: ${chatResponse.error}, falling back to local knowledge base`);
+          // 3. Try Google Vertex AI
+          try {
+            // Fall back to Google Vertex AI if RAG fails
+            const chatResponse = await generateChatResponse({
+              message,
+              knowledgeBase: housingConnectKnowledge,
+            });
             
-            // If it's a quota error, use our fallback
-            if (chatResponse.error === "quota_exceeded") {
-              // Use fallback implementation
-              const fallbackAnswer = findBestAnswer(message);
+            // If there's an error property but Vertex AI still returned a response
+            if (chatResponse.error) {
+              console.log(`Vertex AI error type: ${chatResponse.error}, trying pattern matching`);
               
-              // Store assistant message
-              await storage.createMessage({
-                role: "assistant",
-                content: fallbackAnswer,
-                conversationId: activeConversationId,
-              });
+              // 4. If AI has quota error, try pattern matching
+              if (chatResponse.error === "quota_exceeded") {
+                // Use fallback implementation
+                const fallbackAnswer = findBestAnswer(message);
+                
+                // Store assistant message
+                await storage.createMessage({
+                  role: "assistant",
+                  content: fallbackAnswer,
+                  conversationId: activeConversationId,
+                });
+                
+                return res.json({
+                  answer: fallbackAnswer,
+                  conversationId: activeConversationId,
+                  source: "fallback",
+                  original_error: chatResponse.error
+                });
+              }
               
+              // For other errors, return the Vertex AI error response as is
               return res.json({
-                answer: fallbackAnswer,
-                conversationId: activeConversationId,
-                source: "fallback",
-                original_error: chatResponse.error
+                ...chatResponse,
+                conversationId: activeConversationId
               });
             }
             
-            // For other errors, return the OpenAI error response as is
+            // If no error, store and return the Vertex AI response
+            await storage.createMessage({
+              role: "assistant",
+              content: chatResponse.answer,
+              conversationId: activeConversationId,
+            });
+            
             return res.json({
               ...chatResponse,
               conversationId: activeConversationId
             });
           }
-          
-          // If no error, store and return the OpenAI response
-          await storage.createMessage({
-            role: "assistant",
-            content: chatResponse.answer,
-            conversationId: activeConversationId,
-          });
-          
-          return res.json({
-            ...chatResponse,
-            conversationId: activeConversationId
-          });
-        }
-      } catch (openaiError) {
-        // Try direct JSON search first as a fallback
-        try {
-          console.log("AI service failed, trying direct JSON search instead...");
-          const directJsonResponse = await generateDirectJsonResponse(message);
-          
-          // Store assistant message
-          await storage.createMessage({
-            role: "assistant",
-            content: directJsonResponse.answer,
-            conversationId: activeConversationId,
-          });
-          
-          return res.json({
-            answer: directJsonResponse.answer,
-            conversationId: activeConversationId,
-            source: "direct-json-search",
-            contexts: directJsonResponse.contexts,
-            fallback_reason: "api_failure"
-          });
-        } catch (jsonSearchError) {
-          console.error("Direct JSON search failed, using final fallback:", jsonSearchError);
-          
-          // Last resort fallback - pattern matching
-          const fallbackAnswer = findBestAnswer(message);
-          
-          // Store assistant message
-          await storage.createMessage({
-            role: "assistant",
-            content: fallbackAnswer,
-            conversationId: activeConversationId,
-          });
-          
-          return res.json({
-            answer: fallbackAnswer,
-            conversationId: activeConversationId,
-            source: "fallback",
-            fallback_reason: "all_methods_failed"
-          });
+          catch (aiError) {
+            // 5. Final fallback - pattern matching
+            console.error("All AI methods failed, using pattern matching:", aiError);
+            
+            const fallbackAnswer = findBestAnswer(message);
+            
+            // Store assistant message
+            await storage.createMessage({
+              role: "assistant",
+              content: fallbackAnswer,
+              conversationId: activeConversationId,
+            });
+            
+            return res.json({
+              answer: fallbackAnswer,
+              conversationId: activeConversationId,
+              source: "fallback",
+              fallback_reason: "all_methods_failed"
+            });
+          }
         }
       }
-    } catch (error) {
+    } 
+    catch (error) {
       console.error("Error processing chat request:", error);
-      // Last resort fallback - if everything else fails
+      
+      // Emergency fallback - if everything else fails
       try {
         // Try direct JSON search first as emergency fallback
         try {
@@ -187,7 +200,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             contexts: directJsonResponse.contexts,
             error: "server_recovered" 
           });
-        } catch (jsonError) {
+        } 
+        catch (jsonError) {
           // If JSON search fails, use the pattern matching fallback
           console.log("Emergency JSON search failed, using pattern matching");
           const emergencyAnswer = findBestAnswer(req.body?.message || "");
@@ -198,7 +212,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             error: "server_recovered" 
           });
         }
-      } catch (fallbackError) {
+      } 
+      catch (fallbackError) {
         // If even the fallback fails, return a generic error
         return res.status(500).json({ 
           answer: "An error occurred while processing your request. Please try again later.",

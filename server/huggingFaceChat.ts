@@ -40,9 +40,9 @@ If the answer cannot be determined from the context, say so clearly and provide 
 `;
 
     // Use Hugging Face to generate a response
-    // We're using Meta's Llama 3 model, which is free to use via Hugging Face
+    // Using a much smaller model that fits within the free tier limits
     const response = await hf.textGeneration({
-      model: 'meta-llama/Meta-Llama-3-8B-Instruct',
+      model: 'google/flan-t5-small',
       inputs: prompt,
       parameters: {
         max_new_tokens: 250,

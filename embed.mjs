@@ -2,8 +2,8 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { Chroma } from 'langchain/vectorstores';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { Chroma } from '@langchain/community/vectorstores/chroma';
+import { OpenAIEmbeddings } from '@langchain/openai';
 
 // Load the FAQ data from faqs.json
 const data = JSON.parse(fs.readFileSync('faqs.json', 'utf8'));

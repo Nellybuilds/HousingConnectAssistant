@@ -3,11 +3,12 @@ import { Pinecone } from "@pinecone-database/pinecone";
 import { housingConnectKnowledge } from './knowledge';
 import { Document } from "langchain/document";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { OpenAI } from "@langchain/openai";
+import OpenAI from "openai";
 
 /**
  * Initialize the Pinecone client
  */
+// Initialize Pinecone client
 const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,
 });

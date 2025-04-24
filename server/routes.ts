@@ -4,8 +4,7 @@ import { z } from "zod";
 import { housingConnectKnowledge } from "./knowledge";
 import { findBestAnswer } from "./fallbackChat";
 import { storage } from "./storage";
-import { generateWeaviateRAGResponse } from "./weaviateRag";
-import { generateHuggingFaceChatResponse } from "./huggingFaceChat";
+import { queryWeaviateForContext } from "./weaviateRag";
 
 // Define validation schema for chat requests
 const chatRequestSchema = z.object({
@@ -53,148 +52,113 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       try {
-        // Try to generate response using RAG first
+        // Use Weaviate to get relevant context
+        console.log("Getting relevant context using Weaviate RAG...");
         try {
-          console.log("Attempting to use Weaviate RAG for answer generation...");
-          const ragResponse = await generateWeaviateRAGResponse(message);
+          // Get relevant context from Weaviate
+          const context = await queryWeaviateForContext(message);
+          console.log("Retrieved context from Weaviate:", context.substring(0, 100) + "...");
           
-          // Store and return the Weaviate RAG response
+          // Use fallback implementation with improved matching
+          console.log("Using our keyword-based matching system for response generation");
+          const fallbackAnswer = findBestAnswer(message);
+          console.log("Generated answer based on query:", { 
+            query: message, 
+            answerPreview: fallbackAnswer.substring(0, 100) + "..." 
+          });
+          
+          // Store assistant message
           const assistantMessage = await storage.createMessage({
             role: "assistant",
-            content: ragResponse.answer,
+            content: fallbackAnswer,
             conversationId: activeConversationId,
           });
           
-          console.log("Stored Weaviate RAG response with ID:", assistantMessage.id);
+          console.log("Stored response message with ID:", assistantMessage.id);
           
           return res.json({
-            answer: ragResponse.answer,
+            answer: fallbackAnswer,
             conversationId: activeConversationId,
-            source: "weaviate_rag",
-            contexts: ragResponse.contexts
+            source: "keyword_matching",
+            contexts: [context]
           });
-        } catch (ragError) {
-          console.error("Weaviate RAG generation failed, falling back to standard Hugging Face:", ragError);
+        } catch (error) {
+          console.error("Weaviate context retrieval failed, using direct fallback:", error);
           
-          // Fall back to standard Hugging Face if RAG fails
-          const chatResponse = await generateHuggingFaceChatResponse({
-            message,
-            context: housingConnectKnowledge,
+          const fallbackAnswer = findBestAnswer(message);
+          console.log("Generated direct fallback answer for query:", { 
+            query: message, 
+            answerPreview: fallbackAnswer.substring(0, 100) + "..." 
           });
           
-          // If there's an error property but Hugging Face still returned a response
-          if (chatResponse.error) {
-            console.log(`Hugging Face error type: ${chatResponse.error}, falling back to local knowledge base`);
-            
-            // For any error, use our improved fallback system
-            console.log("Using fallback for all Hugging Face errors");
-            
-            // Use fallback implementation with improved matching
-            const fallbackAnswer = findBestAnswer(message);
-            console.log("Generated fallback answer based on query:", { 
-              query: message, 
-              answerPreview: fallbackAnswer.substring(0, 100) + "..." 
-            });
-            
-            // Store assistant message
-            const assistantMessage = await storage.createMessage({
-              role: "assistant",
-              content: fallbackAnswer,
-              conversationId: activeConversationId,
-            });
-            
-            console.log("Stored fallback message with ID:", assistantMessage.id);
-            
-            return res.json({
-              answer: fallbackAnswer,
-              conversationId: activeConversationId,
-              source: "fallback",
-              original_error: chatResponse.error
-            });
-          }
-          
-          // If no error, store and return the Hugging Face response
-          await storage.createMessage({
+          // Store assistant message
+          const assistantMessage = await storage.createMessage({
             role: "assistant",
-            content: chatResponse.answer,
+            content: fallbackAnswer,
             conversationId: activeConversationId,
           });
           
+          console.log("Stored direct fallback message with ID:", assistantMessage.id);
+          
           return res.json({
-            ...chatResponse,
-            conversationId: activeConversationId
+            answer: fallbackAnswer,
+            conversationId: activeConversationId,
+            source: "fallback",
+            fallback_reason: "api_failure"
           });
         }
-      } catch (huggingFaceError) {
-        // If Hugging Face completely fails, use fallback
-        console.error("Hugging Face request failed completely, using fallback:", huggingFaceError);
-        const fallbackAnswer = findBestAnswer(message);
-        console.log("Generated direct fallback answer for query:", { 
-          query: message, 
-          answerPreview: fallbackAnswer.substring(0, 100) + "..." 
-        });
-        
-        // Store assistant message
-        const assistantMessage = await storage.createMessage({
-          role: "assistant",
-          content: fallbackAnswer,
-          conversationId: activeConversationId,
-        });
-        
-        console.log("Stored direct fallback message with ID:", assistantMessage.id);
-        
-        return res.json({
-          answer: fallbackAnswer,
-          conversationId: activeConversationId,
-          source: "fallback",
-          fallback_reason: "api_failure"
-        });
+      } catch (error) {
+        console.error("Error processing chat request:", error);
+        // Last resort fallback - if everything else fails
+        try {
+          const userMessage = req.body?.message || "";
+          console.log("Using emergency fallback for query:", userMessage);
+          const emergencyAnswer = findBestAnswer(userMessage);
+          
+          // Try to store the message if we have conversation ID
+          if (req.body?.conversationId) {
+            try {
+              // Log that we're trying to save the emergency message
+              console.log("Attempting to store emergency message in conversation:", req.body.conversationId);
+              const emergencyMessage = await storage.createMessage({
+                role: "assistant",
+                content: emergencyAnswer,
+                conversationId: req.body.conversationId,
+              });
+              console.log("Emergency message stored with ID:", emergencyMessage.id);
+              
+              return res.json({ 
+                answer: emergencyAnswer,
+                source: "emergency_fallback",
+                error: "server_recovered",
+                conversationId: req.body.conversationId
+              });
+            } catch (storageError) {
+              console.error("Failed to store emergency message:", storageError);
+            }
+          }
+          
+          // Return response without storage if we couldn't store it
+          return res.json({ 
+            answer: emergencyAnswer,
+            source: "emergency_fallback",
+            error: "server_recovered" 
+          });
+        } catch (fallbackError) {
+          // If even the fallback fails, return a generic error
+          console.error("Complete system failure, returning generic error:", fallbackError);
+          return res.status(500).json({ 
+            answer: "An error occurred while processing your request. Please try again later.",
+            error: "server_error" 
+          });
+        }
       }
     } catch (error) {
-      console.error("Error processing chat request:", error);
-      // Last resort fallback - if everything else fails
-      try {
-        const userMessage = req.body?.message || "";
-        console.log("Using emergency fallback for query:", userMessage);
-        const emergencyAnswer = findBestAnswer(userMessage);
-        
-        // Try to store the message if we have conversation ID
-        if (req.body?.conversationId) {
-          try {
-            // Log that we're trying to save the emergency message
-            console.log("Attempting to store emergency message in conversation:", req.body.conversationId);
-            const emergencyMessage = await storage.createMessage({
-              role: "assistant",
-              content: emergencyAnswer,
-              conversationId: req.body.conversationId,
-            });
-            console.log("Emergency message stored with ID:", emergencyMessage.id);
-            
-            return res.json({ 
-              answer: emergencyAnswer,
-              source: "emergency_fallback",
-              error: "server_recovered",
-              conversationId: req.body.conversationId
-            });
-          } catch (storageError) {
-            console.error("Failed to store emergency message:", storageError);
-          }
-        }
-        
-        // Return response without storage if we couldn't store it
-        return res.json({ 
-          answer: emergencyAnswer,
-          source: "emergency_fallback",
-          error: "server_recovered" 
-        });
-      } catch (fallbackError) {
-        // If even the fallback fails, return a generic error
-        console.error("Complete system failure, returning generic error:", fallbackError);
-        return res.status(500).json({ 
-          answer: "An error occurred while processing your request. Please try again later.",
-          error: "server_error" 
-        });
-      }
+      console.error("Unhandled error in chat endpoint:", error);
+      return res.status(500).json({ 
+        answer: "An error occurred while processing your request. Please try again later.",
+        error: "server_error" 
+      });
     }
   });
 

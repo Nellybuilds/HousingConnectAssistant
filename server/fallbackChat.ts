@@ -156,51 +156,76 @@ const topicKeywords: Record<string, string[]> = {
  * Find the best answer from the knowledge base using improved matching
  */
 export function findBestAnswer(userQuestion: string): string {
-  const lowerQ = userQuestion.toLowerCase();
+  const lowerQ = userQuestion.toLowerCase().trim();
+  console.log(`Finding best answer for question: "${lowerQ}"`);
+  
+  // Check for AMI specifically first (most common question with issues)
+  if (lowerQ.includes("ami") || lowerQ.includes("area median income")) {
+    console.log("AMI question detected, returning specific answer");
+    // Find the entry about AMI
+    const amiEntry = knowledgeBase.find(entry => 
+      entry.question.toLowerCase().includes("ami") || 
+      entry.keywords.some(k => k.toLowerCase() === "ami")
+    );
+    if (amiEntry) {
+      return amiEntry.answer;
+    }
+  }
   
   // 1. Direct question matching
   for (const entry of knowledgeBase) {
     if (lowerQ.includes(entry.question.toLowerCase())) {
+      console.log(`Direct match found for question: "${entry.question}"`);
       return entry.answer;
     }
   }
 
-  // 2. Keyword matching
-  let bestEntry = null;
-  let highestScore = 0;
+  // 2. Keyword matching with improved scoring
+  let matchEntries = [];
   
   for (const entry of knowledgeBase) {
     let score = 0;
+    let matchedKeywords = [];
     
     // Check for exact keyword matches
     for (const keyword of entry.keywords) {
-      if (lowerQ.includes(keyword.toLowerCase())) {
+      const keywordLower = keyword.toLowerCase();
+      if (lowerQ.includes(keywordLower)) {
         // Give higher weight to longer keyword matches
-        score += keyword.length / 2;
+        const keywordWeight = keyword.length / 2;
+        score += keywordWeight;
+        matchedKeywords.push({ keyword, weight: keywordWeight });
       }
     }
     
-    // Check for partial keyword matches
-    const words = lowerQ.split(/\s+/);
-    for (const word of words) {
-      if (word.length > 3) { // Only consider meaningful words
-        for (const keyword of entry.keywords) {
-          if (keyword.toLowerCase().includes(word)) {
-            score += 1;
-          }
-        }
-      }
-    }
-    
-    if (score > highestScore) {
-      highestScore = score;
-      bestEntry = entry;
+    // Add the entry with its score and matched keywords for debugging
+    if (score > 0) {
+      matchEntries.push({
+        entry,
+        score,
+        matchedKeywords
+      });
     }
   }
   
-  // If we found a good match based on keywords
-  if (highestScore > 3 && bestEntry) {
-    return bestEntry.answer;
+  // Sort matches by score in descending order
+  matchEntries.sort((a, b) => b.score - a.score);
+  
+  // Log top matches for debugging
+  if (matchEntries.length > 0) {
+    console.log(`Top matches found (${matchEntries.length} total):`);
+    matchEntries.slice(0, 3).forEach((match, i) => {
+      console.log(`  ${i+1}. Question: "${match.entry.question}" (Score: ${match.score})`);
+      console.log(`     Matched keywords: ${match.matchedKeywords.map(k => k.keyword).join(', ')}`);
+    });
+    
+    // Return the best match if it has a reasonable score
+    if (matchEntries[0].score > 2) {
+      console.log(`Selected best match: "${matchEntries[0].entry.question}"`);
+      return matchEntries[0].entry.answer;
+    }
+  } else {
+    console.log("No keyword matches found");
   }
   
   // 3. Topic-based search as a fallback
@@ -223,18 +248,43 @@ export function findBestAnswer(userQuestion: string): string {
   
   // If we found a matching topic but no specific answer
   if (topicScore > 0 && topicMatch) {
+    console.log(`Topic match found: "${topicMatch}" (Score: ${topicScore})`);
     // Return a general response about the topic
     return `I have information about ${topicMatch} for Housing Connect. Could you ask a more specific question about ${topicMatch}, such as the requirements, process, or options available?`;
   }
   
-  // 4. Check for common question variations
-  if (lowerQ.includes("what is") || lowerQ.includes("explain") || lowerQ.includes("define") || lowerQ.includes("tell me about")) {
-    const words = lowerQ.split(/\s+/);
-    for (const word of words) {
-      if (word.length > 3) {
-        // Look for entries that might explain this term
-        for (const entry of knowledgeBase) {
-          if (entry.question.toLowerCase().includes(word)) {
+  // 4. Check for common question variations with question keywords
+  if (lowerQ.includes("what is") || lowerQ.includes("explain") || lowerQ.includes("define") || lowerQ.includes("tell me about") || lowerQ.includes("what does") || lowerQ.includes("what are")) {
+    console.log("Question format detected, checking for content words");
+    
+    // Extract words after the question phrase
+    let contentWords = [];
+    const questionPhrases = ["what is", "explain", "define", "tell me about", "what does", "what are"];
+    
+    for (const phrase of questionPhrases) {
+      if (lowerQ.includes(phrase)) {
+        const afterPhrase = lowerQ.split(phrase)[1]?.trim();
+        if (afterPhrase) {
+          contentWords = afterPhrase.split(/\s+/);
+          break;
+        }
+      }
+    }
+    
+    if (contentWords.length > 0) {
+      console.log(`Content words extracted: ${contentWords.join(', ')}`);
+      
+      // Look for entries that might explain these terms
+      for (const entry of knowledgeBase) {
+        for (const word of contentWords) {
+          if (word.length > 2 && entry.question.toLowerCase().includes(word)) {
+            console.log(`Match found for content word "${word}" in question "${entry.question}"`);
+            return entry.answer;
+          }
+          
+          // Also check keywords
+          if (word.length > 2 && entry.keywords.some(k => k.toLowerCase().includes(word))) {
+            console.log(`Match found for content word "${word}" in keywords of "${entry.question}"`);
             return entry.answer;
           }
         }
@@ -243,5 +293,6 @@ export function findBestAnswer(userQuestion: string): string {
   }
   
   // 5. Default response if no good match found
+  console.log("No suitable match found, returning default response");
   return "I don't have specific information about that. Please ask about Housing Connect applications, eligibility criteria, housing options, required documents, or application timelines. You can also ask about AMI (Area Median Income), rent calculation, or tenant rights.";
 }

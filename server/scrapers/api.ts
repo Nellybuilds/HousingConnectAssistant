@@ -18,14 +18,18 @@ if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-// Initialize files if they don't exist
+// Initialize files if they don't exist - but don't overwrite them
 function initializeFiles() {
   if (!fs.existsSync(LISTINGS_FILE)) {
+    // Create an empty array as a placeholder if file doesn't exist
     fs.writeFileSync(LISTINGS_FILE, JSON.stringify([], null, 2));
+    console.log('Created empty listings file');
   }
   
   if (!fs.existsSync(HPD_RULES_FILE)) {
+    // Create an empty array as a placeholder if file doesn't exist
     fs.writeFileSync(HPD_RULES_FILE, JSON.stringify([], null, 2));
+    console.log('Created empty HPD rules file');
   }
 }
 

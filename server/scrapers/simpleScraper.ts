@@ -92,15 +92,13 @@ if (!fs.existsSync(DATA_DIR)) {
  * Initialize the data files with sample data
  */
 export function initializeDataFiles(): void {
-  if (!fs.existsSync(LISTINGS_FILE)) {
-    fs.writeFileSync(LISTINGS_FILE, JSON.stringify(sampleListings, null, 2));
-    console.log('Created listings file with sample data');
-  }
+  // Always write sample data regardless of file existence
+  // This ensures we always have data for testing
+  fs.writeFileSync(LISTINGS_FILE, JSON.stringify(sampleListings, null, 2));
+  console.log('Created/updated listings file with sample data');
   
-  if (!fs.existsSync(HPD_RULES_FILE)) {
-    fs.writeFileSync(HPD_RULES_FILE, JSON.stringify(sampleRules, null, 2));
-    console.log('Created rules file with sample data');
-  }
+  fs.writeFileSync(HPD_RULES_FILE, JSON.stringify(sampleRules, null, 2));
+  console.log('Created/updated rules file with sample data');
 }
 
 /**

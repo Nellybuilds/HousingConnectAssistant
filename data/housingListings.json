@@ -1,1 +1,84 @@
-[]
+[
+  {
+    "project_name": "The Bedford",
+    "address": "3160 Webster Avenue, Bronx, NY 10467",
+    "application_deadline": "2025-06-30",
+    "ami_range": "40%-80% AMI",
+    "minimum_income": "$23,880",
+    "maximum_income": "$95,360",
+    "unit_sizes": [
+      "Studio",
+      "1BR",
+      "2BR"
+    ],
+    "rent_prices": [
+      "$683",
+      "$1,110",
+      "$1,342"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/PublicWeb/details/lottery/12345",
+    "project_description": "New affordable housing units in the Bronx with on-site laundry facilities, community room, and bike storage.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-04-29T02:04:03.399Z"
+  },
+  {
+    "project_name": "Riverview Apartments",
+    "address": "45 River Street, Brooklyn, NY 11206",
+    "application_deadline": "2025-07-15",
+    "ami_range": "50%-130% AMI",
+    "minimum_income": "$28,550",
+    "maximum_income": "$156,130",
+    "unit_sizes": [
+      "Studio",
+      "1BR",
+      "2BR",
+      "3BR"
+    ],
+    "rent_prices": [
+      "$750",
+      "$1,200",
+      "$1,500",
+      "$1,850"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/PublicWeb/details/lottery/12346",
+    "project_description": "Mixed-income housing development in Brooklyn with rooftop terrace, fitness center, and 24-hour security.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference",
+      "10% municipal employee preference"
+    ],
+    "last_updated": "2025-04-29T02:04:03.399Z"
+  },
+  {
+    "project_name": "Queens Commons",
+    "address": "127-35 Northern Blvd, Queens, NY 11368",
+    "application_deadline": "2025-08-01",
+    "ami_range": "30%-60% AMI",
+    "minimum_income": "$18,240",
+    "maximum_income": "$76,020",
+    "unit_sizes": [
+      "1BR",
+      "2BR",
+      "3BR"
+    ],
+    "rent_prices": [
+      "$590",
+      "$720",
+      "$830"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/PublicWeb/details/lottery/12347",
+    "project_description": "Affordable family housing in Queens with energy-efficient appliances, children's playroom, and on-site after-school program.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference",
+      "5% veteran preference"
+    ],
+    "last_updated": "2025-04-29T02:04:03.399Z"
+  }
+]

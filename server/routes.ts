@@ -5,6 +5,7 @@ import { housingConnectKnowledge } from "./knowledge";
 import { findBestAnswer } from "./fallbackChat";
 import { storage } from "./storage";
 import { queryWeaviateForContext } from "./weaviateRag";
+import { api as scrapersApi } from "./scrapers";
 
 // Define validation schema for chat requests
 const chatRequestSchema = z.object({

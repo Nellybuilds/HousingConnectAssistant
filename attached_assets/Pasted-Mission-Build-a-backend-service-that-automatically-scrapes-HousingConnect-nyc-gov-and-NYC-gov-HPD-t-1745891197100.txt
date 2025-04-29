@@ -1,0 +1,41 @@
+Mission:
+Build a backend service that automatically scrapes HousingConnect.nyc.gov and NYC.gov/HPD to extract affordable housing lottery listings, deadlines, eligibility info, AMI data, and rules, and saves the data in structured JSON format for use in a chatbot.
+
+📄 Detailed Requirements:
+
+Area	Details
+Sources	1. https://housingconnect.nyc.gov — lottery listings, project details, deadlines, AMI ranges.
+2. https://www.nyc.gov/hpd — rules and regulations, eligibility documents, FAQs.
+Data to Capture (Per Listing)	- Project Name
+- Address
+- Application Deadline
+- AMI Range (ex: 40%-80%)
+- Minimum Income
+- Maximum Income
+- Unit Sizes (studio, 1BR, etc.)
+- Rent Prices
+- Application Link
+- Project Description
+- Special Requirements (e.g., mobility/vision preferences, community board preference)
+Output Format	JSON — Each listing should be a clean JSON object with all fields populated if possible.
+Sample JSON Output	(Show them this)👇
+json { "project_name": "The Bedford", "address": "3160 Webster Avenue, Bronx, NY 10467", "application_deadline": "2025-06-30", "ami_range": "40%-80% AMI", "minimum_income": "$23,880", "maximum_income": "$95,360", "unit_sizes": ["Studio", "1BR", "2BR"], "rent_prices": ["$683", "$1,110", "$1,342"], "application_link": "https://housingconnect.nyc.gov/PublicWeb/details/lottery/12345", "project_description": "New affordable housing units in Bronx.", "special_requirements": ["5% mobility", "2% vision/hearing", "Community Board Preference"] }
+Scraping Requirements	- Scrape across multiple pages if necessary (handle pagination if Housing Connect has it).
+- Detect new listings vs existing ones (avoid duplicates).
+- Handle website errors gracefully (timeouts, changes).
+Schedule	Automatically run the scraper once every 24 hours (e.g., via cron job or scheduled Replit task).
+Storage	Store JSON output either:
+- in a backend database (PostgreSQL, MongoDB), or
+- in simple flat JSON files that can be retrieved easily by the chatbot.
+Extendability	Structure code so that adding new sources later (e.g., other housing sites) is easy. (Good modular design.)
+Tech Stack Preference	- Node.js, Python, or any backend Replit supports easily.
+- Use libraries like Puppeteer (Node) or BeautifulSoup/Scrapy (Python) for scraping.
+Optional (Stretch Goal)	If easy, allow querying the JSON database via a simple API endpoint (ex: /api/lotteries) so the bot can pull data live later.
+📌 Special Reminders:
+Prioritize data accuracy (no duplicate, wrong, or broken entries).
+
+Keep clear error logging (if a scrape fails, log it).
+
+Prefer structured selectors (like IDs, classes) rather than brittle scraping (like guessing XPaths).
+
+No need to scrape PDFs or complicated file downloads yet — just visible text and listings.

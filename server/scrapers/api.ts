@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { HousingListing } from './types';
-import { runAllScrapersNow } from './scheduler';
+import { runAllScrapersNow } from './index';
 
 // Get the directory name in ESM
 const __filename = fileURLToPath(import.meta.url);

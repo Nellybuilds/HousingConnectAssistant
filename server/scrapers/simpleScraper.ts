@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 // Directory and file paths
 const DATA_DIR = path.join(__dirname, '../../data');
 const LISTINGS_FILE = path.join(DATA_DIR, 'housingListings.json');
-const RULES_FILE = path.join(DATA_DIR, 'hpdRules.json');
+const HPD_RULES_FILE = path.join(DATA_DIR, 'hpdRules.json');
 
 // Sample housing listing data (for demonstration)
 const sampleListings: HousingListing[] = [
@@ -97,8 +97,8 @@ export function initializeDataFiles(): void {
     console.log('Created listings file with sample data');
   }
   
-  if (!fs.existsSync(RULES_FILE)) {
-    fs.writeFileSync(RULES_FILE, JSON.stringify(sampleRules, null, 2));
+  if (!fs.existsSync(HPD_RULES_FILE)) {
+    fs.writeFileSync(HPD_RULES_FILE, JSON.stringify(sampleRules, null, 2));
     console.log('Created rules file with sample data');
   }
 }

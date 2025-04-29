@@ -5,6 +5,7 @@ import { storage } from "./storage";
 import { db } from "./db";
 import { users } from "@shared/schema";
 import { initializeWeaviateWithKnowledge } from "./weaviateRag";
+import { scheduleAllScrapers } from "./scrapers";
 
 // Initialize a default user if no users exist
 async function initializeDefaultUser() {
@@ -118,5 +119,15 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+    
+    // Initialize and schedule the housing data scrapers
+    try {
+      log("Initializing housing data scrapers...");
+      scheduleAllScrapers();
+      log("Housing data scrapers scheduled successfully");
+    } catch (error) {
+      console.error("Error initializing housing data scrapers:", error);
+      log("Failed to initialize housing data scrapers");
+    }
   });
 })();

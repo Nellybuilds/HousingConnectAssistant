@@ -310,6 +310,132 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ----- Housing Listings API Endpoints -----
+  
+  // Get all housing listings
+  app.get("/api/housing/listings", (_req: Request, res: Response) => {
+    try {
+      const listings = scrapersApi.getAllListings();
+      res.status(200).json({ listings });
+    } catch (error) {
+      console.error("Error retrieving housing listings:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+  
+  // Get open housing listings (with future deadlines)
+  app.get("/api/housing/listings/open", (_req: Request, res: Response) => {
+    try {
+      const openListings = scrapersApi.getOpenListings();
+      res.status(200).json({ listings: openListings });
+    } catch (error) {
+      console.error("Error retrieving open housing listings:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+  
+  // Search housing listings
+  app.get("/api/housing/search", (req: Request, res: Response) => {
+    try {
+      const query = req.query.q as string;
+      if (!query) {
+        return res.status(400).json({ error: "Search query is required" });
+      }
+      
+      const results = scrapersApi.searchListings(query);
+      res.status(200).json({ results });
+    } catch (error) {
+      console.error("Error searching housing listings:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+  
+  // Get listings by AMI range
+  app.get("/api/housing/listings/ami/:percentage", (req: Request, res: Response) => {
+    try {
+      const amiPercentage = parseInt(req.params.percentage);
+      if (isNaN(amiPercentage)) {
+        return res.status(400).json({ error: "Invalid AMI percentage" });
+      }
+      
+      const listings = scrapersApi.getListingsByAMI(amiPercentage);
+      res.status(200).json({ listings });
+    } catch (error) {
+      console.error("Error retrieving listings by AMI:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+  
+  // Get listings by unit size
+  app.get("/api/housing/listings/unit-size/:size", (req: Request, res: Response) => {
+    try {
+      const unitSize = req.params.size;
+      if (!unitSize) {
+        return res.status(400).json({ error: "Unit size is required" });
+      }
+      
+      const listings = scrapersApi.getListingsByUnitSize(unitSize);
+      res.status(200).json({ listings });
+    } catch (error) {
+      console.error("Error retrieving listings by unit size:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+  
+  // Get HPD rules
+  app.get("/api/housing/rules", (_req: Request, res: Response) => {
+    try {
+      const rules = scrapersApi.getAllHPDRules();
+      res.status(200).json({ rules });
+    } catch (error) {
+      console.error("Error retrieving HPD rules:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+  
+  // Search HPD rules
+  app.get("/api/housing/rules/search", (req: Request, res: Response) => {
+    try {
+      const query = req.query.q as string;
+      if (!query) {
+        return res.status(400).json({ error: "Search query is required" });
+      }
+      
+      const results = scrapersApi.searchHPDRules(query);
+      res.status(200).json({ results });
+    } catch (error) {
+      console.error("Error searching HPD rules:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+  
+  // Get HPD rules by category
+  app.get("/api/housing/rules/category/:category", (req: Request, res: Response) => {
+    try {
+      const category = req.params.category;
+      if (!category) {
+        return res.status(400).json({ error: "Category is required" });
+      }
+      
+      const rules = scrapersApi.getHPDRulesByCategory(category);
+      res.status(200).json({ rules });
+    } catch (error) {
+      console.error("Error retrieving HPD rules by category:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+  
+  // Run scrapers manually (admin only)
+  app.post("/api/housing/scrapers/run", async (_req: Request, res: Response) => {
+    try {
+      const result = await scrapersApi.runScrapersOnDemand();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error("Error running scrapers:", error);
+      res.status(500).json({ success: false, error: "Server error" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

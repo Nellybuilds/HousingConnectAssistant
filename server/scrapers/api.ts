@@ -1,7 +1,12 @@
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { HousingListing } from './types';
 import { runAllScrapersNow } from './scheduler';
+
+// Get the directory name in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Data file paths
 const DATA_DIR = path.join(__dirname, '../../data');
@@ -202,6 +207,13 @@ export async function runScrapersOnDemand(): Promise<{ success: boolean, message
     return { success: true, message: 'Scrapers executed successfully' };
   } catch (error) {
     console.error('Error running scrapers on-demand:', error);
-    return { success: false, message: 'Error running scrapers: ' + error.message };
+    // Handle error safely without accessing properties directly
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    }
+    return { success: false, message: 'Error running scrapers: ' + errorMessage };
   }
 }

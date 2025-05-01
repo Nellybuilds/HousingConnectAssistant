@@ -78,10 +78,10 @@ export default function Admin() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Feedback Analytics</h1>
+        <h1 className="text-3xl font-bold dark:text-white">Feedback Analytics</h1>
         <button
           onClick={logout}
-          className="flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md"
+          className="flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-md"
         >
           <LogOut className="h-4 w-4 mr-2" />
           Logout
@@ -91,29 +91,29 @@ export default function Admin() {
       {/* Stats Cards */}
       {data?.stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-gray-500 text-sm">Total Feedback</h3>
-            <p className="text-2xl font-bold">{data.stats.total}</p>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+            <h3 className="text-gray-500 dark:text-gray-400 text-sm">Total Feedback</h3>
+            <p className="text-2xl font-bold dark:text-white">{data.stats.total}</p>
           </div>
           
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-gray-500 text-sm">Positive Feedback</h3>
-            <p className="text-2xl font-bold text-green-600">{data.stats.positive}</p>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+            <h3 className="text-gray-500 dark:text-gray-400 text-sm">Positive Feedback</h3>
+            <p className="text-2xl font-bold text-green-600 dark:text-green-400">{data.stats.positive}</p>
           </div>
           
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-gray-500 text-sm">Negative Feedback</h3>
-            <p className="text-2xl font-bold text-red-600">{data.stats.negative}</p>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+            <h3 className="text-gray-500 dark:text-gray-400 text-sm">Negative Feedback</h3>
+            <p className="text-2xl font-bold text-red-600 dark:text-red-400">{data.stats.negative}</p>
           </div>
           
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-gray-500 text-sm">Positive Rate</h3>
-            <p className="text-2xl font-bold">{data.stats.positivePercentage}%</p>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+            <h3 className="text-gray-500 dark:text-gray-400 text-sm">Positive Rate</h3>
+            <p className="text-2xl font-bold dark:text-white">{data.stats.positivePercentage}%</p>
             
             {/* Progress bar */}
-            <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-2">
               <div 
-                className="bg-green-600 h-2.5 rounded-full" 
+                className="bg-green-600 dark:bg-green-500 h-2.5 rounded-full" 
                 style={{width: `${positivePercentage}%`}}
               ></div>
             </div>
@@ -122,7 +122,7 @@ export default function Admin() {
       )}
       
       {/* Search and Filter */}
-      <div className="bg-white p-4 rounded-lg shadow mb-6">
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -131,7 +131,7 @@ export default function Admin() {
             <input
               type="text"
               placeholder="Search message content..."
-              className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md"
+              className="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -142,7 +142,7 @@ export default function Admin() {
               className={`px-4 py-2 rounded-md border ${
                 feedbackFilter === "all" 
                   ? "bg-primary text-white" 
-                  : "bg-white text-gray-700 hover:bg-gray-50"
+                  : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
               }`}
               onClick={() => setFeedbackFilter("all")}
             >
@@ -152,7 +152,7 @@ export default function Admin() {
               className={`px-4 py-2 rounded-md border ${
                 feedbackFilter === "positive" 
                   ? "bg-green-600 text-white" 
-                  : "bg-white text-gray-700 hover:bg-gray-50"
+                  : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
               }`}
               onClick={() => setFeedbackFilter("positive")}
             >
@@ -163,7 +163,7 @@ export default function Admin() {
               className={`px-4 py-2 rounded-md border ${
                 feedbackFilter === "negative" 
                   ? "bg-red-600 text-white" 
-                  : "bg-white text-gray-700 hover:bg-gray-50"
+                  : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
               }`}
               onClick={() => setFeedbackFilter("negative")}
             >
@@ -176,18 +176,18 @@ export default function Admin() {
       
       {/* Loading and Error States */}
       {isLoading && (
-        <div className="bg-white p-8 rounded-lg shadow text-center">
+        <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow text-center">
           <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
-            <div className="h-4 bg-gray-200 rounded w-5/6 mx-auto"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mx-auto"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 mx-auto"></div>
           </div>
-          <p className="text-gray-500 mt-4">Loading feedback data...</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-4">Loading feedback data...</p>
         </div>
       )}
       
       {error && (
-        <div className="bg-red-50 p-4 rounded-lg border border-red-200 text-red-700">
+        <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400">
           <p>Error loading feedback data. Please try again later.</p>
         </div>
       )}
@@ -196,45 +196,45 @@ export default function Admin() {
       {!isLoading && !error && (
         <div className="space-y-4">
           {filteredFeedback.length === 0 ? (
-            <div className="bg-white p-8 rounded-lg shadow text-center">
-              <p className="text-gray-500">No feedback matches your criteria.</p>
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow text-center">
+              <p className="text-gray-500 dark:text-gray-400">No feedback matches your criteria.</p>
             </div>
           ) : (
             filteredFeedback.map(item => (
-              <div key={item.id} className="bg-white p-4 rounded-lg shadow">
+              <div key={item.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center">
                     {item.rating ? (
-                      <div className="bg-green-100 p-2 rounded-full">
-                        <ThumbsUp className="h-5 w-5 text-green-600" />
+                      <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-full">
+                        <ThumbsUp className="h-5 w-5 text-green-600 dark:text-green-400" />
                       </div>
                     ) : (
-                      <div className="bg-red-100 p-2 rounded-full">
-                        <ThumbsDown className="h-5 w-5 text-red-600" />
+                      <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-full">
+                        <ThumbsDown className="h-5 w-5 text-red-600 dark:text-red-400" />
                       </div>
                     )}
                     <div className="ml-3">
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         <CalendarDays className="h-4 w-4 inline mr-1" />
                         {formatDate(item.createdAt)}
                       </p>
                       {item.conversationTitle && (
-                        <p className="text-sm font-medium">
+                        <p className="text-sm font-medium dark:text-gray-300">
                           <MessageCircle className="h-4 w-4 inline mr-1" />
                           {item.conversationTitle}
                         </p>
                       )}
                     </div>
                   </div>
-                  <span className="text-xs text-gray-500">ID: {item.messageId}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">ID: {item.messageId}</span>
                 </div>
                 
                 {item.message ? (
-                  <div className="bg-gray-50 p-3 rounded border border-gray-200">
-                    <p className="text-gray-700">{item.message.content}</p>
+                  <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded border border-gray-200 dark:border-gray-600">
+                    <p className="text-gray-700 dark:text-gray-300">{item.message.content}</p>
                   </div>
                 ) : (
-                  <p className="text-gray-500 italic">Message content not available</p>
+                  <p className="text-gray-500 dark:text-gray-400 italic">Message content not available</p>
                 )}
               </div>
             ))

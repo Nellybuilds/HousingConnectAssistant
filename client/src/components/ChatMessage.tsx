@@ -32,7 +32,7 @@ export default function ChatMessage({ role, content, id }: ChatMessageProps) {
       .split('|||')
       .map(segment => {
         if (segment.includes('<li')) {
-          return `<ul class="mt-2 space-y-1 list-disc list-inside text-gray-800">${segment}</ul>`;
+          return `<ul class="mt-2 space-y-1 list-disc list-inside text-gray-800 dark:text-gray-200">${segment}</ul>`;
         }
         return segment;
       })
@@ -41,7 +41,7 @@ export default function ChatMessage({ role, content, id }: ChatMessageProps) {
     // Handle paragraphs (double line breaks)
     const withParagraphs = withListWraps.replace(
       /\n\n/g, 
-      '</p><p class="mt-2 text-gray-800">'
+      '</p><p class="mt-2 text-gray-800 dark:text-gray-200">'
     );
     
     // Handle single line breaks
@@ -122,12 +122,12 @@ export default function ChatMessage({ role, content, id }: ChatMessageProps) {
 
   return (
     <div className="flex items-start">
-      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center mr-2">
-        <Bot className="h-4 w-4 text-primary-600" />
+      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mr-2">
+        <Bot className="h-4 w-4 text-primary-600 dark:text-primary-300" />
       </div>
-      <div className="bg-white rounded-lg rounded-tl-none shadow-sm p-4 max-w-[85%]">
+      <div className="bg-white dark:bg-gray-700 rounded-lg rounded-tl-none shadow-sm p-4 max-w-[85%]">
         <p 
-          className="text-gray-800"
+          className="text-gray-800 dark:text-gray-200"
           dangerouslySetInnerHTML={{ __html: formatMessage(content) }}
         />
         
@@ -135,16 +135,16 @@ export default function ChatMessage({ role, content, id }: ChatMessageProps) {
         {id && (
           <div className="flex items-center mt-2">
             {feedback ? (
-              <p className="text-xs text-green-600 animate-fadeIn">
+              <p className="text-xs text-green-600 dark:text-green-400 animate-fadeIn">
                 Thank you for your feedback!
               </p>
             ) : (
               <>
-                <p className="text-xs text-gray-500 mr-2">Was this helpful?</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mr-2">Was this helpful?</p>
                 
                 <button
                   className={cn(
-                    "p-1 rounded hover:bg-gray-100 transition-colors"
+                    "p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-gray-700 dark:text-gray-300"
                   )}
                   onClick={() => submitFeedback(true)}
                   disabled={isLoading}
@@ -155,7 +155,7 @@ export default function ChatMessage({ role, content, id }: ChatMessageProps) {
                 
                 <button
                   className={cn(
-                    "p-1 rounded ml-2 hover:bg-gray-100 transition-colors"
+                    "p-1 rounded ml-2 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-gray-700 dark:text-gray-300"
                   )}
                   onClick={() => submitFeedback(false)}
                   disabled={isLoading}
@@ -164,8 +164,8 @@ export default function ChatMessage({ role, content, id }: ChatMessageProps) {
                   <ThumbsDown size={16} />
                 </button>
                 
-                {error && <p className="text-xs text-red-500 ml-2">{error}</p>}
-                {isLoading && <p className="text-xs text-gray-500 ml-2">Sending...</p>}
+                {error && <p className="text-xs text-red-500 dark:text-red-400 ml-2">{error}</p>}
+                {isLoading && <p className="text-xs text-gray-500 dark:text-gray-400 ml-2">Sending...</p>}
               </>
             )}
           </div>

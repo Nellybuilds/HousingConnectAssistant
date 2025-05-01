@@ -7,6 +7,7 @@ import Home from "@/pages/Home";
 import Admin from "@/pages/Admin";
 import AdminLogin from "@/pages/AdminLogin";
 import { AdminAuthProvider } from "@/hooks/useAdminAuth";
+import { ThemeProvider } from "@/hooks/useTheme";
 
 function Router() {
   return (
@@ -22,10 +23,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AdminAuthProvider>
-        <Router />
-        <Toaster />
-      </AdminAuthProvider>
+      <ThemeProvider>
+        <AdminAuthProvider>
+          <Router />
+          <Toaster />
+        </AdminAuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

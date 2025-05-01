@@ -29,43 +29,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Update the document with the current theme
   useEffect(() => {
-    // Update theme.json with the new appearance
-    const updateThemeJson = async () => {
-      try {
-        const response = await fetch("/theme.json", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            variant: "professional",
-            primary: "hsl(217, 91%, 60%)",
-            appearance: theme,
-            radius: 0.5
-          })
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Failed to update theme: ${response.status} ${response.statusText}`);
-        }
-        
-        console.log("Theme updated successfully on server");
-      } catch (error) {
-        console.error("Failed to update theme.json", error);
-        // Continue anyway, at least we'll have local storage
-      }
-    };
-
-    // Update document class
+    // Just update the document class and localStorage without making API call
+    // This prevents theme.json corruption issues
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
     
-    // Save to localStorage
+    // Save to localStorage for persistence
     localStorage.setItem("theme", theme);
-    
-    // Update theme.json
-    updateThemeJson();
   }, [theme]);
 
   // Toggle between light and dark themes

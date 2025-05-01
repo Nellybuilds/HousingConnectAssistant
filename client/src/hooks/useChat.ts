@@ -29,6 +29,9 @@ export function useChat(initialConversationId?: string) {
       const response = await apiRequest("GET", "/api/conversations");
       return response.json();
     },
+    staleTime: 60000, // 1 minute
+    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchOnWindowFocus: false, // Don't refetch when window is focused
   });
 
   // Set initial messages from conversation history

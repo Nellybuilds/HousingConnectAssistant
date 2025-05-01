@@ -32,7 +32,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // Update theme.json with the new appearance
     const updateThemeJson = async () => {
       try {
-        await fetch("/theme.json", {
+        const response = await fetch("/theme.json", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -42,8 +42,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
             radius: 0.5
           })
         });
+        
+        if (!response.ok) {
+          throw new Error(`Failed to update theme: ${response.status} ${response.statusText}`);
+        }
+        
+        console.log("Theme updated successfully on server");
       } catch (error) {
         console.error("Failed to update theme.json", error);
+        // Continue anyway, at least we'll have local storage
       }
     };
 

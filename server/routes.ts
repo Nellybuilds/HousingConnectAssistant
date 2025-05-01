@@ -1,6 +1,8 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
+import * as fs from 'fs/promises';
+import * as path from 'path';
 import { housingConnectKnowledge } from "./knowledge";
 import { findBestAnswer } from "./fallbackChat";
 import { storage } from "./storage";
@@ -210,6 +212,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint
   app.get("/api/health", (_req: Request, res: Response) => {
     res.json({ status: "ok" });
+  });
+  
+  // Theme update endpoint
+  app.put("/theme.json", async (req: Request, res: Response) => {
+    try {
+      const themeSchema = z.object({
+        variant: z.string(),
+        primary: z.string(),
+        appearance: z.enum(["light", "dark", "system"]),
+        radius: z.number(),
+      });
+      
+      const result = themeSchema.safeParse(req.body);
+      
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: "Invalid theme data", 
+          errors: result.error.format() 
+        });
+      }
+      
+      const themeData = result.data;
+      
+      // Write to theme.json file
+      const themePath = path.join(process.cwd(), 'theme.json');
+      await fs.writeFile(themePath, JSON.stringify(themeData, null, 2));
+      
+      return res.status(200).json({ 
+        success: true, 
+        theme: themeData 
+      });
+    } catch (error: any) {
+      console.error("Error updating theme:", error);
+      return res.status(500).json({ 
+        message: "Failed to update theme",
+        error: error.message || "Unknown error"
+      });
+    }
   });
 
   // Feedback endpoints

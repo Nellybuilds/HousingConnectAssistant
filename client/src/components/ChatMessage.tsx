@@ -133,7 +133,7 @@ export default function ChatMessage({ role, content, id }: ChatMessageProps) {
         
         {/* Feedback buttons - only show for assistant messages with an ID */}
         {id && (
-          <div className="flex items-center mt-2">
+          <div className="feedback-buttons flex items-center mt-2">
             {feedback ? (
               <p className="text-xs text-green-600 dark:text-green-400 animate-fadeIn">
                 Thank you for your feedback!

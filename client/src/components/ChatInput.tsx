@@ -48,7 +48,7 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-end gap-2">
+    <form onSubmit={handleSubmit} className="chat-input flex items-end gap-2">
       <div className="flex-1 bg-gray-100 dark:bg-gray-700 rounded-lg focus-within:ring-2 focus-within:ring-primary focus-within:bg-white dark:focus-within:bg-gray-600 transition-all border border-gray-200 dark:border-gray-600">
         <textarea
           ref={textareaRef}

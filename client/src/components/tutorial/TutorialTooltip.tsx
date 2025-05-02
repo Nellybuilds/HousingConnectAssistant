@@ -78,14 +78,14 @@ export default function TutorialTooltip({
       {/* Target highlight */}
       {targetSelector && (
         <div 
-          className="rounded-md border-2 border-primary ring-4 ring-primary/20 animate-pulse"
+          className="rounded-md border-2 border-primary ring-4 ring-primary/20 tutorial-highlight"
           style={highlightStyle} 
         />
       )}
       
       {/* Tooltip */}
       <div 
-        className={`fixed z-50 w-80 bg-background rounded-lg shadow-lg border border-border p-4`}
+        className={`fixed z-50 w-80 bg-background rounded-lg shadow-lg border border-border p-4 tutorial-tooltip`}
         style={position}
       >
         <div className="flex justify-between items-center mb-2">

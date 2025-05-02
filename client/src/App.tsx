@@ -8,6 +8,8 @@ import Admin from "@/pages/Admin";
 import AdminLogin from "@/pages/AdminLogin";
 import { AdminAuthProvider } from "@/hooks/useAdminAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { TutorialProvider } from "@/hooks/useTutorial";
+import Tutorial from "@/components/tutorial/Tutorial";
 
 function Router() {
   return (
@@ -25,8 +27,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AdminAuthProvider>
-          <Router />
-          <Toaster />
+          <TutorialProvider>
+            <Router />
+            <Tutorial />
+            <Toaster />
+          </TutorialProvider>
         </AdminAuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

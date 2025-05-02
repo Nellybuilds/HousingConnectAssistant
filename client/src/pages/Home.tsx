@@ -3,6 +3,7 @@ import ChatInterface from "@/components/ChatInterface";
 import Sidebar from "@/components/Sidebar";
 import MobileSidebar from "@/components/MobileSidebar";
 import ThemeToggle from "@/components/ThemeToggle";
+import TutorialButton from "@/components/tutorial/TutorialButton";
 import { Home as HomeIcon, Menu } from "lucide-react";
 
 export default function Home() {
@@ -19,7 +20,9 @@ export default function Home() {
   return (
     <div className="flex flex-col md:flex-row h-screen bg-white dark:bg-gray-900 transition-colors">
       {/* Desktop Sidebar */}
-      <Sidebar />
+      <div className="sidebar">
+        <Sidebar />
+      </div>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
@@ -48,8 +51,16 @@ export default function Home() {
               <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Housing Connect Helper</h1>
             </div>
 
-            {/* Theme toggle */}
-            <ThemeToggle />
+            {/* Right side controls */}
+            <div className="flex items-center space-x-2">
+              {/* Tutorial button */}
+              <TutorialButton />
+              
+              {/* Theme toggle */}
+              <div className="theme-toggle">
+                <ThemeToggle />
+              </div>
+            </div>
           </div>
         </header>
 

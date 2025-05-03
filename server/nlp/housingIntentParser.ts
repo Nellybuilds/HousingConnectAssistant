@@ -354,13 +354,10 @@ export function formatListingResponse(listings: HousingListing[], params: Housin
   
   // Format each listing
   const listingsText = displayListings.map((listing, index) => {
-    // Format the link to Housing Connect
+    // Format the link to Housing Connect - using main website URL to avoid broken links with placeholder IDs
     let applicationLinkText = '';
-    if (listing.application_link && listing.application_link.includes('housingconnect.nyc.gov')) {
-      applicationLinkText = `🔗 Apply at: ${listing.application_link}`;
-    } else {
-      applicationLinkText = `🔗 Apply on Housing Connect by searching for "${listing.project_name}"`;
-    }
+    // Instead of using potentially invalid deep links with lottery IDs, link to the main site
+    applicationLinkText = `🔗 Apply at: https://housingconnect.nyc.gov/ (search for "${listing.project_name}")`;
 
     return `${index + 1}. ${listing.project_name}
    📍 ${listing.address}

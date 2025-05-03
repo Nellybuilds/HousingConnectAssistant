@@ -208,26 +208,28 @@ export async function generateHuggingFaceChatResponse({ message, context, conver
       const today = new Date();
       console.log("Deadline filtering, today is:", today.toISOString());
       
-      // DEBUG: Print all dates before filtering
-      for (const listing of filteredListings) {
+      // Only log the first few listings for debugging
+      for (let i = 0; i < Math.min(filteredListings.length, 3); i++) {
+        const listing = filteredListings[i];
         const deadline = new Date(listing.application_deadline);
-        console.log(`Listing '${listing.project_name}' deadline: ${listing.application_deadline}, parsed: ${deadline.toISOString()}, valid: ${deadline > today}`);
+        console.log(`Sample listing '${listing.project_name}' deadline: ${listing.application_deadline}, valid: ${deadline > today}`);
       }
       
-      // Temporarily disable deadline filtering for debugging
-      /* 
+      // Restore deadline filtering with proper logging
       filteredListings = filteredListings.filter(listing => {
         try {
           const deadline = new Date(listing.application_deadline);
           const isValid = deadline > today;
-          console.log(`Deadline check for '${listing.project_name}': ${deadline.toISOString()}, valid: ${isValid}`);
+          // Only log rejects for debugging
+          if (!isValid) {
+            console.log(`Filtering out '${listing.project_name}' with deadline: ${deadline.toISOString()}`);
+          }
           return isValid;
         } catch (e) {
           console.log(`Error parsing deadline for '${listing.project_name}':`, e);
           return true; // Include if date can't be parsed
         }
       });
-      */
       
       console.log(`Filtered to ${filteredListings.length} matching listings`);
       
@@ -313,10 +315,11 @@ export async function generateHuggingFaceChatResponse({ message, context, conver
     
     // Create a prompt with the context and user question
     const prompt = `
-You are Housing Connect Helper, an AI assistant that provides information about affordable housing. 
-Your task is to provide clear, accurate, and helpful information about Housing Connect.
+You are Housing Connect Helper, an AI assistant that provides information about affordable rental housing in NYC. 
+Your task is to provide clear, accurate, and helpful information about Housing Connect's rental apartment listings and application process.
 Write at a 6th grade reading level with simple words and short sentences.
 Explain any necessary housing terms in simple language.
+Focus ONLY on rental housing, not homeownership programs.
 
 Context information from Housing Connect knowledge base:
 ${context}
@@ -325,6 +328,7 @@ Question: ${message}
 
 Please provide a concise and helpful answer based only on the context provided.
 If the answer cannot be determined from the context, say so clearly and provide general information that might be helpful.
+Focus on affordable rental housing information only.
 `;
 
     // Use Hugging Face to generate a response

@@ -247,19 +247,40 @@ export async function generateWeaviateRAGResponse(question: string, conversation
     
     // Use a try/catch separately for the context to prevent crashes
     try {
-      // Get relevant context from Weaviate using simple keyword matching
-      // This avoids complex vector operations that might cause memory issues
-      if (!question.toLowerCase().includes("apartment") && 
-          !question.toLowerCase().includes("housing") &&
-          !question.toLowerCase().includes("listing")) {
-        // Only query Weaviate for non-housing-specific questions
-        // For housing questions we'll rely on our simplified search
+      // Check if the question is just a location name or appears to be location-related
+      const boroughs = ["bronx", "brooklyn", "manhattan", "queens", "staten island"];
+      const lowerQuestion = question.toLowerCase();
+      const isJustLocation = boroughs.some(borough => 
+        lowerQuestion.includes(borough) || lowerQuestion === `${borough}?`
+      );
+      
+      // Enhance housing-related keyword detection
+      const hasHousingKeywords = 
+          lowerQuestion.includes("apartment") || 
+          lowerQuestion.includes("housing") ||
+          lowerQuestion.includes("listing") ||
+          lowerQuestion.includes("rent") ||
+          lowerQuestion.includes("application") ||
+          lowerQuestion.includes("affordable");
+      
+      // If it's just a location or includes both location and housing keywords,
+      // treat it as a housing search question
+      if (isJustLocation || (isJustLocation && hasHousingKeywords)) {
+        console.log("Processing as a location-based housing query");
+        // For location-specific questions, we'll use a specific context about rental listings
+        context = "Housing Connect offers affordable rental housing listings in all five boroughs " +
+                  "of New York City (Bronx, Brooklyn, Manhattan, Queens, and Staten Island). " +
+                  "You can search for apartments by location, unit size, and income requirements. " +
+                  "Housing Connect does not handle homeowner programs through this platform.";
+      } 
+      // If it's not a housing-specific question, query Weaviate
+      else if (!hasHousingKeywords) {
         context = await queryWeaviateForContext(question);
       }
     } catch (contextError) {
       console.error("Error getting context, using fallback:", contextError);
-      // Use fallback context
-      context = "Housing Connect is NYC's housing lottery system that helps people find and apply for affordable rental and homeownership opportunities. To qualify for affordable housing, your income needs to be in a specific range for each development. Housing developments may have additional requirements.";
+      // Use fallback context - rental only, no homeownership mentions
+      context = "Housing Connect is NYC's housing lottery system that helps people find and apply for affordable rental housing. To qualify for affordable housing, your income needs to be in a specific range for each apartment development. Housing developments may have additional requirements for applicants.";
     }
     
     // Use Hugging Face to generate a response with conversation context

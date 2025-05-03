@@ -42,12 +42,15 @@ def generate_application_deadline(completion_date):
     # Parse completion date
     completion_date = datetime.datetime.strptime(completion_date, '%Y-%m-%d')
     
-    # Set deadline to be 3-6 months before completion
-    months_before = random.randint(3, 6)
-    deadline = completion_date - datetime.timedelta(days=30 * months_before)
+    # Instead of calculating relative to completion date, generate deadlines in the future (mid-2025 to end of 2025)
+    # This ensures they're still valid when viewed in 2025
     
-    # Format as string
-    return deadline.strftime('%Y-%m-%d')
+    # Use a fixed year 2025 for all deadlines
+    month = random.randint(6, 12)  # June to December
+    day = random.randint(1, 28)    # Avoid issues with month lengths
+    
+    # Create a date string for a 2025 deadline
+    return f"2025-{month:02d}-{day:02d}"
 
 def csv_to_json():
     """Convert CSV housing data to JSON format"""

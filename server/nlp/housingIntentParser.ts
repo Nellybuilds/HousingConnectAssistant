@@ -354,12 +354,21 @@ export function formatListingResponse(listings: HousingListing[], params: Housin
   
   // Format each listing
   const listingsText = displayListings.map((listing, index) => {
+    // Format the link to Housing Connect
+    let applicationLinkText = '';
+    if (listing.application_link && listing.application_link.includes('housingconnect.nyc.gov')) {
+      applicationLinkText = `🔗 Apply at: ${listing.application_link}`;
+    } else {
+      applicationLinkText = `🔗 Apply on Housing Connect by searching for "${listing.project_name}"`;
+    }
+
     return `${index + 1}. ${listing.project_name}
    📍 ${listing.address}
    🗓️ Application Deadline: ${new Date(listing.application_deadline).toLocaleDateString()}
    💰 Income Range: ${listing.ami_range} (Min: ${listing.minimum_income}, Max: ${listing.maximum_income})
    🏠 Unit Sizes: ${listing.unit_sizes.join(', ')}
-   ${listing.special_requirements.length > 0 ? `📋 Requirements: ${listing.special_requirements.join(', ')}` : ''}`;
+   ${listing.special_requirements.length > 0 ? `📋 Requirements: ${listing.special_requirements.join(', ')}` : ''}
+   ${applicationLinkText}`;
   }).join('\n\n');
   
   let response = intro + listingsText;

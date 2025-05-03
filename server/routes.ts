@@ -55,38 +55,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       try {
-        // Use Weaviate to get relevant context
-        console.log("Getting relevant context using Weaviate RAG...");
+        // Use Weaviate RAG with conversational features
+        console.log("Getting response using Weaviate RAG with conversation context...");
         try {
-          // Get relevant context from Weaviate
-          const context = await queryWeaviateForContext(message);
-          console.log("Retrieved context from Weaviate:", context.substring(0, 100) + "...");
-          
-          // Use fallback implementation with improved matching
-          console.log("Using our keyword-based matching system for response generation");
-          const fallbackAnswer = findBestAnswer(message);
-          console.log("Generated answer based on query:", { 
-            query: message, 
-            answerPreview: fallbackAnswer.substring(0, 100) + "..." 
-          });
+          // Use conversational RAG to generate a response
+          const ragResponse = await generateWeaviateRAGResponse(message, activeConversationId);
+          console.log("Generated RAG response with source:", ragResponse.source);
           
           // Store assistant message
           const assistantMessage = await storage.createMessage({
             role: "assistant",
-            content: fallbackAnswer,
+            content: ragResponse.answer,
             conversationId: activeConversationId,
           });
           
           console.log("Stored response message with ID:", assistantMessage.id);
           
           return res.json({
-            answer: fallbackAnswer,
+            answer: ragResponse.answer,
             conversationId: activeConversationId,
-            source: "keyword_matching",
-            contexts: [context]
+            source: ragResponse.source,
+            isListingSearch: ragResponse.isListingSearch,
+            contexts: ragResponse.contexts
           });
         } catch (error) {
-          console.error("Weaviate context retrieval failed, using direct fallback:", error);
+          console.error("Weaviate RAG response failed, using direct fallback:", error);
           
           const fallbackAnswer = findBestAnswer(message);
           console.log("Generated direct fallback answer for query:", { 

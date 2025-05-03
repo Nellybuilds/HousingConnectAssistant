@@ -54,18 +54,7 @@ export async function generateHuggingFaceChatResponse({ message, context, conver
         }
       }
       
-      // Extract income if mentioned
-      let income = null;
-      const incomeMatch = message.match(/\$?(\d{1,3}(,\d{3})*|\d+)(\s*k|\s+thousand|\s+dollars)?/i);
-      if (incomeMatch) {
-        let incomeValue = parseFloat(incomeMatch[1].replace(/,/g, ''));
-        if (incomeMatch[3] && (incomeMatch[3].includes('k') || incomeMatch[3].includes('thousand'))) {
-          incomeValue = incomeValue * 1000;
-        }
-        income = incomeValue;
-      }
-      
-      // Extract bedroom/unit size if mentioned
+      // Extract bedroom/unit size first (so we don't confuse it with income)
       let unitSize = null;
       if (message.toLowerCase().includes("studio")) {
         unitSize = "studio";
@@ -73,6 +62,28 @@ export async function generateHuggingFaceChatResponse({ message, context, conver
         const bedroomMatch = message.match(/(\d+)[\s-]?(?:br|bed|bedroom|bedrooms)/i);
         if (bedroomMatch) {
           unitSize = `${bedroomMatch[1]}br`;
+        }
+      }
+      
+      // Extract income if mentioned - make sure we avoid bedroom numbers
+      let income = null;
+      // Look for patterns like $50,000 or 50k or 50 thousand
+      const incomeMatch = message.match(/\$?\s*(\d{1,3}(,\d{3})*|\d{4,})(\s*k|\s+thousand|\s+dollars|\s+a\s+year|\s+per\s+year|\s+annually)?/i);
+      if (incomeMatch && incomeMatch.index !== undefined) {
+        // Skip if this is likely part of a bedroom reference
+        const prefixCheck1 = message.substring(Math.max(0, incomeMatch.index - 10), incomeMatch.index);
+        const prefixCheck2 = message.substring(Math.max(0, incomeMatch.index - 5), incomeMatch.index);
+        
+        if (!prefixCheck1.includes("bedroom") && !prefixCheck2.includes("br")) {
+          let incomeValue = parseFloat(incomeMatch[1].replace(/,/g, ''));
+          // Only consider values that could realistically be income (greater than 10000)
+          if (incomeValue >= 10000 || 
+              (incomeMatch[3] && (incomeMatch[3].includes('k') || incomeMatch[3].includes('thousand')))) {
+            if (incomeMatch[3] && (incomeMatch[3].includes('k') || incomeMatch[3].includes('thousand'))) {
+              incomeValue = incomeValue * 1000;
+            }
+            income = incomeValue;
+          }
         }
       }
       
@@ -119,9 +130,24 @@ export async function generateHuggingFaceChatResponse({ message, context, conver
       // Filter by unit size if specified
       if (unitSize) {
         filteredListings = filteredListings.filter(listing => {
-          return listing.unit_sizes.some(size => 
-            size.toLowerCase().includes(unitSize.toLowerCase())
-          );
+          // More flexible matching for unit sizes
+          return listing.unit_sizes.some(size => {
+            const sizeClean = size.toLowerCase().trim();
+            const unitSizeClean = unitSize.toLowerCase().trim();
+            
+            // Direct match (e.g., "2br" matches "2br")
+            if (sizeClean === unitSizeClean) return true;
+            
+            // If looking for a 2br, also match "2 bedroom" format
+            if (unitSizeClean.endsWith('br')) {
+              const numBedrooms = unitSizeClean.replace('br', '');
+              return sizeClean.includes(numBedrooms + ' bed') || 
+                     sizeClean.includes(numBedrooms + '-bed') ||
+                     sizeClean.includes(numBedrooms + 'bed');
+            }
+            
+            return false;
+          });
         });
       }
       

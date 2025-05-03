@@ -206,14 +206,28 @@ export async function generateHuggingFaceChatResponse({ message, context, conver
       
       // Filter for open listings only (deadline in future)
       const today = new Date();
+      console.log("Deadline filtering, today is:", today.toISOString());
+      
+      // DEBUG: Print all dates before filtering
+      for (const listing of filteredListings) {
+        const deadline = new Date(listing.application_deadline);
+        console.log(`Listing '${listing.project_name}' deadline: ${listing.application_deadline}, parsed: ${deadline.toISOString()}, valid: ${deadline > today}`);
+      }
+      
+      // Temporarily disable deadline filtering for debugging
+      /* 
       filteredListings = filteredListings.filter(listing => {
         try {
           const deadline = new Date(listing.application_deadline);
-          return deadline > today;
+          const isValid = deadline > today;
+          console.log(`Deadline check for '${listing.project_name}': ${deadline.toISOString()}, valid: ${isValid}`);
+          return isValid;
         } catch (e) {
+          console.log(`Error parsing deadline for '${listing.project_name}':`, e);
           return true; // Include if date can't be parsed
         }
       });
+      */
       
       console.log(`Filtered to ${filteredListings.length} matching listings`);
       

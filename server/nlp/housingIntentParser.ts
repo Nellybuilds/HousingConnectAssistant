@@ -305,7 +305,8 @@ export function filterListingsBySearchParams(
     });
   }
   
-  // Filter for open listings only
+  // Filter for open listings only - temporarily disabled for debugging
+  /*
   const today = new Date();
   filtered = filtered.filter(listing => {
     try {
@@ -315,6 +316,7 @@ export function filterListingsBySearchParams(
       return true; // Include if date can't be parsed
     }
   });
+  */
   
   return filtered;
 }

@@ -4,6 +4,7 @@ import { Document } from "langchain/document";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { HuggingFaceEmbeddings } from "./huggingFaceEmbeddings";
 import { generateHuggingFaceChatResponse } from "./huggingFaceChat";
+import { findBestAnswer } from "./fallbackChat";
 import crypto from 'crypto';
 
 // Constants
@@ -242,14 +243,27 @@ export async function queryWeaviateForContext(question: string, topK: number = 3
  */
 export async function generateWeaviateRAGResponse(question: string, conversationId?: string) {
   try {
-    // Get relevant context from Weaviate
-    const context = await queryWeaviateForContext(question);
+    let context = "Housing Connect is a platform to help you find and apply for affordable housing in one place.";
     
-    if (!context) {
-      throw new Error("Failed to retrieve context from vector store");
+    // Use a try/catch separately for the context to prevent crashes
+    try {
+      // Get relevant context from Weaviate using simple keyword matching
+      // This avoids complex vector operations that might cause memory issues
+      if (!question.toLowerCase().includes("apartment") && 
+          !question.toLowerCase().includes("housing") &&
+          !question.toLowerCase().includes("listing")) {
+        // Only query Weaviate for non-housing-specific questions
+        // For housing questions we'll rely on our simplified search
+        context = await queryWeaviateForContext(question);
+      }
+    } catch (contextError) {
+      console.error("Error getting context, using fallback:", contextError);
+      // Use fallback context
+      context = "Housing Connect is NYC's housing lottery system that helps people find and apply for affordable rental and homeownership opportunities. To qualify for affordable housing, your income needs to be in a specific range for each development. Housing developments may have additional requirements.";
     }
     
     // Use Hugging Face to generate a response with conversation context
+    // Our simplified approach should avoid the memory issues
     const response = await generateHuggingFaceChatResponse({
       message: question,
       context: context,
@@ -258,19 +272,31 @@ export async function generateWeaviateRAGResponse(question: string, conversation
     
     return {
       answer: response.answer,
-      source: response.source || "weaviate_huggingface_rag", 
+      source: response.source || "weaviate_simplified_rag", 
       contexts: [context],
       error: response.error, // Pass along any error
       isListingSearch: response.isListingSearch
     };
   } catch (error) {
-    console.error("Error generating Weaviate RAG response:", error);
+    console.error("Error generating simplified RAG response:", error);
     
-    return {
-      answer: "I'm having trouble accessing information at the moment.",
-      source: "weaviate_error",
-      contexts: [],
-      error: error instanceof Error ? error.message : "Unknown error"
-    };
+    // Use direct fallback keyword matching as a last resort
+    try {
+      const fallbackAnswer = findBestAnswer(question);
+      return {
+        answer: fallbackAnswer,
+        source: "fallback_simplified",
+        contexts: [],
+        error: error instanceof Error ? error.message : "Unknown error"
+      };
+    } catch (fallbackError) {
+      console.error("Even fallback failed:", fallbackError);
+      return {
+        answer: "I'm having trouble accessing information at the moment. Could you try asking in a different way?",
+        source: "fallback_error",
+        contexts: [],
+        error: "Multiple fallback failures"
+      };
+    }
   }
 }

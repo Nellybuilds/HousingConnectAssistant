@@ -1,6 +1,6 @@
 import { HfInference } from '@huggingface/inference';
 import { HousingListing } from './scrapers/types';
-import { parseHousingSearchIntent, filterListingsBySearchParams, formatListingResponse } from './nlp/housingIntentParser';
+import { parseHousingSearchIntent, filterListingsBySearchParams, formatListingResponse, type HousingSearchParams } from './nlp/housingIntentParser';
 import * as ConversationManager from './nlp/conversationManager';
 import { api as scrapersApi } from './scrapers';
 
@@ -26,106 +26,185 @@ interface ChatResponse {
  */
 export async function generateHuggingFaceChatResponse({ message, context, conversationId }: ChatOptions): Promise<ChatResponse> {
   try {
-    console.log("Processing message:", message);
+    console.log("Processing message:", message.substring(0, 100) + (message.length > 100 ? "..." : ""));
     
-    // If we have a conversation ID, check for housing search intent or follow-ups
-    if (conversationId) {
-      // First, check if this is a housing search query
-      const housingSearchParams = parseHousingSearchIntent(message);
+    // Check if this is a housing-related query using simple keyword matching
+    // This should avoid the memory issues with the embeddings
+    const housingKeywords = ["apartment", "housing", "listing", "application", "affordable", "income", "bedroom", "studio", "family"];
+    const isHousingRelated = housingKeywords.some(kw => message.toLowerCase().includes(kw));
+    
+    // If it's a housing query, use our direct housing search logic instead of embeddings
+    if (isHousingRelated && conversationId) {
+      console.log("Housing query detected, using direct matching");
       
-      // Get conversation context if it exists
-      const conversationContext = conversationId 
-        ? ConversationManager.getConversationContext(conversationId)
-        : null;
+      // Extract location (borough) if mentioned
+      const boroughKeywords = {
+        "manhattan": ["manhattan", "new york city", "nyc"],
+        "brooklyn": ["brooklyn", "bk"],
+        "bronx": ["bronx", "the bronx"],
+        "queens": ["queens"],
+        "staten island": ["staten island", "staten"]
+      };
       
-      // Process housing search intent
-      if (housingSearchParams && housingSearchParams.requestingListings) {
-        console.log("Detected housing search intent with params:", housingSearchParams);
-        
-        // Get listings from our database
-        const allListings = scrapersApi.getAllListings();
-        console.log(`Retrieved ${allListings.length} listings from database`);
-        
-        // Filter listings based on search parameters
-        const filteredListings = filterListingsBySearchParams(allListings, housingSearchParams);
-        console.log(`Filtered to ${filteredListings.length} matching listings`);
-        
-        // Format response
-        const response = formatListingResponse(filteredListings, housingSearchParams);
-        
-        // Update conversation context
-        if (conversationId) {
-          ConversationManager.updateWithHousingSearch(conversationId, housingSearchParams, filteredListings);
+      let location = null;
+      for (const [borough, keywords] of Object.entries(boroughKeywords)) {
+        if (keywords.some(kw => message.toLowerCase().includes(kw.toLowerCase()))) {
+          location = borough;
+          break;
         }
-        
+      }
+      
+      // Extract income if mentioned
+      let income = null;
+      const incomeMatch = message.match(/\$?(\d{1,3}(,\d{3})*|\d+)(\s*k|\s+thousand|\s+dollars)?/i);
+      if (incomeMatch) {
+        let incomeValue = parseFloat(incomeMatch[1].replace(/,/g, ''));
+        if (incomeMatch[3] && (incomeMatch[3].includes('k') || incomeMatch[3].includes('thousand'))) {
+          incomeValue = incomeValue * 1000;
+        }
+        income = incomeValue;
+      }
+      
+      // Extract bedroom/unit size if mentioned
+      let unitSize = null;
+      if (message.toLowerCase().includes("studio")) {
+        unitSize = "studio";
+      } else {
+        const bedroomMatch = message.match(/(\d+)[\s-]?(?:br|bed|bedroom|bedrooms)/i);
+        if (bedroomMatch) {
+          unitSize = `${bedroomMatch[1]}br`;
+        }
+      }
+      
+      // Extract household size if mentioned
+      let householdSize = null;
+      const householdMatch = message.match(/family\s+of\s+(\d+)|(\d+)\s+person|(\d+)\s+people|household\s+of\s+(\d+)/i);
+      if (householdMatch) {
+        const sizeMatch = householdMatch[1] || householdMatch[2] || householdMatch[3] || householdMatch[4];
+        if (sizeMatch) {
+          householdSize = parseInt(sizeMatch);
+        }
+      }
+      
+      console.log("Extracted parameters:", { location, income, unitSize, householdSize });
+      
+      // Get listings from database
+      const allListings = scrapersApi.getAllListings();
+      console.log(`Retrieved ${allListings.length} listings from database`);
+      
+      // Filter listings manually based on extracted parameters
+      let filteredListings = [...allListings];
+      
+      // Filter by location if specified
+      if (location) {
+        filteredListings = filteredListings.filter(listing => 
+          listing.address.toLowerCase().includes(location.toLowerCase())
+        );
+      }
+      
+      // Filter by income if specified
+      if (income) {
+        filteredListings = filteredListings.filter(listing => {
+          try {
+            const minIncome = parseFloat(listing.minimum_income.replace(/[$,]/g, ''));
+            const maxIncome = parseFloat(listing.maximum_income.replace(/[$,]/g, ''));
+            return !isNaN(minIncome) && !isNaN(maxIncome) && 
+                   income >= minIncome && income <= maxIncome;
+          } catch (e) {
+            return true; // Include if there's an error parsing
+          }
+        });
+      }
+      
+      // Filter by unit size if specified
+      if (unitSize) {
+        filteredListings = filteredListings.filter(listing => {
+          return listing.unit_sizes.some(size => 
+            size.toLowerCase().includes(unitSize.toLowerCase())
+          );
+        });
+      }
+      
+      // Filter for open listings only (deadline in future)
+      const today = new Date();
+      filteredListings = filteredListings.filter(listing => {
+        try {
+          const deadline = new Date(listing.application_deadline);
+          return deadline > today;
+        } catch (e) {
+          return true; // Include if date can't be parsed
+        }
+      });
+      
+      console.log(`Filtered to ${filteredListings.length} matching listings`);
+      
+      // Format a simplified response
+      if (filteredListings.length === 0) {
         return {
-          answer: response,
-          source: "housing_search",
+          answer: "I couldn't find any housing options matching your criteria. Would you like to try with different requirements?",
+          source: "housing_search_simplified",
           contexts: [context],
           isListingSearch: true
         };
       }
       
-      // Check for follow-up questions about previous housing search
-      if (conversationContext && 
-          conversationContext.lastSearchResults && 
-          conversationContext.lastSearchResults.length > 0) {
-        
-        // Check if user is asking about a specific listing from previous results
-        const listingIndex = ConversationManager.isListingFollowUp(message, conversationContext.lastSearchResults);
-        
-        if (listingIndex !== null) {
-          console.log(`Detected follow-up for listing #${listingIndex + 1}`);
-          
-          const selectedListing = conversationContext.lastSearchResults[listingIndex];
-          
-          // Check if this is a rent-specific follow-up
-          if (ConversationManager.isRentFollowUp(message)) {
-            const rentResponse = ConversationManager.getRentResponse(selectedListing);
-            return {
-              answer: rentResponse,
-              source: "listing_followup_rent",
-              contexts: [context]
-            };
-          }
-          
-          // Check if this is an eligibility-specific follow-up
-          if (ConversationManager.isEligibilityFollowUp(message)) {
-            const eligibilityResponse = ConversationManager.getEligibilityResponse(selectedListing);
-            return {
-              answer: eligibilityResponse,
-              source: "listing_followup_eligibility",
-              contexts: [context]
-            };
-          }
-          
-          // Otherwise, provide general details about the listing
-          ConversationManager.updateWithSelectedListing(conversationId, selectedListing, message);
-          
-          const detailedResponse = `
-Here are more details about ${selectedListing.project_name}:
-
-📍 ${selectedListing.address}
-🗓️ Application Deadline: ${new Date(selectedListing.application_deadline).toLocaleDateString()}
-💰 Income Range: ${selectedListing.ami_range}
-   - Minimum Income: ${selectedListing.minimum_income}
-   - Maximum Income: ${selectedListing.maximum_income}
-🏠 Unit Sizes Available: ${selectedListing.unit_sizes.join(', ')}
-${selectedListing.rent_prices.length > 0 ? `💵 Rent Prices: ${selectedListing.rent_prices.join(', ')}` : ''}
-${selectedListing.special_requirements.length > 0 ? `📋 Special Requirements: ${selectedListing.special_requirements.join(', ')}` : ''}
-
-${selectedListing.project_description}
-
-You can apply through Housing Connect before the deadline. Would you like to know more about the rent prices or eligibility requirements?
-`;
-          
-          return {
-            answer: detailedResponse,
-            source: "listing_details",
-            contexts: [context]
+      // Limit to 3 results for readability
+      const displayListings = filteredListings.slice(0, 3);
+      
+      // Build response text
+      let intro = "Here are some housing options";
+      if (location) intro += ` in ${location}`;
+      if (income) intro += ` for your income of $${income.toLocaleString()}`;
+      if (householdSize) intro += ` for a household of ${householdSize} ${householdSize === 1 ? 'person' : 'people'}`;
+      if (unitSize) {
+        const sizeText = unitSize === 'studio' ? 'Studio' : `${unitSize.toUpperCase().replace('BR', ' bedroom')}`;
+        intro += ` with ${sizeText} units`;
+      }
+      intro += ":\n\n";
+      
+      // Format each listing
+      const listingsText = displayListings.map((listing, index) => {
+        return `${index + 1}. ${listing.project_name}
+   📍 ${listing.address}
+   🗓️ Application Deadline: ${new Date(listing.application_deadline).toLocaleDateString()}
+   💰 Income Range: ${listing.ami_range} (Min: ${listing.minimum_income}, Max: ${listing.maximum_income})
+   🏠 Unit Sizes: ${listing.unit_sizes.join(', ')}
+   ${listing.special_requirements.length > 0 ? `📋 Requirements: ${listing.special_requirements.join(', ')}` : ''}`;
+      }).join('\n\n');
+      
+      let response = intro + listingsText;
+      
+      // Add footer
+      if (filteredListings.length > 3) {
+        response += `\n\nI found ${filteredListings.length} matching options in total. You can ask me for more details about any specific property.`;
+      } else {
+        response += `\n\nDo you want to know more about any of these properties?`;
+      }
+      
+      // Store context for follow-ups
+      if (conversationId) {
+        try {
+          const searchParams = {
+            income: income ? income : undefined,
+            location: location ? location : undefined,
+            householdSize: householdSize ? householdSize : undefined,
+            unitSizes: unitSize ? [unitSize] : undefined,
+            requestingListings: true,
+            rawQuery: message
           };
+          
+          ConversationManager.updateWithHousingSearch(conversationId, searchParams, filteredListings);
+        } catch (e) {
+          console.error("Error storing conversation context:", e);
         }
       }
+      
+      return {
+        answer: response,
+        source: "housing_search_simplified",
+        contexts: [context],
+        isListingSearch: true
+      };
     }
     
     // Not a housing search or follow-up, use regular RAG with Hugging Face

@@ -129,25 +129,58 @@ export async function generateHuggingFaceChatResponse({ message, context, conver
       
       // Filter by unit size if specified
       if (unitSize) {
+        console.log("Filtering by unit size:", unitSize);
+        
+        // DEBUG: Let's see all units sizes before filtering
+        for (const listing of filteredListings) {
+          console.log(`Listing '${listing.project_name}' has units: ${listing.unit_sizes.join(', ')}`);
+        }
+        
         filteredListings = filteredListings.filter(listing => {
           // More flexible matching for unit sizes
-          return listing.unit_sizes.some(size => {
+          const matched = listing.unit_sizes.some(size => {
             const sizeClean = size.toLowerCase().trim();
             const unitSizeClean = unitSize.toLowerCase().trim();
             
-            // Direct match (e.g., "2br" matches "2br")
-            if (sizeClean === unitSizeClean) return true;
+            console.log(`Comparing '${sizeClean}' with requested '${unitSizeClean}'`);
             
-            // If looking for a 2br, also match "2 bedroom" format
-            if (unitSizeClean.endsWith('br')) {
-              const numBedrooms = unitSizeClean.replace('br', '');
-              return sizeClean.includes(numBedrooms + ' bed') || 
-                     sizeClean.includes(numBedrooms + '-bed') ||
-                     sizeClean.includes(numBedrooms + 'bed');
+            // Direct match (e.g., "2BR" matches "2br")
+            if (sizeClean === unitSizeClean) {
+              console.log("  ✓ Direct match");
+              return true;
             }
             
+            // Partial match cases
+            if (unitSizeClean === "2br" && sizeClean === "2br") {
+              console.log("  ✓ Perfect match for 2BR");
+              return true;
+            }
+            
+            // If looking for a 2br, also match various formats like "2 bedroom", "2-bedroom", "two bedroom"
+            if (unitSizeClean.endsWith('br')) {
+              const numBedrooms = unitSizeClean.replace('br', '');
+              const matchesOtherFormat = 
+                sizeClean.includes(numBedrooms + ' bed') || 
+                sizeClean.includes(numBedrooms + '-bed') ||
+                sizeClean.includes(numBedrooms + 'bed');
+              
+              if (matchesOtherFormat) {
+                console.log(`  ✓ Format match: '${numBedrooms}' bedroom`);
+                return true;
+              }
+            }
+            
+            console.log("  ✗ No match");
             return false;
           });
+          
+          if (matched) {
+            console.log(`✓ Listing '${listing.project_name}' MATCHES unit size criteria`);
+          } else {
+            console.log(`✗ Listing '${listing.project_name}' does NOT match unit size criteria`);
+          }
+          
+          return matched;
         });
       }
       

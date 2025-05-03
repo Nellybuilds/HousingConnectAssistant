@@ -108,9 +108,29 @@ export async function generateHuggingFaceChatResponse({ message, context, conver
       
       // Filter by location if specified
       if (location) {
-        filteredListings = filteredListings.filter(listing => 
-          listing.address.toLowerCase().includes(location.toLowerCase())
-        );
+        console.log(`Filtering by location: '${location}'`);
+        
+        // Log addresses before filtering
+        console.log("Addresses before location filtering:");
+        filteredListings.forEach(listing => {
+          console.log(`- ${listing.address}`);
+        });
+        
+        filteredListings = filteredListings.filter(listing => {
+          // First check the address field
+          const matchesAddress = listing.address.toLowerCase().includes(location.toLowerCase());
+          
+          // For 'Bronx', also check the borough field if address doesn't match
+          // (Sometimes address might say "New York" but it's in the Bronx borough)
+          const isBronxSearch = location.toLowerCase() === 'bronx' || location.toLowerCase() === 'the bronx';
+          const matchesSpecialCase = isBronxSearch && listing.project_name.includes('Bronx');
+          
+          const matches = matchesAddress || matchesSpecialCase;
+          
+          console.log(`Location check for '${listing.project_name}': address=${matchesAddress}, special=${matchesSpecialCase}, final=${matches}`);
+          
+          return matches;
+        });
       }
       
       // Filter by income if specified

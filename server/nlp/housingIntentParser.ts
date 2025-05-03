@@ -233,7 +233,16 @@ export function filterListingsBySearchParams(
   if (params.location) {
     filtered = filtered.filter(listing => {
       const locationLower = params.location ? params.location.toLowerCase() : '';
-      return listing.address.toLowerCase().includes(locationLower);
+      
+      // First check the address field
+      const matchesAddress = listing.address.toLowerCase().includes(locationLower);
+      
+      // For 'Bronx', also check the project name if address doesn't match
+      // (Sometimes address might say "New York" but it's in the Bronx borough)
+      const isBronxSearch = locationLower === 'bronx' || locationLower === 'the bronx';
+      const matchesSpecialCase = isBronxSearch && listing.project_name.includes('Bronx');
+      
+      return matchesAddress || matchesSpecialCase;
     });
   }
   

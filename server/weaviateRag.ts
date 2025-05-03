@@ -240,7 +240,7 @@ export async function queryWeaviateForContext(question: string, topK: number = 3
 /**
  * Generate a RAG-enhanced response using Hugging Face
  */
-export async function generateWeaviateRAGResponse(question: string) {
+export async function generateWeaviateRAGResponse(question: string, conversationId?: string) {
   try {
     // Get relevant context from Weaviate
     const context = await queryWeaviateForContext(question);
@@ -249,17 +249,19 @@ export async function generateWeaviateRAGResponse(question: string) {
       throw new Error("Failed to retrieve context from vector store");
     }
     
-    // Use Hugging Face to generate a response
+    // Use Hugging Face to generate a response with conversation context
     const response = await generateHuggingFaceChatResponse({
       message: question,
-      context: context
+      context: context,
+      conversationId: conversationId 
     });
     
     return {
       answer: response.answer,
-      source: "weaviate_huggingface_rag", 
+      source: response.source || "weaviate_huggingface_rag", 
       contexts: [context],
-      error: response.error // Pass along any error
+      error: response.error, // Pass along any error
+      isListingSearch: response.isListingSearch
     };
   } catch (error) {
     console.error("Error generating Weaviate RAG response:", error);

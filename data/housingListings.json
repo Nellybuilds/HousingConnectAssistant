@@ -1,37 +1,355 @@
 [
   {
-    "project_name": "The Bedford",
-    "address": "3160 Webster Avenue, Bronx, NY 10467",
-    "application_deadline": "2025-06-30",
-    "ami_range": "40%-80% AMI",
-    "minimum_income": "$23,880",
-    "maximum_income": "$95,360",
+    "project_name": "BLUE SEA. 223 LINDEN STREET. LINDEN GROVE",
+    "address": "223 LINDEN STREET, Brooklyn, NY 11221",
+    "application_deadline": "2025-10-01",
+    "ami_range": "30%-60% AMI",
+    "minimum_income": "$24,000",
+    "maximum_income": "$72,000",
     "unit_sizes": [
       "Studio",
       "1BR",
       "2BR"
     ],
     "rent_prices": [
-      "$683",
-      "$1,110",
-      "$1,342"
+      "$876",
+      "$1012",
+      "$1002"
     ],
-    "application_link": "https://housingconnect.nyc.gov/PublicWeb/details/lottery/12345",
-    "project_description": "New affordable housing units in the Bronx with on-site laundry facilities, community room, and bike storage.",
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Brooklyn with 153 total units.",
     "special_requirements": [
       "5% mobility disability preference",
       "2% vision/hearing disability preference",
       "50% community board preference"
     ],
-    "last_updated": "2025-05-03T04:08:06.351Z"
+    "last_updated": "2025-05-03T04:12:23.083586"
   },
   {
-    "project_name": "Riverview Apartments",
-    "address": "45 River Street, Brooklyn, NY 11206",
-    "application_deadline": "2025-07-15",
+    "project_name": "IMPACCT BK. 776-780 MYRTLE AVE",
+    "address": "778 MYRTLE AVENUE, Brooklyn, NY 11206",
+    "application_deadline": "2024-11-02",
+    "ami_range": "30%-60% AMI",
+    "minimum_income": "$24,000",
+    "maximum_income": "$72,000",
+    "unit_sizes": [
+      "Studio",
+      "1BR",
+      "2BR"
+    ],
+    "rent_prices": [
+      "$858",
+      "$1064",
+      "$1446"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Brooklyn with 60 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.083685"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "1272 BOSTON ROAD, Bronx, NY 10456",
+    "application_deadline": "2024-08-01",
+    "ami_range": "30%-50% AMI",
+    "minimum_income": "$24,000",
+    "maximum_income": "$60,000",
+    "unit_sizes": [
+      "1BR",
+      "2BR"
+    ],
+    "rent_prices": [
+      "$902",
+      "$1569"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 13 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.083911"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "1418 CLINTON AVENUE, Bronx, NY 10456",
+    "application_deadline": "2024-09-30",
+    "ami_range": "80%-130% AMI",
+    "minimum_income": "$64,000",
+    "maximum_income": "$156,000",
+    "unit_sizes": [
+      "1BR",
+      "2BR",
+      "3BR"
+    ],
+    "rent_prices": [
+      "$1042",
+      "$1221",
+      "$1246"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 10 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.084226"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "426 EAST 162 STREET, Bronx, NY 10451",
+    "application_deadline": "2024-08-31",
+    "ami_range": "30%-60% AMI",
+    "minimum_income": "$24,000",
+    "maximum_income": "$72,000",
+    "unit_sizes": [
+      "1BR",
+      "2BR"
+    ],
+    "rent_prices": [
+      "$1249",
+      "$1066"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 7 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.084284"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "493 EAST 166 STREET, Bronx, NY 10456",
+    "application_deadline": "2024-08-31",
+    "ami_range": "50%-80% AMI",
+    "minimum_income": "$40,000",
+    "maximum_income": "$96,000",
+    "unit_sizes": [
+      "2BR",
+      "3BR"
+    ],
+    "rent_prices": [
+      "$1127",
+      "$1545"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 10 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.084338"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "918 FREEMAN STREET, Bronx, NY 10459",
+    "application_deadline": "2024-08-01",
     "ami_range": "50%-130% AMI",
-    "minimum_income": "$28,550",
-    "maximum_income": "$156,130",
+    "minimum_income": "$40,000",
+    "maximum_income": "$156,000",
+    "unit_sizes": [
+      "Studio",
+      "3BR"
+    ],
+    "rent_prices": [
+      "$661",
+      "$1306"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 10 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.084422"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "1300 HOE AVENUE, Bronx, NY 10459",
+    "application_deadline": "2024-08-31",
+    "ami_range": "80%-130% AMI",
+    "minimum_income": "$64,000",
+    "maximum_income": "$156,000",
+    "unit_sizes": [
+      "1BR",
+      "2BR"
+    ],
+    "rent_prices": [
+      "$1298",
+      "$1530"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 21 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.084471"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "1507 HOE AVENUE, Bronx, NY 10460",
+    "application_deadline": "2024-10-30",
+    "ami_range": "80%-130% AMI",
+    "minimum_income": "$64,000",
+    "maximum_income": "$156,000",
+    "unit_sizes": [
+      "1BR",
+      "2BR",
+      "3BR"
+    ],
+    "rent_prices": [
+      "$1283",
+      "$1077",
+      "$1276"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 10 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.084514"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "4031 PARK AVENUE, Bronx, NY 10457",
+    "application_deadline": "2024-09-30",
+    "ami_range": "50%-80% AMI",
+    "minimum_income": "$40,000",
+    "maximum_income": "$96,000",
+    "unit_sizes": [
+      "2BR",
+      "3BR"
+    ],
+    "rent_prices": [
+      "$1094",
+      "$1458"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 10 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.084582"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "1336 PROSPECT AVENUE, Bronx, NY 10459",
+    "application_deadline": "2024-08-31",
+    "ami_range": "50%-80% AMI",
+    "minimum_income": "$40,000",
+    "maximum_income": "$96,000",
+    "unit_sizes": [
+      "2BR",
+      "3BR"
+    ],
+    "rent_prices": [
+      "$1398",
+      "$1402"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 10 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.084633"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "1386 PROSPECT AVENUE, Bronx, NY 10459",
+    "application_deadline": "2024-10-30",
+    "ami_range": "30%-60% AMI",
+    "minimum_income": "$24,000",
+    "maximum_income": "$72,000",
+    "unit_sizes": [
+      "3BR"
+    ],
+    "rent_prices": [
+      "$1754"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 11 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.084673"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "1439 PROSPECT AVENUE, Bronx, NY 10456",
+    "application_deadline": "2024-08-01",
+    "ami_range": "30%-50% AMI",
+    "minimum_income": "$24,000",
+    "maximum_income": "$60,000",
+    "unit_sizes": [
+      "1BR",
+      "2BR"
+    ],
+    "rent_prices": [
+      "$1238",
+      "$1452"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 20 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.084713"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "768 EAST 168 STREET, Bronx, NY 10456",
+    "application_deadline": "2024-08-01",
+    "ami_range": "40%-80% AMI",
+    "minimum_income": "$32,000",
+    "maximum_income": "$96,000",
+    "unit_sizes": [
+      "1BR",
+      "2BR",
+      "3BR"
+    ],
+    "rent_prices": [
+      "$1092",
+      "$1213",
+      "$1240"
+    ],
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 15 total units.",
+    "special_requirements": [
+      "5% mobility disability preference",
+      "2% vision/hearing disability preference",
+      "50% community board preference"
+    ],
+    "last_updated": "2025-05-03T04:12:23.084773"
+  },
+  {
+    "project_name": "BEULAH CLUSTER HDFC.Y15.FY22",
+    "address": "1212 UNIVERSITY AVENUE, Bronx, NY 10452",
+    "application_deadline": "2024-10-30",
+    "ami_range": "50%-80% AMI",
+    "minimum_income": "$40,000",
+    "maximum_income": "$96,000",
     "unit_sizes": [
       "Studio",
       "1BR",
@@ -39,46 +357,18 @@
       "3BR"
     ],
     "rent_prices": [
-      "$750",
-      "$1,200",
-      "$1,500",
-      "$1,850"
+      "$799",
+      "$989",
+      "$1080",
+      "$1279"
     ],
-    "application_link": "https://housingconnect.nyc.gov/PublicWeb/details/lottery/12346",
-    "project_description": "Mixed-income housing development in Brooklyn with rooftop terrace, fitness center, and 24-hour security.",
+    "application_link": "https://housingconnect.nyc.gov/",
+    "project_description": "Affordable housing development in Bronx with 54 total units.",
     "special_requirements": [
       "5% mobility disability preference",
       "2% vision/hearing disability preference",
-      "50% community board preference",
-      "10% municipal employee preference"
+      "50% community board preference"
     ],
-    "last_updated": "2025-05-03T04:08:06.351Z"
-  },
-  {
-    "project_name": "Queens Commons",
-    "address": "127-35 Northern Blvd, Queens, NY 11368",
-    "application_deadline": "2025-08-01",
-    "ami_range": "30%-60% AMI",
-    "minimum_income": "$18,240",
-    "maximum_income": "$76,020",
-    "unit_sizes": [
-      "1BR",
-      "2BR",
-      "3BR"
-    ],
-    "rent_prices": [
-      "$590",
-      "$720",
-      "$830"
-    ],
-    "application_link": "https://housingconnect.nyc.gov/PublicWeb/details/lottery/12347",
-    "project_description": "Affordable family housing in Queens with energy-efficient appliances, children's playroom, and on-site after-school program.",
-    "special_requirements": [
-      "5% mobility disability preference",
-      "2% vision/hearing disability preference",
-      "50% community board preference",
-      "5% veteran preference"
-    ],
-    "last_updated": "2025-05-03T04:08:06.351Z"
+    "last_updated": "2025-05-03T04:12:23.084814"
   }
 ]

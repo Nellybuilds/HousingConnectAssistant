@@ -89,14 +89,32 @@ if (!fs.existsSync(DATA_DIR)) {
 }
 
 /**
- * Initialize the data files with sample data
+ * Initialize the data files - check if they exist first, only use sample data if needed
  */
 export function initializeDataFiles(): void {
-  // Always write sample data regardless of file existence
-  // This ensures we always have data for testing
-  fs.writeFileSync(LISTINGS_FILE, JSON.stringify(sampleListings, null, 2));
-  console.log('Created/updated listings file with sample data');
+  // Check if the housing listings file exists and has data
+  let useSampleData = true;
   
+  if (fs.existsSync(LISTINGS_FILE)) {
+    try {
+      const existingData = JSON.parse(fs.readFileSync(LISTINGS_FILE, 'utf8'));
+      if (Array.isArray(existingData) && existingData.length > 0) {
+        console.log(`Using existing housing listings data with ${existingData.length} records`);
+        useSampleData = false;
+      }
+    } catch (error) {
+      console.error('Error reading existing housing listings file:', error);
+    }
+  }
+  
+  // Only use sample data if needed
+  if (useSampleData) {
+    console.log('No existing data found, using sample data (run python convert_housing_csv_to_json.py to use real data)');
+    fs.writeFileSync(LISTINGS_FILE, JSON.stringify(sampleListings, null, 2));
+    console.log('Created listings file with sample data');
+  }
+  
+  // Always use sample rules data since we don't have real rules data
   fs.writeFileSync(HPD_RULES_FILE, JSON.stringify(sampleRules, null, 2));
   console.log('Created/updated rules file with sample data');
 }

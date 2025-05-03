@@ -184,11 +184,12 @@ export async function generateHuggingFaceChatResponse({ message, context, conver
       // Store context for follow-ups
       if (conversationId) {
         try {
-          const searchParams = {
-            income: income ? income : undefined,
-            location: location ? location : undefined,
-            householdSize: householdSize ? householdSize : undefined,
-            unitSizes: unitSize ? [unitSize] : undefined,
+          // Create a properly typed search params object for the conversation manager
+          const searchParams: HousingSearchParams = {
+            income: income !== null ? income : undefined,
+            location: location !== null ? location : undefined,
+            householdSize: householdSize !== null ? householdSize : undefined,
+            unitSizes: unitSize !== null ? [unitSize] : undefined,
             requestingListings: true,
             rawQuery: message
           };

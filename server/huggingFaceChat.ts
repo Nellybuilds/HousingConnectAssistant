@@ -33,9 +33,17 @@ export async function generateHuggingFaceChatResponse({ message, context, conver
     const housingKeywords = ["apartment", "housing", "listing", "application", "affordable", "income", "bedroom", "studio", "family"];
     const isHousingRelated = housingKeywords.some(kw => message.toLowerCase().includes(kw));
     
-    // If it's a housing query, use our direct housing search logic instead of embeddings
-    if (isHousingRelated && conversationId) {
-      console.log("Housing query detected, using direct matching");
+    // Check if it's a definitional question about Housing Connect or a general question
+    const isDefinitionalQuestion = 
+      message.toLowerCase().startsWith("what is") || 
+      message.toLowerCase().startsWith("what's") || 
+      message.toLowerCase().startsWith("tell me about") ||
+      message.toLowerCase().startsWith("explain") ||
+      message.toLowerCase().includes("what does housing connect");
+      
+    // If it's a housing search query (but not a definitional question), use direct matching
+    if (isHousingRelated && !isDefinitionalQuestion && conversationId) {
+      console.log("Housing search query detected, using direct matching");
       
       // Extract location (borough) if mentioned
       const boroughKeywords = {

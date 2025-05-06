@@ -245,11 +245,29 @@ export async function generateWeaviateRAGResponse(question: string, conversation
   try {
     let context = "Housing Connect is a platform to help you find and apply for affordable housing in one place.";
     
+    // Check if this is a definitional question about what Housing Connect is
+    const lowerQuestion = question.toLowerCase();
+    if (
+      lowerQuestion.includes("what is housing connect") || 
+      lowerQuestion.includes("what's housing connect") ||
+      lowerQuestion.includes("tell me about housing connect") ||
+      lowerQuestion.startsWith("what is") && lowerQuestion.includes("housing connect") ||
+      lowerQuestion.startsWith("what's") && lowerQuestion.includes("housing connect") ||
+      lowerQuestion.startsWith("explain") && lowerQuestion.includes("housing connect")
+    ) {
+      console.log("Processing as general 'What is Housing Connect?' question");
+      return {
+        answer: "Housing Connect is an affordable housing platform that helps individuals and families find and apply for affordable housing opportunities in one place. It simplifies the process by allowing users to create a single profile that can be used to apply to multiple housing developments. The platform eliminates the need to fill out separate applications for each development.",
+        source: "knowledge_base",
+        contexts: ["Housing Connect is a platform to help you find and apply for affordable housing in one place."],
+        isListingSearch: false
+      };
+    }
+    
     // Use a try/catch separately for the context to prevent crashes
     try {
       // Check if the question is just a location name or appears to be location-related
       const boroughs = ["bronx", "brooklyn", "manhattan", "queens", "staten island"];
-      const lowerQuestion = question.toLowerCase();
       const isJustLocation = boroughs.some(borough => 
         lowerQuestion.includes(borough) || lowerQuestion === `${borough}?`
       );

@@ -159,7 +159,26 @@ export function findBestAnswer(userQuestion: string): string {
   const lowerQ = userQuestion.toLowerCase().trim();
   console.log(`Finding best answer for question: "${lowerQ}"`);
   
-  // Check for AMI specifically first (most common question with issues)
+  // Check for "What is Housing Connect?" question first
+  if (
+    lowerQ.includes("what is housing connect") || 
+    lowerQ.includes("what's housing connect") ||
+    (lowerQ.startsWith("what is") && lowerQ.includes("housing connect")) ||
+    (lowerQ.startsWith("what's") && lowerQ.includes("housing connect")) ||
+    lowerQ.includes("tell me about housing connect") ||
+    (lowerQ.startsWith("explain") && lowerQ.includes("housing connect"))
+  ) {
+    console.log("'What is Housing Connect?' question detected, returning specific answer");
+    // Find the entry about Housing Connect
+    const whatIsEntry = knowledgeBase.find(entry => 
+      entry.question.toLowerCase().includes("what is housing connect")
+    );
+    if (whatIsEntry) {
+      return whatIsEntry.answer;
+    }
+  }
+  
+  // Check for AMI specifically (most common question with issues)
   if (lowerQ.includes("ami") || lowerQ.includes("area median income")) {
     console.log("AMI question detected, returning specific answer");
     // Find the entry about AMI
